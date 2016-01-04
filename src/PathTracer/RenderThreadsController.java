@@ -26,7 +26,7 @@ public class RenderThreadsController implements Runnable {
         this.callback = callback;
     }
 
-    public void run() {
+    public void run () {
         this.executorService = Executors.newCachedThreadPool();
         this.threadsPool = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class RenderThreadsController implements Runnable {
                     new RenderThread(this.currentSample++)
                 )
             );
-        } catch (InterruptedException|ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }

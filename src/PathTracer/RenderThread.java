@@ -12,7 +12,7 @@ public class RenderThread implements Callable<Color> {
     }
 
     @Override
-    public Color call() throws InterruptedException {
+    public Color call () throws InterruptedException {
         Random random = new Random();
 
         Thread.sleep(500);
