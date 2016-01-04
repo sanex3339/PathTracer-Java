@@ -55,10 +55,9 @@ public class RenderThreadsController implements Runnable {
     private void startThread () {
         try {
             Future<Color> thread = this.threadsPool.get(0);
-
             Color color = thread.get();
 
-            this.callback.redrawCanvas(color);
+            this.callback.redrawCanvasCallback(color);
 
             this.threadsPool.remove(0);
             this.threadsPool.add(

@@ -35,10 +35,10 @@ public class PathTracer {
     }
 
     private void renderButtonHandler (ActionEvent event) {
-        new RenderThreadsController(this::redrawCanvas);
+        new RenderThreadsController(this::redrawCanvasCallback);
     }
 
-    private void redrawCanvas (Color color) {
+    private void redrawCanvasCallback (Color color) {
         System.out.println(color.getRed() + ", " + color.getGreen() + ", " + color.getBlue());
 
         this.renderCanvas.update(color);

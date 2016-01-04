@@ -17,6 +17,7 @@ public class RenderCanvas extends Canvas {
         setBackground (Color.WHITE);
     }
 
+    @Override
     public void paint (Graphics g) {
         for (int y = 0; y < this.canvasHeight; y++) {
             for (int x = 0; x < this.canvasWidth; x++) {
