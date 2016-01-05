@@ -39,7 +39,7 @@ public class PathTracer {
      * @param event event object
      */
     private void renderButtonHandler (ActionEvent event) {
-        new RenderThreadsController(this::redrawCanvasCallback);
+        new RenderThreadsController<>(this::redrawCanvasCallback);
     }
 
     /**

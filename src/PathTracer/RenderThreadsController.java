@@ -12,19 +12,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RenderThreadsController implements Runnable {
+public class RenderThreadsController <T> implements Runnable {
     final public int threadsCount = Runtime.getRuntime().availableProcessors();
 
     public int currentSample = 1;
 
     private ExecutorService executorService;
     private List<Future<Color>> threadsPool;
-    private Callback callback;
+    private Callback<T> callback;
 
     /**
      * @param callback
      */
-    RenderThreadsController(Callback callback) {
+    RenderThreadsController(Callback<T> callback) {
         Thread thread = new Thread(this, "RenderThreadsController");
         thread.start();
 
@@ -60,13 +60,14 @@ public class RenderThreadsController implements Runnable {
     /**
      * Start thread from threadsPool, get thread data and run callback with that data.
      */
+    @SuppressWarnings("unchecked")
     private void startThread () {
         try {
             Future<Color> thread = this.threadsPool.get(0);
             Color color = thread.get();
 
-            Map<String, Color> data = new HashMap<>();
-            data.put("color", color);
+            Map<String, T> data = new HashMap<>();
+            data.put("color", (T) color);
 
             this.callback.callback(data);
 
