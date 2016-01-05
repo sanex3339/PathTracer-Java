@@ -2,9 +2,7 @@ package PathTracer;
 
 import PathTracer.interfaces.Callback;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -15,7 +13,7 @@ final public class RenderThreadsController <T> implements Runnable {
     public int currentSample = 1;
 
     private ExecutorService executorService;
-    private List<Future<Color>> threadsPool;
+    private List<Future<Map<String, T>>> threadsPool;
     private Callback<T> callback;
 
     /**
@@ -31,8 +29,8 @@ final public class RenderThreadsController <T> implements Runnable {
     /**
      * @return RenderThread
      */
-    private RenderThread getRenderThread() {
-        return new RenderThread(this.currentSample++);
+    private Callable<Map<String, T>> getRenderThread() {
+        return new RenderThread<T>(this.currentSample++);
     }
 
     public void run () {
@@ -64,16 +62,11 @@ final public class RenderThreadsController <T> implements Runnable {
     /**
      * Start thread from threadsPool, get thread data and run callback with that data.
      */
-    @SuppressWarnings("unchecked")
     private void startThread () {
         try {
-            Future<Color> thread = this.threadsPool.get(0);
-            Color color = thread.get();
+            Future<Map<String, T>> thread = this.threadsPool.get(0);
 
-            Map<String, T> data = new HashMap<>();
-            data.put("color", (T) color);
-
-            this.callback.callback(data);
+            this.callback.callback(thread.get());
 
             this.threadsPool.remove(0);
             this.threadsPool.add(
