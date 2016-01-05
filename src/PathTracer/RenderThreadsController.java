@@ -1,7 +1,5 @@
 package PathTracer;
 
-import PathTracer.interfaces.RedrawCanvas;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,20 +8,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RenderThreadsController implements Runnable {
+public class RenderThreadsController<T extends PathTracer.interfaces.Callback> implements Runnable {
     final public int threadsCount = Runtime.getRuntime().availableProcessors();
 
     public int currentSample = 1;
 
     private ExecutorService executorService;
     private List<Future<Color>> threadsPool;
-    private RedrawCanvas callback;
+    private T callback;
 
-    RenderThreadsController(RedrawCanvas callback) {
+    RenderThreadsController(T render) {
         Thread thread = new Thread(this, "RenderThreadsController");
         thread.start();
 
-        this.callback = callback;
+        this.callback = render;
     }
 
     public void run () {
@@ -57,7 +55,7 @@ public class RenderThreadsController implements Runnable {
             Future<Color> thread = this.threadsPool.get(0);
             Color color = thread.get();
 
-            this.callback.redrawCanvasCallback(color);
+            this.callback.callback(color);
 
             this.threadsPool.remove(0);
             this.threadsPool.add(

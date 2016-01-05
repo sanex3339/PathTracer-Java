@@ -2,6 +2,6 @@ package PathTracer.interfaces;
 
 import java.awt.*;
 
-public interface RedrawCanvas {
-    void redrawCanvasCallback (Color color);
+public interface RedrawCanvas extends Callback {
+    void callback (Color color);
 }
