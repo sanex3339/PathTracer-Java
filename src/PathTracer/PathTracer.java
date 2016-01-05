@@ -1,11 +1,9 @@
 package PathTracer;
 
-import PathTracer.interfaces.Callback;
-import PathTracer.interfaces.RedrawCanvas;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Map;
 
 public class PathTracer {
     public int windowWidth = 300;
@@ -38,10 +36,12 @@ public class PathTracer {
     }
 
     private void renderButtonHandler (ActionEvent event) {
-        new RenderThreadsController<RedrawCanvas>(this::callback);
+        new RenderThreadsController(this::redrawCanvasCallback);
     }
 
-    private void callback (Color color) {
+    private void redrawCanvasCallback (Map<String, Color> data) {
+        Color color = data.get("color");
+
         System.out.println(color.getRed() + ", " + color.getGreen() + ", " + color.getBlue());
 
         this.renderCanvas.update(color);
