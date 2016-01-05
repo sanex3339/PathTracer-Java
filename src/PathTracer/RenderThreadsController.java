@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 final public class RenderThreadsController <T> implements Runnable {
     final public int threadsCount = Runtime.getRuntime().availableProcessors();
@@ -31,6 +28,13 @@ final public class RenderThreadsController <T> implements Runnable {
         this.callback = callback;
     }
 
+    /**
+     * @return RenderThread
+     */
+    private RenderThread getRenderThread() {
+        return new RenderThread(this.currentSample++);
+    }
+
     public void run () {
         this.executorService = Executors.newCachedThreadPool();
         this.threadsPool = new ArrayList<>();
@@ -38,7 +42,7 @@ final public class RenderThreadsController <T> implements Runnable {
         for (int i = 0; i < this.threadsCount; i++) {
             this.threadsPool.add(
                 this.executorService.submit(
-                    new RenderThread(this.currentSample++)
+                    this.getRenderThread()
                 )
             );
         }
@@ -74,7 +78,7 @@ final public class RenderThreadsController <T> implements Runnable {
             this.threadsPool.remove(0);
             this.threadsPool.add(
                 this.executorService.submit(
-                    new RenderThread(this.currentSample++)
+                    this.getRenderThread()
                 )
             );
         } catch (InterruptedException | ExecutionException e) {
