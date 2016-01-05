@@ -13,8 +13,6 @@ final public class RenderCanvas extends Canvas {
     public RenderCanvas (int canvasWidth, int canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
-
-        setBackground (Color.WHITE);
     }
 
     @Override
