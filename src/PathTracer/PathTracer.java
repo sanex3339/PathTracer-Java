@@ -48,6 +48,10 @@ public class PathTracer {
     private void redrawCanvasCallback (Map<String, Color> data) {
         Color color = data.get("color");
 
+        if (color == null) {
+            throw new NullPointerException("Invalid HasMap key inside `data` attribute");
+        }
+
         System.out.println(color.getRed() + ", " + color.getGreen() + ", " + color.getBlue());
 
         this.renderCanvas.update(color);
