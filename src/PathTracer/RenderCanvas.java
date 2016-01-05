@@ -4,7 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class RenderCanvas extends Canvas {
+final public class RenderCanvas extends Canvas {
     public int canvasWidth = 300;
     public int canvasHeight = 300;
 

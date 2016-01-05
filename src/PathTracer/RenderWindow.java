@@ -3,7 +3,7 @@ package PathTracer;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public class RenderWindow extends JFrame {
+final public class RenderWindow extends JFrame {
     int windowWidth = 300;
     int windowHeight = 300;
 

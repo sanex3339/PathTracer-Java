@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Map;
 
-public class PathTracer {
+final public class PathTracer {
     public int windowWidth = 300;
     public int windowHeight = 300;
 

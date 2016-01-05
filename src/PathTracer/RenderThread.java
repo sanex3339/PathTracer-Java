@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-public class RenderThread implements Callable<Color> {
+final public class RenderThread implements Callable<Color> {
     private int sample;
 
     /**

@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RenderThreadsController <T> implements Runnable {
+final public class RenderThreadsController <T> implements Runnable {
     final public int threadsCount = Runtime.getRuntime().availableProcessors();
 
     public int currentSample = 1;
