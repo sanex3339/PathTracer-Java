@@ -21,6 +21,9 @@ public class RenderThreadsController implements Runnable {
     private List<Future<Color>> threadsPool;
     private Callback callback;
 
+    /**
+     * @param callback
+     */
     RenderThreadsController(Callback callback) {
         Thread thread = new Thread(this, "RenderThreadsController");
         thread.start();
@@ -54,6 +57,9 @@ public class RenderThreadsController implements Runnable {
         executorService.shutdown();
     }
 
+    /**
+     * Start thread from threadsPool, get thread data and run callback with that data.
+     */
     private void startThread () {
         try {
             Future<Color> thread = this.threadsPool.get(0);

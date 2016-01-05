@@ -7,6 +7,10 @@ public class RenderWindow extends JFrame {
     int windowWidth = 300;
     int windowHeight = 300;
 
+    /**
+     * @param windowWidth
+     * @param windowHeight
+     */
     public RenderWindow (int windowWidth, int windowHeight) {
         super();
 

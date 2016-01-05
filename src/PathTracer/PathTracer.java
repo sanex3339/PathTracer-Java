@@ -35,10 +35,16 @@ public class PathTracer {
         this.renderWindow.setVisible(true);
     }
 
+    /**
+     * @param event event object
+     */
     private void renderButtonHandler (ActionEvent event) {
         new RenderThreadsController(this::redrawCanvasCallback);
     }
 
+    /**
+     * @param data HasMap with data
+     */
     private void redrawCanvasCallback (Map<String, Color> data) {
         Color color = data.get("color");
 

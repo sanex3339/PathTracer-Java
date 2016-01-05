@@ -7,6 +7,9 @@ import java.util.concurrent.Callable;
 public class RenderThread implements Callable<Color> {
     private int sample;
 
+    /**
+     * @param sample sample value
+     */
     public RenderThread (int sample) {
         this.sample = sample;
     }
