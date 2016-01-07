@@ -3,11 +3,15 @@ package PathTracer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 final public class PathTracer {
     public int windowWidth = 300;
     public int windowHeight = 300;
+    public int currentSample = 1;
+
+    private List<Double> buffer = new ArrayList<>();
 
     private JButton renderButton;
     private RenderCanvas renderCanvas;
@@ -20,6 +24,10 @@ final public class PathTracer {
         this.renderWindow = new JFrame("PathTracer");
         this.renderButton = new JButton("Start Render");
         this.renderCanvas = new RenderCanvas(this.windowWidth, this.windowHeight);
+
+        for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
+            this.buffer.add(0.0);
+        }
     }
 
     public void init () {
@@ -49,21 +57,52 @@ final public class PathTracer {
      * @param event event object
      */
     private void renderButtonHandler (ActionEvent event) {
-        new RenderThreadsController<>(this::redrawCanvasCallback);
+        new RenderThreadsController(
+            this.windowWidth,
+            this.windowHeight,
+            this::redrawCanvasCallback
+        );
     }
 
     /**
-     * @param data HasMap with data
+     * @param colors
      */
-    private void redrawCanvasCallback (Map<String, Color> data) {
-        Color color = data.get("color");
-
-        if (color == null) {
+    private void redrawCanvasCallback (List<Color> colors) {
+        if (colors == null) {
             throw new NullPointerException("Invalid HasMap key inside `data` attribute");
         }
 
-        System.out.println(color.getRed() + ", " + color.getGreen() + ", " + color.getBlue());
+        List<Color> sampledColors = new ArrayList<>();
 
-        this.renderCanvas.update(color);
+        System.out.println(this.currentSample);
+
+        for (int i = 0; i < colors.size(); i++) {
+            int redIndex = i * 3;
+            int greenIndex = i * 3 + 1;
+            int blueIndex = i * 3 + 2;
+
+            this.buffer.set(
+                redIndex,
+                this.buffer.get(redIndex) + colors.get(i).getRed()
+            );
+            this.buffer.set(
+                greenIndex,
+                this.buffer.get(greenIndex) + colors.get(i).getGreen()
+            );
+            this.buffer.set(
+                blueIndex,
+                this.buffer.get(blueIndex) + colors.get(i).getBlue()
+            );
+
+            sampledColors.add(new Color(
+                (int) (this.buffer.get(redIndex) / this.currentSample),
+                (int) (this.buffer.get(greenIndex) / this.currentSample),
+                (int) (this.buffer.get(blueIndex) / this.currentSample)
+            ));
+        }
+
+        this.currentSample++;
+
+        this.renderCanvas.draw(sampledColors);
     }
 }

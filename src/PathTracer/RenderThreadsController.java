@@ -2,35 +2,41 @@ package PathTracer;
 
 import PathTracer.interfaces.Callback;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
-final public class RenderThreadsController <T> implements Runnable {
+final public class RenderThreadsController implements Runnable {
     final public int threadsCount = Runtime.getRuntime().availableProcessors();
 
-    public int currentSample = 1;
+    public int screenWidth;
+    public int screenHeight;
 
     private ExecutorService executorService;
-    private List<Future<Map<String, T>>> threadsPool;
-    private Callback<T> callback;
+    private List<Future<List<Color>>> threadsPool;
+    private Callback callback;
 
     /**
      * @param callback
      */
-    RenderThreadsController(Callback<T> callback) {
+    RenderThreadsController(int screenWidth, int screenHeight, Callback callback) {
         Thread thread = new Thread(this, "RenderThreadsController");
         thread.start();
 
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         this.callback = callback;
     }
 
     /**
      * @return RenderThread
      */
-    private Callable<Map<String, T>> getRenderThread() {
-        return new RenderThread<T>(this.currentSample++);
+    private Callable<List<Color>> getRenderThread() {
+        return new RenderThread(
+            this.screenWidth,
+            this.screenHeight
+        );
     }
 
     public void run () {
@@ -45,16 +51,9 @@ final public class RenderThreadsController <T> implements Runnable {
             );
         }
 
-        int t = 20;
-
-        while (t > 0) {
+        while (this.threadsPool.size() > 0) {
             this.startThread();
-            t--;
         }
-
-        /*while (this.threadsPool.size() > 0) {
-            this.startThread();
-        }*/
 
         executorService.shutdown();
     }
@@ -64,8 +63,8 @@ final public class RenderThreadsController <T> implements Runnable {
      */
     private void startThread () {
         try {
-            Future<Map<String, T>> thread = this.threadsPool.get(0);
-
+            Future<List<Color>> thread = this.threadsPool.get(0);
+            
             this.callback.callback(thread.get());
 
             this.threadsPool.remove(0);

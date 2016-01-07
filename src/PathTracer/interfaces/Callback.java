@@ -1,8 +1,9 @@
 package PathTracer.interfaces;
 
-import java.util.Map;
+import java.awt.*;
+import java.util.List;
 
 @FunctionalInterface
-public interface Callback <T> {
-    void callback (Map<String, T> data);
+public interface Callback {
+    void callback (List<Color> colors);
 }
