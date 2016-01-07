@@ -27,7 +27,7 @@ public class Tracer {
 
         // center sphere
         objects.add(
-            new Sphere(new Vector(0, -300, 400), 400)
+            new Sphere(new Vector(0, -100, 400), 300)
                 .setMaterial(new Material(new RGBColor(115, 115, 115)))
         );
 
