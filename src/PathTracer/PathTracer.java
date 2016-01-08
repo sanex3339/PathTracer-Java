@@ -22,7 +22,7 @@ final public class PathTracer {
         this.windowHeight = screenHeight;
 
         this.renderWindow = new JFrame("PathTracer");
-        this.renderButton = new JButton("Start Render");
+        this.renderButton = new JButton("Click to render!");
         this.renderCanvas = new RenderCanvas(this.windowWidth, this.windowHeight);
 
         for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
@@ -37,17 +37,27 @@ final public class PathTracer {
 
         this.renderWindow.setLayout(new BorderLayout());
 
+        this.renderButton.setSize(this.windowWidth, this.windowHeight);
         this.renderButton.addActionListener(this::renderButtonHandler);
+        this.renderButton.setOpaque(false);
+        this.renderButton.setContentAreaFilled(false);
+        this.renderButton.setBorderPainted(false);
+        this.renderButton.setFocusPainted(false);
 
-        this.renderWindow.add(this.renderCanvas);
-        this.renderWindow.add(this.renderButton, BorderLayout.NORTH);
-
-        this.renderWindow.setBounds(
-            screenWidth / 2 - this.windowWidth / 2,
-            screenHeight / 2 - this.windowHeight / 2,
-            this.windowWidth,
-            this.windowHeight
+        this.renderCanvas.setPreferredSize(
+            new Dimension(this.windowWidth, this.windowHeight)
         );
+
+        this.renderWindow.add(this.renderButton, BorderLayout.NORTH);
+        this.renderWindow.add(this.renderCanvas, BorderLayout.NORTH);
+
+        this.renderWindow.pack();
+
+        this.renderWindow.setLocation(
+            screenWidth / 2 - this.windowWidth / 2,
+            screenHeight / 2 - this.windowHeight / 2
+        );
+
         this.renderWindow.setResizable(false);
         this.renderWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.renderWindow.setVisible(true);
@@ -57,6 +67,8 @@ final public class PathTracer {
      * @param event event object
      */
     private void renderButtonHandler (ActionEvent event) {
+        this.renderButton.setText("Rendering...");
+
         new RenderThreadsController(
             this.windowWidth,
             this.windowHeight,
@@ -74,7 +86,11 @@ final public class PathTracer {
 
         List<Color> sampledColors = new ArrayList<>();
 
-        System.out.println(this.currentSample);
+        System.out.println("Sample: " + this.currentSample);
+
+        if (this.renderButton.isVisible()) {
+            this.renderButton.setVisible(false);
+        }
 
         for (int i = 0; i < colors.size(); i++) {
             int redIndex = i * 3;
