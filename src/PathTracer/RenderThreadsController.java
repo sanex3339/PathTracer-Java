@@ -49,8 +49,6 @@ final public class RenderThreadsController implements Runnable {
                     this.getRenderThread()
                 )
             );
-
-            this.startThread();
         }
 
         while (this.threadsPool.size() > 0) {
