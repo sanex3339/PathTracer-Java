@@ -6,7 +6,7 @@ import PathTracer.renderer.*;
 public class Plane implements SceneObject {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
-    private Material material = new Material(new RGBColor(115, 115, 115));
+    private Material material = new Material(RGBColor.GRAY);
 
     public Plane(Vector normal, Vector point) {
         this.normal = normal;
@@ -28,10 +28,10 @@ public class Plane implements SceneObject {
                 ),
                 this.normal
             ) /
-                Vector.dot(
-                    ray.getDirection(),
-                    this.getNormal()
-                );
+            Vector.dot(
+                ray.getDirection(),
+                this.getNormal()
+            );
 
         if (t <= RTMath.EPSILON) {
             return null;

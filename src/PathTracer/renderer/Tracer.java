@@ -22,29 +22,29 @@ public class Tracer {
         // light sphere
         objects.add(
             new Sphere(new Vector(0, 630, 0), 150)
-                .setMaterial(new Material(new RGBColor(115, 115, 115), new RGBColor(355, 355, 355)))
+                .setMaterial(new Material(new RGBColor(115, 115, 115), new Emission(new RGBColor(255, 255, 255), 1)))
         );
 
         // center sphere
         objects.add(
-            new Sphere(new Vector(0, -100, 400), 300)
-                .setMaterial(new Material(new RGBColor(115, 115, 115)))
+            new Sphere(new Vector(0, -100, 400), 200)
+                .setMaterial(new Material(RGBColor.BLACK, 1))
         );
 
         // top plane
         objects.add(
             new Plane(new Vector(0, -1, 0), new Vector (0, 700, 0))
                 .setMaterial(
-                    new Material(new RGBColor(245, 245, 245))
+                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
                         .setLambertCoeff(1)
                 )
         );
 
         // bottom plane
         objects.add(
-            new Plane(new Vector(0, 1, 0), new Vector (0, -500, 0))
+            new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
                 .setMaterial(
-                    new Material(new RGBColor(245, 245, 245))
+                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -53,7 +53,7 @@ public class Tracer {
         objects.add(
             new Plane(new Vector(-1, 0, 0), new Vector (700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.3 * 255, 255, 0.1 * 255))
+                    new Material(new RGBColor(0.25 * 255, 0.25 * 255, 0.75 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -62,7 +62,7 @@ public class Tracer {
         objects.add(
             new Plane(new Vector(1, 0, 0), new Vector (-700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(255, 0.3 * 255, 0.1 * 255))
+                    new Material(new RGBColor(0.75 * 255, 0.25 * 255, 0.25 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -80,7 +80,7 @@ public class Tracer {
         objects.add(
             new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
                 .setMaterial(
-                    new Material(new RGBColor(0, 0, 0))
+                    new Material(RGBColor.BLACK)
                         .setLambertCoeff(1)
                 )
         );
@@ -127,50 +127,50 @@ public class Tracer {
         RGBColor color;
         Double cost;
         IntersectPoint intersection = this.trace(ray);
-        RGBColor lightSamplingColor;
+        RGBColor lightSamplingColor = RGBColor.BLACK;
         Vector newDirection;
         Vector newPoint;
         double randFactor = 1;
         int rayIteration = ray.getIteration();
         RGBColor tempColor;
 
+        // if light source - return emission color
+        if (intersection.getOwner().getMaterial().isLightSource()) {
+            return intersection.getOwner().getMaterial().getEmission().getEmissionColor();
+        }
+
         if (rayIteration >= 5) {
-            if (Math.random() <= 0.1) {
-                return new RGBColor(0, 0, 0);
+            return RGBColor.BLACK;
+
+            /*if (Math.random() <= 0.1) {
+                return RGBColor.BLACK;
             }
 
-            randFactor = 1 / (1 - 0.1);
+            randFactor = 1 / (1 - 0.1);*/
         }
 
+        // return black color if not intersected
         if (!intersection.isIntersected()) {
-            return new RGBColor(0, 0, 0);
+            return RGBColor.BLACK;
         }
 
-        lightSamplingColor = new RGBColor(0, 0, 0);
-
+        // get lightsampling color
         for (SceneObject object : this.scene.getObjects()) {
-            if (object.getMaterial().getEmission() == new RGBColor(0, 0, 0)) {
+            if (object.getMaterial().getEmission().equals(RGBColor.BLACK)) {
                 continue;
             }
 
             lightSamplingColor = lightSamplingColor
-                .add(this.getLightPower(ray, intersection, object));
+                .add(this.getLightPower(intersection, object));
         }
 
-        color = lightSamplingColor.scale(ray.getIteration()).add(
-            intersection
-                .getOwner()
-                .getMaterial()
-                .getColor()
-                .multiple(
-                    intersection
-                        .getOwner()
-                        .getMaterial()
-                        .getEmission()
-                        .scale(randFactor)
-                )
-        );
+        // get current iteration color
+        color = lightSamplingColor
+            .add(
+                this.getReflectionColor(ray, intersection)
+            );
 
+        // get new random direction and point for new iteration
         newDirection = this.cosineSampleHemisphere(intersection.getNormal());
 
         if (Vector.dot(newDirection, ray.getDirection()) > 0) {
@@ -191,7 +191,6 @@ public class Tracer {
             );
         }
 
-        cost = Vector.dot(newDirection, intersection.getNormal());
         tempColor = this.getColor(
             new Ray(
                 newPoint,
@@ -200,9 +199,11 @@ public class Tracer {
             )
         );
 
+        cost = Vector.dot(newDirection, intersection.getNormal());
+
         return color.add(
             tempColor
-                .add(
+                .multiple(
                     intersection
                         .getOwner()
                         .getMaterial()
@@ -220,7 +221,7 @@ public class Tracer {
         Vector reflectedRay;
 
         if (reflectionValue == 0) {
-            return new RGBColor(0, 0, 0);
+            return RGBColor.BLACK;
         }
 
         reflectedRay = Vector.reflect(
@@ -229,7 +230,7 @@ public class Tracer {
         );
 
         reflectionColor = this.getColor(
-            new Ray(intersect.getHitPoint(), reflectedRay, ray.getIteration())
+            new Ray(intersect.getHitPoint(), reflectedRay, ray.getIteration() + 1)
         ).scale(reflectionValue);
 
         return reflectionColor;
@@ -255,88 +256,41 @@ public class Tracer {
         );
     }
 
-    private RGBColor getLightPower (Ray ray, IntersectPoint intersect, SceneObject object) {
-        Vector l = object.getRandomPoint();
+    private RGBColor getLightPower (IntersectPoint intersect, SceneObject object) {
+        Vector lightSourceRandomPoint = object.getRandomPoint();
+        RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
+        RGBColor hitPointColor = intersect.getOwner().getMaterial().getColor();
+        double lightPower = object.getMaterial().getEmissionValue();
+        double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
+        Vector rayLine = Vector.substract(
+            Vector.substract(
+                object.getPosition(),
+                lightSourceRandomPoint
+            ),
+            intersect.getHitPoint()
+        );
 
         IntersectPoint shadowRay = this.trace(
             new Ray(
                 intersect.getHitPoint(),
-                Vector.substract(
-                    Vector.substract(
-                        object.getPosition(),
-                        l
-                    ),
-                    intersect.getHitPoint()
-                )
+                Vector.normalize(rayLine)
             )
         );
 
         if (
             shadowRay.isIntersected() &&
-                shadowRay.getOwner().getMaterial().getEmissionValue() > 0
-            ) {
-            return intersect
-                .getOwner()
-                .getMaterial()
-                .getColor();
+            shadowRay.getOwner().getMaterial().isLightSource()
+        ) {
+            return hitPointColor
+                .filter(
+                    emissionColor
+                        .scale(
+                            lightPower - rayLine.getLength() * (lightPower / fadeRadius)
+                        )
+                );
         } else {
-            return new RGBColor(0, 0, 0);
+            return RGBColor.BLACK;
         }
-
-        /*let lightPower = object.getMaterial().getEmission(),
-            lightRandomPoint: Vector,
-            shadowRay: IntersectPoint,
-            resultPower: number = 0;
-        lightRandomPoint = object.getRandomPoint();
-        shadowRay = this.trace(
-            new Ray(
-                intersect.getHitPoint(),
-                Vector.substract(
-                    Vector.substract(
-                        object.getPosition(),
-                        lightRandomPoint
-                    ),
-                    intersect.getHitPoint()
-                )
-            )
-        );
-        if (
-            shadowRay.isIntersected() &&
-            shadowRay.getOwner().getMaterial().getEmissionValue() > 0
-        ) {
-            resultPower = 1;
-        }
-        return resultPower;
-        /*lightRandomPoint = this.cosineSampleHemisphere(
-            intersect.getOwner().getNormal(intersect.getHitPoint())
-        );
-        shadowRay = this.trace(
-            new Ray(
-                intersect.getHitPoint(),
-                lightRandomPoint
-            )
-        );
-        if (
-            shadowRay.isIntersected() &&
-            shadowRay.getOwner() instanceof AbstractLight
-        ) {
-            resultPower = (
-                (
-                    Vector.substract(
-                        Vector.substract(
-                            light.getPosition(),
-                            lightRandomPoint
-                        ),
-                        intersect.getHitPoint()
-                    ).getLength() * (lightPower / light.getFadeRadius())
-                )
-            );
-            if (resultPower < 0) {
-                resultPower = 0;
-            }
-        }*/
-
-        /*return resultPower;*/
     }
 
     private IntersectPoint trace (Ray ray) {
@@ -366,8 +320,7 @@ public class Tracer {
     }
 
     public List<Color> render () {
-        double randoMultiplier = 0.5;
-        int spp = 1;
+        double randomMultiplier = 0.5;
 
         List<Color> buffer = new ArrayList<>();
         RGBColor color;
@@ -376,32 +329,28 @@ public class Tracer {
 
         for (int y = 0; y < this.screenHeight; y++) {
             for (int x = 0; x < this.screenWidth; x++) {
-                color = new RGBColor(0, 0, 0);
+                color = RGBColor.BLACK;
 
-                for (int iteration = 0; iteration < spp; iteration++) {
-                    rand = 0;
+                rand = 0;
 
-                    if (Math.random() > 0.5) {
-                        rand += Math.random() * randoMultiplier;
-                    } else {
-                        rand -= Math.random() * randoMultiplier;
-                    }
-
-                    ray = new Ray(
-                        this.scene.getCamera().getPosition(),
-                        this.getPerspectiveVector(x + rand, y + rand)
-                    );
-
-                    color = color.add(this.getColor(ray));
+                if (Math.random() > 0.5) {
+                    rand += Math.random() * randomMultiplier;
+                } else {
+                    rand -= Math.random() * randomMultiplier;
                 }
 
-                color = color.divide(spp);
+                ray = new Ray(
+                    this.scene.getCamera().getPosition(),
+                    this.getPerspectiveVector(x + rand, y + rand)
+                );
+
+                color = color.add(this.getColor(ray));
 
                 buffer.add(
                     new Color(
-                        RGBColor.clampColor(color.getRed()),
-                        RGBColor.clampColor(color.getGreen()),
-                        RGBColor.clampColor(color.getBlue())
+                        color.getRed(),
+                        color.getGreen(),
+                        color.getBlue()
                     )
                 );
             }
