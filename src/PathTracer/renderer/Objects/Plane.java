@@ -1,8 +1,9 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 
-public class Plane extends AbstractObject {
+public class Plane implements SceneObject {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
     private Material material = new Material(new RGBColor(115, 115, 115));

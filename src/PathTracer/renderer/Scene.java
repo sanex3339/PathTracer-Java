@@ -1,19 +1,19 @@
 package PathTracer.renderer;
 
-import PathTracer.renderer.Objects.AbstractObject;
+import PathTracer.interfaces.SceneObject;
 
 import java.util.List;
 
 public class Scene {
     private Camera camera;
-    private List<AbstractObject> objects;
+    private List<SceneObject> objects;
 
-    Scene (List<AbstractObject> objects, Camera camera) {
+    Scene (List<SceneObject> objects, Camera camera) {
         this.objects = objects;
         this.camera = camera;
     }
 
-    public void addObject(AbstractObject object) {
+    public void addObject (SceneObject object) {
         this.objects.add(object);
     }
 
@@ -21,7 +21,7 @@ public class Scene {
         return this.camera;
     }
 
-    public List<AbstractObject> getObjects () {
+    public List<SceneObject> getObjects () {
         return this.objects;
     }
 }

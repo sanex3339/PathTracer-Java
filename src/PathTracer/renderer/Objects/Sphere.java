@@ -1,8 +1,9 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 
-public class Sphere extends AbstractObject {
+public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
     private Material material;

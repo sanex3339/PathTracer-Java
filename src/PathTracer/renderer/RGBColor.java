@@ -51,7 +51,7 @@ public class RGBColor {
         );
     }
 
-    public RGBColor scaled (double multiplier) {
+    public RGBColor scale(double multiplier) {
         return new RGBColor(
             (int) (this.getRed() * multiplier),
             (int) (this.getGreen() * multiplier),

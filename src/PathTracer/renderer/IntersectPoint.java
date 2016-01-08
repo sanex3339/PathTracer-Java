@@ -1,16 +1,16 @@
 package PathTracer.renderer;
 
-import PathTracer.renderer.Objects.AbstractObject;
+import PathTracer.interfaces.SceneObject;
 
 public class IntersectPoint {
-    private boolean intersected = false;
+    private boolean isIntersected = false;
     private Vector hitPoint;
     private Vector normal;
     private double distanceFromOrigin;
-    private AbstractObject owner;
+    private SceneObject owner;
 
-    public boolean getIntersect () {
-        return this.intersected;
+    public boolean isIntersected() {
+        return this.isIntersected;
     }
 
     public Vector getHitPoint () {
@@ -21,7 +21,7 @@ public class IntersectPoint {
         return this.normal;
     }
 
-    public AbstractObject getOwner () {
+    public SceneObject getOwner () {
         return this.owner;
     }
 
@@ -29,19 +29,19 @@ public class IntersectPoint {
         return this.distanceFromOrigin;
     }
 
-    public void setIntersect () {
-        this.intersected = true;
+    public void intersected () {
+        this.isIntersected = true;
     }
 
-    public void setHitPoint(Vector hitPoint) {
+    public void setHitPoint (Vector hitPoint) {
         this.hitPoint = hitPoint;
     }
 
-    public void setNormal(Vector normal) {
+    public void setNormal (Vector normal) {
         this.normal = normal;
     }
 
-    public void setOwner(AbstractObject owner) {
+    public void setOwner (SceneObject owner) {
         this.owner = owner;
     }
 

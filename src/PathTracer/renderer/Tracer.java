@@ -1,6 +1,6 @@
 package PathTracer.renderer;
 
-import PathTracer.renderer.Objects.AbstractObject;
+import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.Objects.Plane;
 import PathTracer.renderer.Objects.Sphere;
 
@@ -13,11 +13,11 @@ public class Tracer {
     private int screenWidth;
     private int screenHeight;
 
-    public Tracer(int screenWidth, int screenHeight) {
+    public Tracer (int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-        List<AbstractObject> objects = new ArrayList<>();
+        List<SceneObject> objects = new ArrayList<>();
 
         // light sphere
         objects.add(
@@ -142,22 +142,22 @@ public class Tracer {
             randFactor = 1 / (1 - 0.1);
         }
 
-        if (!intersection.getIntersect()) {
+        if (!intersection.isIntersected()) {
             return new RGBColor(0, 0, 0);
         }
 
         lightSamplingColor = new RGBColor(0, 0, 0);
 
-        for (AbstractObject light : this.scene.getObjects()) {
-            if (light.getMaterial().getEmission() == new RGBColor(0, 0, 0)) {
+        for (SceneObject object : this.scene.getObjects()) {
+            if (object.getMaterial().getEmission() == new RGBColor(0, 0, 0)) {
                 continue;
             }
 
             lightSamplingColor = lightSamplingColor
-                .add(this.getLightPower(ray, intersection, light));
+                .add(this.getLightPower(ray, intersection, object));
         }
 
-        color = lightSamplingColor.scaled(ray.getIteration()).add(
+        color = lightSamplingColor.scale(ray.getIteration()).add(
             intersection
                 .getOwner()
                 .getMaterial()
@@ -167,7 +167,7 @@ public class Tracer {
                         .getOwner()
                         .getMaterial()
                         .getEmission()
-                        .scaled(randFactor)
+                        .scale(randFactor)
                 )
         );
 
@@ -208,9 +208,9 @@ public class Tracer {
                         .getMaterial()
                         .getColor()
                 )
-                .scaled(cost)
-                .scaled(0.1)
-                .scaled(randFactor)
+                .scale(cost)
+                .scale(0.1)
+                .scale(randFactor)
         );
     }
 
@@ -230,7 +230,7 @@ public class Tracer {
 
         reflectionColor = this.getColor(
             new Ray(intersect.getHitPoint(), reflectedRay, ray.getIteration())
-        ).scaled(reflectionValue);
+        ).scale(reflectionValue);
 
         return reflectionColor;
     }
@@ -255,7 +255,7 @@ public class Tracer {
         );
     }
 
-    private RGBColor getLightPower (Ray ray, IntersectPoint intersect, AbstractObject object) {
+    private RGBColor getLightPower (Ray ray, IntersectPoint intersect, SceneObject object) {
         Vector l = object.getRandomPoint();
 
         IntersectPoint shadowRay = this.trace(
@@ -272,7 +272,7 @@ public class Tracer {
         );
 
         if (
-            shadowRay.getIntersect() &&
+            shadowRay.isIntersected() &&
                 shadowRay.getOwner().getMaterial().getEmissionValue() > 0
             ) {
             return intersect
@@ -301,7 +301,7 @@ public class Tracer {
             )
         );
         if (
-            shadowRay.getIntersect() &&
+            shadowRay.isIntersected() &&
             shadowRay.getOwner().getMaterial().getEmissionValue() > 0
         ) {
             resultPower = 1;
@@ -317,7 +317,7 @@ public class Tracer {
             )
         );
         if (
-            shadowRay.getIntersect() &&
+            shadowRay.isIntersected() &&
             shadowRay.getOwner() instanceof AbstractLight
         ) {
             resultPower = (
@@ -343,21 +343,21 @@ public class Tracer {
         IntersectPoint intersection = new IntersectPoint();
         IntersectData intersectData;
         double minDistance = Double.POSITIVE_INFINITY;
-        List<AbstractObject> sceneObjects = this.scene.getObjects();
+        List<SceneObject> sceneObjects = this.scene.getObjects();
 
-        for (AbstractObject object : sceneObjects) {
+        for (SceneObject object : sceneObjects) {
             intersectData = object.getIntersectData(ray);
 
             if (
                 intersectData != null &&
-                intersectData.distance < minDistance
+                intersectData.getDistance() < minDistance
             ) {
-                minDistance = intersectData.distance;
+                minDistance = intersectData.getDistance();
 
-                intersection.setIntersect();
-                intersection.setHitPoint(intersectData.hitPoint);
-                intersection.setNormal(intersectData.normal);
-                intersection.setDistanceFromOrigin(intersectData.distance);
+                intersection.intersected();
+                intersection.setHitPoint(intersectData.getHitPoint());
+                intersection.setNormal(intersectData.getNormal());
+                intersection.setDistanceFromOrigin(intersectData.getDistance());
                 intersection.setOwner(object);
             }
         }

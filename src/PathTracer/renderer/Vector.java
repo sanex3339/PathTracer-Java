@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Vector {
-    public double x;
-    public double y;
-    public double z;
+    private double x;
+    private double y;
+    private double z;
 
     public Vector(double x, double y, double z) {
         this.x = x;
@@ -15,12 +15,24 @@ public class Vector {
     }
 
     public Map<String, Double> getCoordinates () {
-        Map<String, Double> coordinates = new HashMap<String, Double>();
+        Map<String, Double> coordinates = new HashMap<>();
         coordinates.put("x", this.x);
         coordinates.put("y", this.y);
         coordinates.put("z", this.z);
 
         return coordinates;
+    }
+
+    public double getX () {
+        return this.x;
+    }
+
+    public double getY () {
+        return this.y;
+    }
+
+    public double getZ () {
+        return this.z;
     }
 
     public double getLength () {

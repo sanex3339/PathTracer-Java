@@ -18,7 +18,7 @@ public class Material {
         this.emission = emission;
     }
 
-    public Material(RGBColor color) {
+    public Material (RGBColor color) {
         this.color = color;
     }
 
