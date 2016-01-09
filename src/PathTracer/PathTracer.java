@@ -87,6 +87,7 @@ final public class PathTracer {
         List<Color> sampledColors = new ArrayList<>();
 
         System.out.println("Sample: " + this.currentSample);
+        this.renderWindow.setTitle("Sample: " + this.currentSample);
 
         if (this.renderButton.isVisible()) {
             this.renderButton.setVisible(false);

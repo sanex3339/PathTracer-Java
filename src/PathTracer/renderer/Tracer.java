@@ -21,11 +21,11 @@ public class Tracer {
 
         // light sphere
         objects.add(
-            new Sphere(new Vector(0, 630, 0), 150)
+            new Sphere(new Vector(0, 580, 0), 150)
                 .setMaterial(
                     new Material(
                         new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 1, 1900)
+                        new Emission(new RGBColor(255, 250, 249), 1.5, 1600)
                     )
                 )
         );
@@ -91,7 +91,7 @@ public class Tracer {
         objects.add(
             new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
                 .setMaterial(
-                    new Material(RGBColor.BLACK)
+                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -147,10 +147,11 @@ public class Tracer {
             return RGBColor.BLACK;
         }
 
+        // TODO: REFACTOR (COMBINE?) `getDiffuseColor` and `getGIColor` METHODS!!!!!
+
         return this.getDiffuseColor(ray)
-            .add(
-                this.getReflectionColor(ray, intersection)
-            );
+            .add(this.getGIColor(ray))
+            .add(this.getReflectionColor(ray, intersection));
     }
 
     private RGBColor getDiffuseColor(Ray ray) {
@@ -159,13 +160,14 @@ public class Tracer {
         RGBColor lightSamplingColor = RGBColor.BLACK;
         IntersectPoint intersection = this.trace(ray);
         Vector newPoint;
+        double cost;
         int rayIteration = ray.getIteration();
 
         if (rayIteration >= 5) {
             return RGBColor.BLACK;
         }
 
-        // get lightsampling color
+        // get light sampling color
         for (SceneObject object : this.scene.getObjects()) {
             if (object.getMaterial().getEmission().equals(RGBColor.BLACK)) {
                 continue;
@@ -196,6 +198,8 @@ public class Tracer {
             );
         }
 
+        cost = Vector.dot(newDirection, intersection.getNormal());
+
         tempColor = this.getDiffuseColor(
             new Ray(
                 newPoint,
@@ -205,9 +209,77 @@ public class Tracer {
         );
 
         return lightSamplingColor
-            .scale(rayIteration)
-            .add(tempColor)
-            .divide(rayIteration);
+            .add(
+                tempColor
+                    .divide(rayIteration)
+            )
+            .scale(cost);
+    }
+
+    private RGBColor getGIColor (Ray ray) {
+        IntersectPoint intersection = this.trace(ray);
+        RGBColor color;
+        RGBColor tempColor;
+        RGBColor lightSamplingColor = RGBColor.BLACK;
+        int iteration = ray.getIteration();
+
+        if (intersection.getOwner().getMaterial().isLightSource()) {
+            return intersection.getOwner().getMaterial().getEmission().getEmissionColor();
+        }
+
+        if (iteration >= 5) {
+            return RGBColor.BLACK;
+        }
+
+        // get light sampling color
+        for (SceneObject object : this.scene.getObjects()) {
+            if (object.getMaterial().getEmission().equals(RGBColor.BLACK)) {
+                continue;
+            }
+
+            lightSamplingColor = lightSamplingColor
+                .add(this.getLightPower(intersection, object));
+        }
+
+        // get new random direction and point for new iteration
+        Vector newDirection = this.cosineSampleHemisphere(intersection.getNormal());
+        Vector newPoint;
+
+        if (Vector.dot(newDirection, ray.getDirection()) > 0) {
+            newPoint = Vector.add(
+                ray.getOrigin(),
+                Vector.scale(
+                    ray.getDirection(),
+                    intersection.getDistanceFromOrigin() * (1 + RTMath.EPSILON)
+                )
+            );
+        } else {
+            newPoint = Vector.add(
+                ray.getOrigin(),
+                Vector.scale(
+                    ray.getDirection(),
+                    intersection.getDistanceFromOrigin() * (1 - RTMath.EPSILON)
+                )
+            );
+        }
+
+        color = lightSamplingColor.scale(iteration);
+
+        tempColor = this.getGIColor(
+            new Ray(
+                newPoint,
+                newDirection,
+                ++iteration
+            )
+        );
+
+        return color.add(
+            intersection
+                .getOwner()
+                .getMaterial()
+                .getColor()
+                .filter(tempColor.divide(iteration))
+        );
     }
 
     private RGBColor getReflectionColor (Ray ray, IntersectPoint intersect) {
@@ -224,7 +296,7 @@ public class Tracer {
             intersect.getNormal()
         );
 
-        reflectionColor = this.getColor(
+        reflectionColor = this.getGIColor(
             new Ray(intersect.getHitPoint(), reflectedRay, ray.getIteration() + 1)
         ).scale(reflectionValue);
 
@@ -251,23 +323,24 @@ public class Tracer {
         );
     }
 
-    private RGBColor getLightPower (IntersectPoint intersect, SceneObject object) {
+    private RGBColor getLightPower (IntersectPoint intersection, SceneObject object) {
         Vector lightSourceRandomPoint = object.getRandomPoint();
         RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
-        RGBColor hitPointColor = intersect.getOwner().getMaterial().getColor();
+        RGBColor hitPointColor = intersection.getOwner().getMaterial().getColor();
         double lightPower = object.getMaterial().getEmissionValue();
         double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
+        double lambertCos;
         Vector rayLine = Vector.substract(
             Vector.substract(
                 object.getPosition(),
                 lightSourceRandomPoint
             ),
-            intersect.getHitPoint()
+            intersection.getHitPoint()
         );
 
         IntersectPoint shadowRay = this.trace(
             new Ray(
-                intersect.getHitPoint(),
+                intersection.getHitPoint(),
                 Vector.normalize(rayLine)
             )
         );
@@ -276,12 +349,23 @@ public class Tracer {
             shadowRay.isIntersected() &&
             shadowRay.getOwner().getMaterial().isLightSource()
         ) {
+            Vector lightDirection = Vector.normalize(
+                Vector.substract(
+                    intersection.getHitPoint(),
+                    object.getPosition()
+                )
+            );
+
+            lambertCos = -Vector.dot(
+                lightDirection,
+                intersection.getNormal()
+            );
+
             return hitPointColor
                 .filter(
                     emissionColor
-                        .scale(
-                            lightPower - rayLine.getLength() * (lightPower / fadeRadius)
-                        )
+                        .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
+                        .scale(lambertCos)
                 );
         } else {
             return RGBColor.BLACK;
