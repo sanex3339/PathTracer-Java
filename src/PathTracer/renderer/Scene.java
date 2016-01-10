@@ -8,7 +8,7 @@ public class Scene {
     private Camera camera;
     private List<SceneObject> objects;
 
-    Scene (List<SceneObject> objects, Camera camera) {
+    public Scene(List<SceneObject> objects, Camera camera) {
         this.objects = objects;
         this.camera = camera;
     }

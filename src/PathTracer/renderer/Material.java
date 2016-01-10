@@ -13,7 +13,7 @@ public class Material {
         this.reflectionCoeff = reflectionCoeff;
     }
 
-    Material (RGBColor color, Emission emission) {
+    public Material(RGBColor color, Emission emission) {
         this.color = color;
         this.emission = emission;
     }
@@ -22,7 +22,7 @@ public class Material {
         this.color = color;
     }
 
-    Material (RGBColor color, double reflectionCoeff) {
+    public Material (RGBColor color, double reflectionCoeff) {
         this.color = color;
         this.reflectionCoeff = reflectionCoeff;
     }

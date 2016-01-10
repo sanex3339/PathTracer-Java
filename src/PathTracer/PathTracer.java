@@ -1,5 +1,7 @@
 package PathTracer;
 
+import PathTracer.renderer.Scene;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,9 +9,11 @@ import java.util.*;
 import java.util.List;
 
 final public class PathTracer {
-    public int windowWidth = 300;
-    public int windowHeight = 300;
-    public int currentSample = 1;
+    private int windowWidth = 300;
+    private int windowHeight = 300;
+    private int currentSample = 1;
+
+    private Scene scene;
 
     private List<Double> buffer = new ArrayList<>();
 
@@ -17,9 +21,16 @@ final public class PathTracer {
     private RenderCanvas renderCanvas;
     private JFrame renderWindow;
 
-    public PathTracer (int screenWidth, int screenHeight)  {
+    public PathTracer (int screenWidth, int screenHeight, Scene scene)  {
         this.windowWidth = screenWidth;
         this.windowHeight = screenHeight;
+        this.scene = scene;
+    }
+
+    public void init () {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
 
         this.renderWindow = new JFrame("PathTracer");
         this.renderButton = new JButton("Click to render!");
@@ -28,12 +39,6 @@ final public class PathTracer {
         for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
             this.buffer.add(0.0);
         }
-    }
-
-    public void init () {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int screenWidth = gd.getDisplayMode().getWidth();
-        int screenHeight = gd.getDisplayMode().getHeight();
 
         this.renderWindow.setLayout(new BorderLayout());
 
@@ -72,6 +77,7 @@ final public class PathTracer {
         new RenderThreadsController(
             this.windowWidth,
             this.windowHeight,
+            this.scene,
             this::redrawCanvasCallback
         );
     }

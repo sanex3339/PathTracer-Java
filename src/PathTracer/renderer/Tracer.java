@@ -1,8 +1,7 @@
 package PathTracer.renderer;
 
 import PathTracer.interfaces.SceneObject;
-import PathTracer.renderer.Objects.Plane;
-import PathTracer.renderer.Objects.Sphere;
+import com.sun.istack.internal.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,100 +12,10 @@ public class Tracer {
     private int screenWidth;
     private int screenHeight;
 
-    public Tracer (int screenWidth, int screenHeight) {
+    public Tracer (int screenWidth, int screenHeight, Scene scene) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-
-        List<SceneObject> objects = new ArrayList<>();
-
-        // light sphere
-        objects.add(
-            new Sphere(new Vector(0, 580, 0), 150)
-                .setMaterial(
-                    new Material(
-                        new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 1, 1600)
-                    )
-                )
-        );
-
-        // mirror sphere
-        objects.add(
-            new Sphere(new Vector(-300, -100, 400), 200)
-                .setMaterial(new Material(RGBColor.BLACK, 1))
-        );
-
-        // green sphere
-        objects.add(
-            new Sphere(new Vector(300, -300, 400), 200)
-                .setMaterial(new Material(new RGBColor(72, 201, 26)))
-        );
-
-        // top plane
-        objects.add(
-            new Plane(new Vector(0, -1, 0), new Vector (0, 700, 0))
-                .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        // bottom plane
-        objects.add(
-            new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
-                .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        // right plane
-        objects.add(
-            new Plane(new Vector(-1, 0, 0), new Vector (700, 0, 0))
-                .setMaterial(
-                    new Material(new RGBColor(0.25 * 255, 0.25 * 255, 0.75 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        // left plane
-        objects.add(
-            new Plane(new Vector(1, 0, 0), new Vector (-700, 0, 0))
-                .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.25 * 255, 0.25 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        // front plane
-        objects.add(
-            new Plane(new Vector(0, 0, -1), new Vector (0, 0, 700))
-                .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        // back plane
-        objects.add(
-            new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
-                .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
-                        .setLambertCoeff(1)
-                )
-        );
-
-        this.setScene(
-            new Scene(
-                objects,
-                new Camera(
-                    new Vector(0, 0, -699),
-                    new Vector(0, 0, 1),
-                    this.screenWidth,
-                    this.screenHeight
-                )
-            )
-        );
+        this.scene = scene;
     }
 
     private Vector getPerspectiveVector (double x, double y) {
@@ -203,9 +112,5 @@ public class Tracer {
         }
 
         return buffer;
-    }
-
-    public void setScene (Scene scene) {
-        this.scene = scene;
     }
 }

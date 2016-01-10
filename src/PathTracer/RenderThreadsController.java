@@ -1,6 +1,7 @@
 package PathTracer;
 
 import PathTracer.interfaces.Callback;
+import PathTracer.renderer.Scene;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,10 +9,12 @@ import java.util.List;
 import java.util.concurrent.*;
 
 final public class RenderThreadsController implements Runnable {
-    final public int threadsCount = Runtime.getRuntime().availableProcessors();
+    final private int threadsCount = Runtime.getRuntime().availableProcessors();
 
-    public int screenWidth;
-    public int screenHeight;
+    private int screenWidth;
+    private int screenHeight;
+
+    private Scene scene;
 
     private ExecutorService executorService;
     private List<Future<List<Color>>> threadsPool;
@@ -20,12 +23,13 @@ final public class RenderThreadsController implements Runnable {
     /**
      * @param callback
      */
-    RenderThreadsController(int screenWidth, int screenHeight, Callback callback) {
+    RenderThreadsController(int screenWidth, int screenHeight, Scene scene, Callback callback) {
         Thread thread = new Thread(this, "RenderThreadsController");
         thread.start();
 
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.scene = scene;
         this.callback = callback;
     }
 
@@ -35,7 +39,8 @@ final public class RenderThreadsController implements Runnable {
     private Callable<List<Color>> getRenderThread() {
         return new RenderThread(
             this.screenWidth,
-            this.screenHeight
+            this.screenHeight,
+            this.scene
         );
     }
 
