@@ -32,13 +32,11 @@ final public class PathTracer {
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
 
+        this.initBuffer();
+
         this.renderWindow = new JFrame("PathTracer");
         this.renderButton = new JButton("Click to render!");
         this.renderCanvas = new RenderCanvas(this.windowWidth, this.windowHeight);
-
-        for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
-            this.buffer.add(0.0);
-        }
 
         this.renderWindow.setLayout(new BorderLayout());
 
@@ -66,6 +64,12 @@ final public class PathTracer {
         this.renderWindow.setResizable(false);
         this.renderWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.renderWindow.setVisible(true);
+    }
+
+    private void initBuffer () {
+        for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
+            this.buffer.add(0.0);
+        }
     }
 
     /**
