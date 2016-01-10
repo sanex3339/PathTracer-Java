@@ -36,13 +36,13 @@ public class Sphere implements SceneObject {
             minT = Math.min(t1, t2);
             maxT = Math.max(t1, t2);
 
-            if (minT > RTMath.EPSILON) {
+            if (minT > PTMath.EPSILON) {
                 intersectionPoint = minT;
             } else {
                 intersectionPoint = maxT;
             }
 
-            if (intersectionPoint < RTMath.EPSILON) {
+            if (intersectionPoint < PTMath.EPSILON) {
                 return null;
             }
         }

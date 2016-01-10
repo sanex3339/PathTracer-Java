@@ -33,7 +33,7 @@ public class Plane implements SceneObject {
                 this.getNormal()
             );
 
-        if (t <= RTMath.EPSILON) {
+        if (t <= PTMath.EPSILON) {
             return null;
         }
 
