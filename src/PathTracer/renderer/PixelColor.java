@@ -28,8 +28,13 @@ public class PixelColor {
             return RGBColor.BLACK;
         }
 
-        this.pixelColor = this.getDiffuseColor(ray)
-            .add(this.getReflectionColor(ray, intersection));
+        try {
+            this.pixelColor = this.getDiffuseColor(ray)
+                .add(this.getReflectionColor(ray, intersection));
+        } catch (NullPointerException e) {
+            // TODO: fix that
+            return RGBColor.BLACK;
+        }
 
         return this.pixelColor;
     }
@@ -51,7 +56,7 @@ public class PixelColor {
                     .getEmission()
                     .getEmissionColor()
                     .equals(RGBColor.BLACK)
-                ) {
+            ) {
                 continue;
             }
 
@@ -66,7 +71,7 @@ public class PixelColor {
         nextIterationPixelColor = pixelColor.getPixelColor();
 
         this.globalIlluminationColor = this.lightSamplingColor
-            .scale(iteration)
+            .scale(iteration + 1)
             .add(
                 nextIterationPixelColor.divide(iteration + 1)
             );
@@ -109,6 +114,7 @@ public class PixelColor {
 
     private RGBColor getLightSamplingColor (IntersectPoint intersection, SceneObject object) {
         Vector lightSourceRandomPoint = object.getRandomPoint();
+        Vector rayLine;
 
         RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
         RGBColor hitPointColor = intersection.getOwner().getMaterial().getColor();
@@ -116,12 +122,10 @@ public class PixelColor {
         double lightPower = object.getMaterial().getEmissionValue();
         double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
         double lambertCos;
+        double surfaceCost;
 
-        Vector rayLine = Vector.substract(
-            Vector.substract(
-                object.getPosition(),
-                lightSourceRandomPoint
-            ),
+        rayLine = Vector.substract(
+            lightSourceRandomPoint,
             intersection.getHitPoint()
         );
 
@@ -135,8 +139,8 @@ public class PixelColor {
 
         if (
             shadowRay.isIntersected() &&
-                shadowRay.getOwner().getMaterial().isLightSource()
-            ) {
+            shadowRay.getOwner().getMaterial().isLightSource()
+        ) {
             Vector lightDirection = Vector.normalize(
                 Vector.substract(
                     intersection.getHitPoint(),
@@ -149,11 +153,17 @@ public class PixelColor {
                 intersection.getNormal()
             );
 
+            surfaceCost = Vector.dot(
+                lightDirection,
+                shadowRay.getNormal()
+            );
+
             return hitPointColor
                 .filter(
                     emissionColor
                         .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
                         .scale(lambertCos)
+                        .scale(surfaceCost)
                 );
         } else {
             return RGBColor.BLACK;

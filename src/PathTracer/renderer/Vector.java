@@ -41,6 +41,16 @@ public class Vector {
         );
     }
 
+    public boolean equals (Vector vector) {
+        if (vector == null) {
+            return false;
+        }
+
+        return this.getX() == vector.getX() &&
+            this.getY() == vector.getY() &&
+            this.getZ() == vector.getZ();
+    }
+
     public static Vector scale (Vector vector, double multiplier) {
         return new Vector(
             vector.x * multiplier, vector.y * multiplier, vector.z * multiplier

@@ -77,10 +77,13 @@ public class Sphere implements SceneObject {
         double q = 2 * Math.PI * u;
         double f = Math.pow(Math.cos(2 * v - 1), -1);
 
-        return new Vector(
-            this.radius * Math.cos(q) * Math.sin(f),
-            this.radius * Math.sin(q) * Math.sin(f),
-            this.radius * Math.cos(f)
+        return Vector.substract(
+            this.getPosition(),
+            new Vector(
+                this.radius * Math.cos(q) * Math.sin(f),
+                this.radius * Math.sin(q) * Math.sin(f),
+                this.radius * Math.cos(f)
+            )
         );
     }
 

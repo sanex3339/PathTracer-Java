@@ -66,7 +66,7 @@ public class Plane implements SceneObject {
     }
 
     public Vector getRandomPoint () {
-        return new Vector(0, 0, 0);
+        return this.getPosition();
     }
 
     public Vector getNormal () {
