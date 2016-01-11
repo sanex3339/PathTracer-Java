@@ -32,7 +32,7 @@ final public class RenderThreadsService {
         for (int i = 0; i < this.threadsCount; i++) {
             this.threadsPool.add(
                 this.executorService.submit(
-                    this.renderDataProvider.renderDataProvider()
+                    this.renderDataProvider.callback()
                 )
             );
         }
@@ -59,7 +59,7 @@ final public class RenderThreadsService {
         this.threadsPool.remove(0);
         this.threadsPool.add(
             this.executorService.submit(
-                this.renderDataProvider.renderDataProvider()
+                this.renderDataProvider.callback()
             )
         );
     }
