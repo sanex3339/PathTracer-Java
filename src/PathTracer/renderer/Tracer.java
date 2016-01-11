@@ -6,8 +6,9 @@ import PathTracer.interfaces.SceneObject;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class Tracer implements RayTracer {
+public class Tracer implements RayTracer, Callable<List<Color>> {
     private Scene scene;
     private int screenWidth;
     private int screenHeight;
@@ -36,6 +37,11 @@ public class Tracer implements RayTracer {
                 )
             )
         );
+    }
+
+    @Override
+    public List<Color> call () {
+        return this.render();
     }
 
     public static IntersectPoint trace (Ray ray, Scene scene) {

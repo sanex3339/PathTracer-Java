@@ -1,48 +1,30 @@
 package PathTracer;
 
-import PathTracer.interfaces.Callback;
-import PathTracer.renderer.Scene;
+import PathTracer.interfaces.RenderDataHandler;
+import PathTracer.interfaces.RenderDataProvider;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-final public class RenderThreadsService implements Runnable {
+final public class RenderThreadsService {
     final private int threadsCount = Runtime.getRuntime().availableProcessors();
-
-    private int screenWidth;
-    private int screenHeight;
-
-    private Scene scene;
 
     private ExecutorService executorService;
     private List<Future<List<Color>>> threadsPool;
-    private Callback callback;
 
-    RenderThreadsService(int screenWidth, int screenHeight, Scene scene, Callback callback) {
-        Thread thread = new Thread(this, "RenderThreadsService");
-        thread.start();
+    private RenderDataProvider renderDataProvider;
+    private RenderDataHandler renderDataHandler;
 
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-        this.scene = scene;
-        this.callback = callback;
+    RenderThreadsService(RenderDataProvider renderDataProvider, RenderDataHandler renderDataHandler) {
+        this.renderDataProvider = renderDataProvider;
+        this.renderDataHandler = renderDataHandler;
     }
 
     /**
-     * Return new RenderThread object
-     *
-     * @return RenderThread
+     * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
-    private Callable<List<Color>> getRenderThread() {
-        return new RenderThread(
-            this.screenWidth,
-            this.screenHeight,
-            this.scene
-        );
-    }
-
     public void run () {
         this.executorService = Executors.newCachedThreadPool();
         this.threadsPool = new ArrayList<>();
@@ -50,7 +32,7 @@ final public class RenderThreadsService implements Runnable {
         for (int i = 0; i < this.threadsCount; i++) {
             this.threadsPool.add(
                 this.executorService.submit(
-                    this.getRenderThread()
+                    this.renderDataProvider.renderDataProvider()
                 )
             );
         }
@@ -63,22 +45,22 @@ final public class RenderThreadsService implements Runnable {
     }
 
     /**
-     * Start thread from threadsPool, get thread data (colors collection) and run callback with that data.
+     * Start thread from threadsPool, get thread data (colors collection) and run renderDataHandler with that data.
      */
     private void startThread () {
-        try {
-            Future<List<Color>> thread = this.threadsPool.get(0);
-            
-            this.callback.callback(thread.get());
+        Future<List<Color>> thread = this.threadsPool.get(0);
 
-            this.threadsPool.remove(0);
-            this.threadsPool.add(
-                this.executorService.submit(
-                    this.getRenderThread()
-                )
-            );
-        } catch (InterruptedException | ExecutionException e) {
+        try {
+            this.renderDataHandler.callback(thread);
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        this.threadsPool.remove(0);
+        this.threadsPool.add(
+            this.executorService.submit(
+                this.renderDataProvider.renderDataProvider()
+            )
+        );
     }
 }

@@ -1,14 +1,18 @@
 package PathTracer;
 
 import PathTracer.renderer.Scene;
+import PathTracer.renderer.Tracer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-final public class PathTracer {
+final public class PathTracer implements Runnable {
     /**
      * Application window width
      */
@@ -86,6 +90,20 @@ final public class PathTracer {
         this.renderWindow.setVisible(true);
     }
 
+    /**
+     * Start render by executing RenderThreadsService
+     */
+    @Override
+    public void run() {
+        new RenderThreadsService(
+            this::renderDataProvider,
+            this::renderDataHandler
+        ).run();
+    }
+
+    /**
+     * Fill buffer with empty values
+     */
     private void initBuffer () {
         for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
             this.buffer.add(0.0);
@@ -98,18 +116,33 @@ final public class PathTracer {
     private void renderButtonHandler (ActionEvent event) {
         this.renderButton.setText("Rendering...");
 
-        new RenderThreadsService(
-            this.windowWidth,
-            this.windowHeight,
-            this.scene,
-            this::redrawCanvasCallback
-        );
+        Thread thread = new Thread(this, "test");
+        thread.start();
+    }
+
+
+    /**
+     * @return List<Color> Provide collection of calculated Colors object for each pixel
+     */
+    private Callable<List<Color>> renderDataProvider () {
+        return new Tracer(this.windowWidth, this.windowHeight, this.scene);
+    }
+
+    /**
+     * Get data from given thread
+     *
+     * @param thread
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    private void renderDataHandler (Future<List<Color>> thread) throws ExecutionException, InterruptedException {
+        this.redrawCanvas(thread.get());
     }
 
     /**
      * @param colors calculated pixel colors from Tracer
      */
-    private void redrawCanvasCallback (List<Color> colors) {
+    private void redrawCanvas (List<Color> colors) {
         if (colors == null) {
             throw new NullPointerException("Invalid HasMap key inside `data` attribute");
         }
