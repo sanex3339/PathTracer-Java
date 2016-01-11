@@ -44,25 +44,8 @@ public class Triangle implements SceneObject {
 
         hitPoint = ray.getHitPoin(distance);
 
-        for (int i = 0, verticesLength = this.vertices.size(); i < verticesLength; i++) {
-            Vector vertex1 = this.vertices.get(i);
-            Vector vertex2;
-
-            if (i == verticesLength - 1) {
-                vertex2 = this.vertices.get(0);
-            } else {
-                vertex2 = this.vertices.get(i + 1);
-            }
-
-            if (
-                !Triangle.checkSameClockDir(
-                    Vector.substract(vertex2, vertex1),
-                    Vector.substract(hitPoint, vertex1),
-                    this.getNormal()
-                )
-            ) {
-                return null;
-            }
+        if (!isPointInsideTriangle(hitPoint)) {
+            return null;
         }
 
         return new IntersectData(
@@ -87,7 +70,7 @@ public class Triangle implements SceneObject {
         double rand1 = Math.random();
         double rand2 = Math.random();
 
-        return Vector.add(
+        Vector x = Vector.add(
             this.getVertexByIndex(0),
             Vector.scale(
                 Vector.substract(
@@ -104,6 +87,30 @@ public class Triangle implements SceneObject {
                 rand2
             )
         );
+
+        if (!isPointInsideTriangle(x)) {
+            Vector v3 = Vector.add(
+                this.getVertexByIndex(0),
+                Vector.substract(
+                    this.getVertexByIndex(1),
+                    this.getVertexByIndex(0)
+                ),
+                Vector.substract(
+                    this.getVertexByIndex(2),
+                    this.getVertexByIndex(0)
+                )
+            );
+
+            x = Vector.add(
+                this.getVertexByIndex(0),
+                Vector.substract(
+                    v3,
+                    x
+                )
+            );
+        }
+
+        return x;
     }
 
     public Material getMaterial () {
@@ -122,6 +129,31 @@ public class Triangle implements SceneObject {
         this.material = material;
 
         return this;
+    }
+
+    private boolean isPointInsideTriangle (Vector point) {
+        for (int i = 0, verticesLength = this.vertices.size(); i < verticesLength; i++) {
+            Vector vertex1 = this.vertices.get(i);
+            Vector vertex2;
+
+            if (i == verticesLength - 1) {
+                vertex2 = this.vertices.get(0);
+            } else {
+                vertex2 = this.vertices.get(i + 1);
+            }
+
+            if (
+                !Triangle.checkSameClockDir(
+                    Vector.substract(vertex2, vertex1),
+                    Vector.substract(point, vertex1),
+                    this.getNormal()
+                )
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static boolean checkSameClockDir (Vector vector1, Vector vector2, Vector normal) {

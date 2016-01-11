@@ -100,15 +100,15 @@ public class Polygon implements SceneObject {
 
         this.triangles.add(
             new Triangle(
-                    Arrays.asList(this.getVertexByIndex(0), this.getVertexByIndex(1), this.getVertexByIndex(ind1))
-                )
-                .setMaterial(this.material)
+                Arrays.asList(this.getVertexByIndex(0), this.getVertexByIndex(1), this.getVertexByIndex(ind1))
+            )
+            .setMaterial(this.material)
         );
         this.triangles.add(
             new Triangle(
-                    Arrays.asList(this.getVertexByIndex(ind2), this.getVertexByIndex(2), this.getVertexByIndex(3))
-                )
-                .setMaterial(this.material)
+                Arrays.asList(this.getVertexByIndex(ind2), this.getVertexByIndex(2), this.getVertexByIndex(3))
+            )
+            .setMaterial(this.material)
         );
     }
 }
