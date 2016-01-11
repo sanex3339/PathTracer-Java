@@ -48,10 +48,10 @@ final public class RenderThreadsService {
      * Start thread from threadsPool, get thread data (colors collection) and run renderDataHandler with that data.
      */
     private void startThread () {
-        Future<List<Color>> thread = this.threadsPool.get(0);
-
         try {
-            this.renderDataHandler.callback(thread);
+            this.renderDataHandler.callback(
+                this.threadsPool.get(0)
+            );
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

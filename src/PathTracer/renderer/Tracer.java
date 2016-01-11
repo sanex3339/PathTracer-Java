@@ -10,33 +10,13 @@ import java.util.concurrent.Callable;
 
 public class Tracer implements RayTracer, Callable<List<Color>> {
     private Scene scene;
-    private int screenWidth;
-    private int screenHeight;
+    private int imageWidth;
+    private int imageHeight;
 
-    public Tracer (int screenWidth, int screenHeight, Scene scene) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+    public Tracer (int imageWidth, int imageHeight, Scene scene) {
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
         this.scene = scene;
-    }
-
-    private Vector getPerspectiveVector (double x, double y) {
-        Camera camera = this.scene.getCamera();
-
-        return Vector.normalize(
-            Vector.add(
-                camera.getForwardVector(),
-                Vector.add(
-                    Vector.scale(
-                        camera.getRightVector(),
-                        camera.recenterX(x)
-                    ),
-                    Vector.scale(
-                        camera.getUpVector(),
-                        camera.recenterY(y)
-                    )
-                )
-            )
-        );
     }
 
     @Override
@@ -85,8 +65,8 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
         RGBColor color;
         Ray ray;
 
-        for (int y = 0; y < this.screenHeight; y++) {
-            for (int x = 0; x < this.screenWidth; x++) {
+        for (int y = 0; y < this.imageHeight; y++) {
+            for (int x = 0; x < this.imageWidth; x++) {
                 color = RGBColor.BLACK;
 
                 if (Math.random() > 0.5) {
@@ -103,7 +83,7 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
 
                 ray = new Ray(
                     this.scene.getCamera().getPosition(),
-                    this.getPerspectiveVector(randX, randY)
+                    this.scene.getCamera().getPerspectiveVector(randX, randY)
                 );
 
                 pixelColor = new PixelColor(ray, this.scene);

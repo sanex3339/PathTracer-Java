@@ -40,6 +40,24 @@ public class Camera {
         return this.direction;
     }
 
+    public Vector getPerspectiveVector (double x, double y) {
+        return Vector.normalize(
+            Vector.add(
+                this.getForwardVector(),
+                Vector.add(
+                    Vector.scale(
+                        this.getRightVector(),
+                        this.recenterX(x)
+                    ),
+                    Vector.scale(
+                        this.getUpVector(),
+                        this.recenterY(y)
+                    )
+                )
+            )
+        );
+    }
+
     public Vector getPosition () {
         return this.position;
     }
