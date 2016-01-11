@@ -57,15 +57,35 @@ public class Vector {
         );
     }
 
-    public static Vector add (Vector vector1, Vector vector2) {
+    public static Vector add (Vector ...vectors) {
+        double x = vectors[0].getX();
+        double y = vectors[0].getY();
+        double z = vectors[0].getZ();
+
+        for (int i = 1, len = vectors.length; i < len; i++) {
+            x += vectors[i].getX();
+            y += vectors[i].getY();
+            z += vectors[i].getZ();
+        }
+
         return new Vector(
-            vector1.x + vector2.x, vector1.y + vector2.y, vector1.z + vector2.z
+            x, y, z
         );
     }
 
-    public static Vector substract (Vector vector1, Vector vector2) {
+    public static Vector substract (Vector ...vectors) {
+        double x = vectors[0].getX();
+        double y = vectors[0].getY();
+        double z = vectors[0].getZ();
+
+        for (int i = 1, len = vectors.length; i < len; i++) {
+            x -= vectors[i].getX();
+            y -= vectors[i].getY();
+            z -= vectors[i].getZ();
+        }
+
         return new Vector(
-            vector1.x - vector2.x, vector1.y - vector2.y, vector1.z - vector2.z
+            x, y, z
         );
     }
 

@@ -1,13 +1,13 @@
 package PathTracer.renderer;
 
+import PathTracer.interfaces.RayTracer;
 import PathTracer.interfaces.SceneObject;
-import com.sun.istack.internal.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tracer {
+public class Tracer implements RayTracer {
     private Scene scene;
     private int screenWidth;
     private int screenHeight;
@@ -50,17 +50,19 @@ public class Tracer {
             intersectData = object.getIntersectData(ray);
 
             if (
-                intersectData != null &&
-                intersectData.getDistance() < minDistance
+                intersectData == null ||
+                intersectData.getDistance() >= minDistance
             ) {
-                minDistance = intersectData.getDistance();
-
-                intersection.intersected();
-                intersection.setHitPoint(intersectData.getHitPoint());
-                intersection.setNormal(intersectData.getNormal());
-                intersection.setDistanceFromOrigin(intersectData.getDistance());
-                intersection.setOwner(object);
+                continue;
             }
+
+            minDistance = intersectData.getDistance();
+
+            intersection.intersected();
+            intersection.setHitPoint(intersectData.getHitPoint());
+            intersection.setNormal(intersectData.getNormal());
+            intersection.setDistanceFromOrigin(intersectData.getDistance());
+            intersection.setOwner(object);
         }
 
         return intersection;
