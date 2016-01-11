@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class Polygon implements SceneObject {
     private List<Triangle> triangles = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
-    private Material material;
+    private Material material = Material.BASE_MATERIAL;
 
     public Polygon (List<Vector> vertices) {
         if (vertices.size() < 3 || vertices.size() > 4) {

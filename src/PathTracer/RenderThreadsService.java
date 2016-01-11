@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-final public class RenderThreadsController implements Runnable {
+final public class RenderThreadsService implements Runnable {
     final private int threadsCount = Runtime.getRuntime().availableProcessors();
 
     private int screenWidth;
@@ -20,11 +20,8 @@ final public class RenderThreadsController implements Runnable {
     private List<Future<List<Color>>> threadsPool;
     private Callback callback;
 
-    /**
-     * @param callback
-     */
-    RenderThreadsController(int screenWidth, int screenHeight, Scene scene, Callback callback) {
-        Thread thread = new Thread(this, "RenderThreadsController");
+    RenderThreadsService(int screenWidth, int screenHeight, Scene scene, Callback callback) {
+        Thread thread = new Thread(this, "RenderThreadsService");
         thread.start();
 
         this.screenWidth = screenWidth;
@@ -34,6 +31,8 @@ final public class RenderThreadsController implements Runnable {
     }
 
     /**
+     * Return new RenderThread object
+     *
      * @return RenderThread
      */
     private Callable<List<Color>> getRenderThread() {
@@ -64,7 +63,7 @@ final public class RenderThreadsController implements Runnable {
     }
 
     /**
-     * Start thread from threadsPool, get thread data and run callback with that data.
+     * Start thread from threadsPool, get thread data (colors collection) and run callback with that data.
      */
     private void startThread () {
         try {

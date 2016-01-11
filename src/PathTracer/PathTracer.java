@@ -9,12 +9,29 @@ import java.util.*;
 import java.util.List;
 
 final public class PathTracer {
+    /**
+     * Application window width
+     */
     private int windowWidth = 300;
+
+    /**
+     * Application window height
+     */
     private int windowHeight = 300;
+
+    /**
+     * Current sample
+     */
     private int currentSample = 1;
 
+    /**
+     * 3D scene
+     */
     private Scene scene;
 
+    /**
+     * Frame buffer
+     */
     private List<Double> buffer = new ArrayList<>();
 
     private JButton renderButton;
@@ -27,6 +44,9 @@ final public class PathTracer {
         this.scene = scene;
     }
 
+    /**
+     * PathTracer initializer.
+     */
     public void init () {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int screenWidth = gd.getDisplayMode().getWidth();
@@ -78,7 +98,7 @@ final public class PathTracer {
     private void renderButtonHandler (ActionEvent event) {
         this.renderButton.setText("Rendering...");
 
-        new RenderThreadsController(
+        new RenderThreadsService(
             this.windowWidth,
             this.windowHeight,
             this.scene,
@@ -87,7 +107,7 @@ final public class PathTracer {
     }
 
     /**
-     * @param colors
+     * @param colors calculated pixel colors from Tracer
      */
     private void redrawCanvasCallback (List<Color> colors) {
         if (colors == null) {

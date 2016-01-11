@@ -6,10 +6,25 @@ import java.awt.Graphics;
 import java.util.List;
 
 final public class RenderCanvas extends Canvas implements Runnable {
+    /**
+     * Canvas width
+     */
     public int canvasWidth = 300;
+
+    /**
+     * Canvas height
+     */
     public int canvasHeight = 300;
 
+
+    /**
+     * Collection of calculated colors for each pixel
+     */
     private List<Color> colors;
+
+    /**
+     * Default (init) color
+     */
     private Color color = Color.WHITE;
 
     public RenderCanvas (int canvasWidth, int canvasHeight) {
@@ -35,6 +50,9 @@ final public class RenderCanvas extends Canvas implements Runnable {
     }
 
 
+    /**
+     * Update canvas with calculated colors
+     */
     @Override
     public void run() {
         Graphics g = this.getGraphics();

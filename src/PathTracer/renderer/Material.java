@@ -1,8 +1,14 @@
 package PathTracer.renderer;
 
 public class Material {
+    /**
+     * Standard gray material
+     */
+    public static Material BASE_MATERIAL = new Material(new RGBColor(115, 115, 115));
+
     private RGBColor color;
     private Emission emission = new Emission(RGBColor.BLACK);
+
     private double lambertCoeff = 0.5;
     private double phongCoeff = 0.5;
     private double reflectionCoeff = 0;

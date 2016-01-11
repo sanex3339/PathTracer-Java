@@ -6,7 +6,7 @@ import PathTracer.renderer.*;
 public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
-    private Material material;
+    private Material material = Material.BASE_MATERIAL;
 
     public Sphere(Vector center, double radius) {
         this.position = center;

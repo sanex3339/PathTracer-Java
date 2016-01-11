@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Triangle implements SceneObject {
     private List<Vector> vertices = new ArrayList<>();
-    private Material material;
+    private Material material = Material.BASE_MATERIAL;
 
     public Triangle(List<Vector> vertices) {
         if (vertices.size() != 3) {

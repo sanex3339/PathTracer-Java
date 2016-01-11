@@ -6,7 +6,7 @@ import PathTracer.renderer.*;
 public class Plane implements SceneObject {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
-    private Material material = new Material(RGBColor.GRAY);
+    private Material material = Material.BASE_MATERIAL;
 
     public Plane(Vector normal, Vector point) {
         this.normal = normal;
