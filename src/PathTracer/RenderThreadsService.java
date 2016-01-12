@@ -4,19 +4,17 @@ import PathTracer.interfaces.RenderDataHandler;
 import PathTracer.interfaces.RenderDataProvider;
 
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.*;
 
 final public class RenderThreadsService {
-    final private int threadsCount = Runtime.getRuntime().availableProcessors() - 4;
+    final private int threadsCount = Runtime.getRuntime().availableProcessors() - 2;
 
     private RenderDataProvider renderDataProvider;
     private RenderDataHandler renderDataHandler;
 
     private ExecutorService executorService;
-    private Queue<Future<List<Color>>> threadsPool;
+    private ExecutorCompletionService<List<Color>> completionService;
 
     RenderThreadsService(RenderDataProvider renderDataProvider, RenderDataHandler renderDataHandler) {
         this.renderDataProvider = renderDataProvider;
@@ -27,22 +25,18 @@ final public class RenderThreadsService {
      * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
     public void run () {
-        this.executorService = Executors.newFixedThreadPool(threadsCount);
-        this.threadsPool = new LinkedList<>();
+        this.executorService = Executors.newFixedThreadPool(this.threadsCount);
+        this.completionService = new ExecutorCompletionService<>(this.executorService);
 
         for (int i = 0; i < this.threadsCount; i++) {
-            this.threadsPool.add(
-                this.executorService.submit(
-                    this.renderDataProvider.callback()
-                )
+            completionService.submit(
+                this.renderDataProvider.callback()
             );
         }
 
-        while (!this.threadsPool.isEmpty()) {
+        while (true) {
             this.startThread();
         }
-
-        this.executorService.shutdown();
     }
 
     /**
@@ -51,16 +45,14 @@ final public class RenderThreadsService {
     private void startThread () {
         try {
             this.renderDataHandler.callback(
-                this.threadsPool.poll()
+                this.completionService.take()
             );
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        this.threadsPool.add(
-            this.executorService.submit(
-                this.renderDataProvider.callback()
-            )
+        this.completionService.submit(
+            this.renderDataProvider.callback()
         );
     }
 }

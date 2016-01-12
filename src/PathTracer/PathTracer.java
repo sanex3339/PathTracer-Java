@@ -23,8 +23,6 @@ final public class PathTracer implements Runnable {
      */
     private int windowHeight = 300;
 
-    int i = 1;
-
     /**
      * 3D scene
      */
@@ -33,7 +31,7 @@ final public class PathTracer implements Runnable {
     private JFrame renderWindow;
     private SaveMenu saveMenu;
     private JButton renderButton;
-    private RenderCanvas renderCanvas;
+    private FrameRenderer frameRenderer;
 
     public PathTracer (int screenWidth, int screenHeight, Scene scene)  {
         this.windowWidth = screenWidth;
@@ -51,7 +49,7 @@ final public class PathTracer implements Runnable {
 
         this.renderWindow = new JFrame("PathTracer");
         this.renderButton = new JButton("Click to render!");
-        this.renderCanvas = new RenderCanvas(this.windowWidth, this.windowHeight);
+        this.frameRenderer = new FrameRenderer(this.windowWidth, this.windowHeight);
         this.saveMenu = new SaveMenu("SaveMenu");
 
         this.renderWindow.setLayout(new BorderLayout());
@@ -63,8 +61,8 @@ final public class PathTracer implements Runnable {
         this.renderButton.setBorderPainted(false);
         this.renderButton.setFocusPainted(false);
 
-        this.renderCanvas.addMouseListener((ClickListener) this::rightClickHandler);
-        this.renderCanvas.setPreferredSize(
+        this.frameRenderer.addMouseListener((ClickListener) this::rightClickHandler);
+        this.frameRenderer.setPreferredSize(
             new Dimension(this.windowWidth, this.windowHeight)
         );
 
@@ -72,11 +70,11 @@ final public class PathTracer implements Runnable {
         this.saveMenu
             .getSaveImageItem()
             .addMouseListener((ClickListener)
-                (e) -> this.renderCanvas.saveToFile()
+                (e) -> this.frameRenderer.saveToFile()
             );
 
         this.renderWindow.add(this.renderButton, BorderLayout.NORTH);
-        this.renderWindow.add(this.renderCanvas, BorderLayout.NORTH);
+        this.renderWindow.add(this.frameRenderer, BorderLayout.NORTH);
 
         this.renderWindow.pack();
 
@@ -147,12 +145,10 @@ final public class PathTracer implements Runnable {
      * @param colors calculated pixel colors from Tracer
      */
     private void redrawCanvas (List<Color> colors) {
-        System.out.println(this.i++);
-
         if (this.renderButton.isVisible()) {
             this.renderButton.setVisible(false);
         }
 
-        this.renderCanvas.update(colors);
+        this.frameRenderer.updateFrame(colors);
     }
 }
