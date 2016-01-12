@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 final public class RenderThreadsService {
-    final private int threadsCount = Runtime.getRuntime().availableProcessors();
+    final private int threadsCount = Runtime.getRuntime().availableProcessors() - 2;
 
     private ExecutorService executorService;
     private List<Future<List<Color>>> threadsPool;
@@ -26,7 +26,7 @@ final public class RenderThreadsService {
      * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
     public void run () {
-        this.executorService = Executors.newFixedThreadPool(this.threadsCount);
+        this.executorService = Executors.newCachedThreadPool();
         this.threadsPool = new ArrayList<>();
 
         for (int i = 0; i < this.threadsCount; i++) {
