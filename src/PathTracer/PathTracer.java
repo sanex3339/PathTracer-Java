@@ -1,12 +1,12 @@
 package PathTracer;
 
+import PathTracer.interfaces.ClickListener;
 import PathTracer.renderer.Scene;
 import PathTracer.renderer.Tracer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -24,23 +24,14 @@ final public class PathTracer implements Runnable {
     private int windowHeight = 300;
 
     /**
-     * Current sample
-     */
-    private int currentSample = 1;
-
-    /**
      * 3D scene
      */
     private Scene scene;
 
-    /**
-     * Frame buffer
-     */
-    private List<Double> buffer = new ArrayList<>();
-
+    private JFrame renderWindow;
+    private SaveMenu saveMenu;
     private JButton renderButton;
     private RenderCanvas renderCanvas;
-    private JFrame renderWindow;
 
     public PathTracer (int screenWidth, int screenHeight, Scene scene)  {
         this.windowWidth = screenWidth;
@@ -56,11 +47,10 @@ final public class PathTracer implements Runnable {
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
 
-        this.initBuffer();
-
         this.renderWindow = new JFrame("PathTracer");
         this.renderButton = new JButton("Click to render!");
         this.renderCanvas = new RenderCanvas(this.windowWidth, this.windowHeight);
+        this.saveMenu = new SaveMenu("SaveMenu");
 
         this.renderWindow.setLayout(new BorderLayout());
 
@@ -71,9 +61,17 @@ final public class PathTracer implements Runnable {
         this.renderButton.setBorderPainted(false);
         this.renderButton.setFocusPainted(false);
 
+        this.renderCanvas.addMouseListener((ClickListener) this::rightClickHandler);
         this.renderCanvas.setPreferredSize(
             new Dimension(this.windowWidth, this.windowHeight)
         );
+
+        this.saveMenu.initMenu();
+        this.saveMenu
+            .getSaveImageItem()
+            .addMouseListener((ClickListener)
+                (e) -> this.renderCanvas.saveToFile()
+            );
 
         this.renderWindow.add(this.renderButton, BorderLayout.NORTH);
         this.renderWindow.add(this.renderCanvas, BorderLayout.NORTH);
@@ -102,24 +100,28 @@ final public class PathTracer implements Runnable {
     }
 
     /**
-     * Fill buffer with empty values
-     */
-    private void initBuffer () {
-        for (int i = 0; i < this.windowWidth * this.windowHeight * 3; i++) {
-            this.buffer.add(0.0);
-        }
-    }
-
-    /**
      * @param event event object
      */
     private void renderButtonHandler (ActionEvent event) {
         this.renderButton.setText("Rendering...");
 
-        Thread thread = new Thread(this, "test");
+        Thread thread = new Thread(this, "RenderThread");
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
     }
 
+    /**
+     * RenderCanvas right-click handler
+     *
+     * @param event MouseEvent
+     */
+    private void rightClickHandler(MouseEvent event) {
+        if (!SwingUtilities.isRightMouseButton(event)) {
+            return;
+        }
+
+        this.saveMenu.show(event.getComponent(), event.getX(), event.getY());
+    }
 
     /**
      * @return List<Color> Provide collection of calculated Colors object for each pixel
@@ -131,7 +133,7 @@ final public class PathTracer implements Runnable {
     /**
      * Get data from given thread
      *
-     * @param thread
+     * @param thread ExecutorService thread
      * @throws ExecutionException
      * @throws InterruptedException
      */
@@ -143,46 +145,10 @@ final public class PathTracer implements Runnable {
      * @param colors calculated pixel colors from Tracer
      */
     private void redrawCanvas (List<Color> colors) {
-        if (colors == null) {
-            throw new NullPointerException("Invalid HasMap key inside `data` attribute");
-        }
-
-        List<Color> sampledColors = new ArrayList<>();
-
-        System.out.println("Sample: " + this.currentSample);
-        this.renderWindow.setTitle("Sample: " + this.currentSample);
-
         if (this.renderButton.isVisible()) {
             this.renderButton.setVisible(false);
         }
 
-        for (int i = 0; i < colors.size(); i++) {
-            int redIndex = i * 3;
-            int greenIndex = i * 3 + 1;
-            int blueIndex = i * 3 + 2;
-
-            this.buffer.set(
-                redIndex,
-                this.buffer.get(redIndex) + colors.get(i).getRed()
-            );
-            this.buffer.set(
-                greenIndex,
-                this.buffer.get(greenIndex) + colors.get(i).getGreen()
-            );
-            this.buffer.set(
-                blueIndex,
-                this.buffer.get(blueIndex) + colors.get(i).getBlue()
-            );
-
-            sampledColors.add(new Color(
-                (int) (this.buffer.get(redIndex) / this.currentSample),
-                (int) (this.buffer.get(greenIndex) / this.currentSample),
-                (int) (this.buffer.get(blueIndex) / this.currentSample)
-            ));
-        }
-
-        this.currentSample++;
-
-        this.renderCanvas.draw(sampledColors);
+        this.renderCanvas.update(colors);
     }
 }

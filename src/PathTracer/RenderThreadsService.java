@@ -26,7 +26,7 @@ final public class RenderThreadsService {
      * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
     public void run () {
-        this.executorService = Executors.newCachedThreadPool();
+        this.executorService = Executors.newFixedThreadPool(this.threadsCount);
         this.threadsPool = new ArrayList<>();
 
         for (int i = 0; i < this.threadsCount; i++) {
