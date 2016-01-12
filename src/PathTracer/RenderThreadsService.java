@@ -4,18 +4,19 @@ import PathTracer.interfaces.RenderDataHandler;
 import PathTracer.interfaces.RenderDataProvider;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 final public class RenderThreadsService {
     final private int threadsCount = Runtime.getRuntime().availableProcessors() - 2;
 
-    private ExecutorService executorService;
-    private List<Future<List<Color>>> threadsPool;
-
     private RenderDataProvider renderDataProvider;
     private RenderDataHandler renderDataHandler;
+
+    private ExecutorService executorService;
+    private Queue<Future<List<Color>>> threadsPool;
 
     RenderThreadsService(RenderDataProvider renderDataProvider, RenderDataHandler renderDataHandler) {
         this.renderDataProvider = renderDataProvider;
@@ -26,8 +27,8 @@ final public class RenderThreadsService {
      * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
     public void run () {
-        this.executorService = Executors.newCachedThreadPool();
-        this.threadsPool = new ArrayList<>();
+        this.executorService = Executors.newWorkStealingPool();
+        this.threadsPool = new LinkedList<>();
 
         for (int i = 0; i < this.threadsCount; i++) {
             this.threadsPool.add(
@@ -37,11 +38,11 @@ final public class RenderThreadsService {
             );
         }
 
-        while (this.threadsPool.size() > 0) {
+        while (!this.threadsPool.isEmpty()) {
             this.startThread();
         }
 
-        executorService.shutdown();
+        this.executorService.shutdown();
     }
 
     /**
@@ -50,13 +51,12 @@ final public class RenderThreadsService {
     private void startThread () {
         try {
             this.renderDataHandler.callback(
-                this.threadsPool.get(0)
+                this.threadsPool.poll()
             );
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        this.threadsPool.remove(0);
         this.threadsPool.add(
             this.executorService.submit(
                 this.renderDataProvider.callback()

@@ -23,6 +23,8 @@ final public class PathTracer implements Runnable {
      */
     private int windowHeight = 300;
 
+    int i = 1;
+
     /**
      * 3D scene
      */
@@ -145,6 +147,8 @@ final public class PathTracer implements Runnable {
      * @param colors calculated pixel colors from Tracer
      */
     private void redrawCanvas (List<Color> colors) {
+        System.out.println(this.i++);
+
         if (this.renderButton.isVisible()) {
             this.renderButton.setVisible(false);
         }
