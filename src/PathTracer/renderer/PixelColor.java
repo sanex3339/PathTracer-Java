@@ -212,8 +212,14 @@ public class PixelColor {
                 shadowRay.getNormal()
             );
 
-            return emissionColor
+            /*
                 .scale(lambertCos * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))))
+                .scale(surfaceCost * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))))
+            */
+
+            return emissionColor
+                .scale((lightPower - rayLine.getLength() * (lightPower / fadeRadius)))
+                .scale(Math.sqrt(Math.pow(lambertCos, 2) * Math.pow((lightPower - rayLine.getLength() * (lightPower / fadeRadius)), 2)))
                 .scale(surfaceCost * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))));
         } else {
             return RGBColor.BLACK;
