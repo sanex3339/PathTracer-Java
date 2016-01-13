@@ -13,7 +13,6 @@ final public class RenderThreadsService {
     private RenderDataProvider renderDataProvider;
     private RenderDataHandler renderDataHandler;
 
-    private ExecutorService executorService;
     private ExecutorCompletionService<List<Color>> completionService;
 
     RenderThreadsService(RenderDataProvider renderDataProvider, RenderDataHandler renderDataHandler) {
@@ -25,8 +24,8 @@ final public class RenderThreadsService {
      * Fill threadsPool with RenderDataProvider' objects (`Tracer` class objects).
      */
     public void run () {
-        this.executorService = Executors.newFixedThreadPool(this.threadsCount);
-        this.completionService = new ExecutorCompletionService<>(this.executorService);
+        ExecutorService executorService = Executors.newFixedThreadPool(this.threadsCount);
+        this.completionService = new ExecutorCompletionService<>(executorService);
 
         for (int i = 0; i < this.threadsCount; i++) {
             completionService.submit(

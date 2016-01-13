@@ -87,6 +87,7 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
                 );
 
                 pixelColor = new PixelColor(ray, this.scene);
+                pixelColor.calculatePixelColor();
                 color = color.add(pixelColor.getPixelColor());
 
                 buffer.add(

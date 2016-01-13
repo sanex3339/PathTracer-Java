@@ -10,6 +10,8 @@ public class PixelColor {
 
     private RGBColor surfaceColor = RGBColor.BLACK;
     private RGBColor lightSamplingColor = RGBColor.BLACK;
+    private RGBColor directLightingColor = RGBColor.BLACK;
+    private RGBColor ambientOcclusionColor = RGBColor.BLACK;
     private RGBColor globalIlluminationColor = RGBColor.BLACK;
 
     public PixelColor (Ray ray, Scene scene) {
@@ -17,15 +19,19 @@ public class PixelColor {
         this.scene = scene;
     }
 
-    public RGBColor getPixelColor() {
+    public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
 
         if (intersection.getOwner().getMaterial().isLightSource()) {
-            return intersection.getOwner().getMaterial().getEmission().getEmissionColor();
+            this.pixelColor = intersection.getOwner().getMaterial().getEmission().getEmissionColor();
+
+            return;
         }
 
         if (!intersection.isIntersected() || ray.getIteration() >= 5) {
-            return RGBColor.BLACK;
+            this.pixelColor = RGBColor.BLACK;
+
+            return;
         }
 
         try {
@@ -33,19 +39,39 @@ public class PixelColor {
                 .add(this.getReflectionColor(ray, intersection));
         } catch (NullPointerException e) {
             // TODO: fix that
-            return RGBColor.BLACK;
+            this.pixelColor = RGBColor.BLACK;
         }
+    }
 
+    public RGBColor getPixelColor () {
         return this.pixelColor;
     }
 
+    public RGBColor getSurfaceColor () {
+        return this.surfaceColor;
+    }
+
+    public RGBColor getDirectLightingColor () {
+        return this.directLightingColor;
+    }
+
+    public RGBColor getLightSamplingColor () {
+        return this.lightSamplingColor;
+    }
+
+    public RGBColor getAmbientOcclusionColor () {
+        return this.ambientOcclusionColor;
+    }
+
+    public RGBColor getGlobalIlluminationColor () {
+        return this.globalIlluminationColor;
+    }
+
     private RGBColor getDiffuseColor (Ray ray) {
-        PixelColor pixelColor;
+        PixelColor nextIterationPixelColor;
 
         int iteration = ray.getIteration();
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
-
-        RGBColor nextIterationPixelColor;
 
         this.surfaceColor = intersection.getOwner().getMaterial().getColor();
 
@@ -64,20 +90,37 @@ public class PixelColor {
                 .add(this.getLightSamplingColor(intersection, object));
         }
 
-        pixelColor = new PixelColor(
+        this.directLightingColor = this.surfaceColor.filter(this.lightSamplingColor);
+
+        nextIterationPixelColor = new PixelColor(
             this.getNextIterationRandomRay(ray, intersection),
             this.scene
         );
-        nextIterationPixelColor = pixelColor.getPixelColor();
+        nextIterationPixelColor.calculatePixelColor();
 
-        this.globalIlluminationColor = this.lightSamplingColor
-            .scale(iteration + 1)
+        this.ambientOcclusionColor = this.lightSamplingColor
             .add(
-                nextIterationPixelColor.divide(iteration + 1)
+                nextIterationPixelColor
+                    .getAmbientOcclusionColor()
+                    .substract(this.lightSamplingColor)
             );
 
-        return this.lightSamplingColor.add(
-            this.surfaceColor.filter(
+        this.globalIlluminationColor = this.lightSamplingColor
+            .add(this.surfaceColor)
+            .scale(iteration)
+            .add(
+                nextIterationPixelColor
+                    .getLightSamplingColor()
+                    .add(
+                        nextIterationPixelColor
+                            .getSurfaceColor()
+                            .divide(iteration + 1)
+                    )
+            )
+            .filter(this.ambientOcclusionColor);
+
+        return this.surfaceColor.filter(
+            this.lightSamplingColor.add(
                 this.globalIlluminationColor
             )
         );
@@ -107,7 +150,10 @@ public class PixelColor {
             ),
             this.scene
         );
-        reflectionColor = pixelColor.getPixelColor().scale(reflectionValue);
+        pixelColor.calculatePixelColor();
+        reflectionColor = pixelColor
+            .getPixelColor()
+            .scale(reflectionValue);
 
         return reflectionColor;
     }
@@ -117,7 +163,6 @@ public class PixelColor {
         Vector rayLine;
 
         RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
-        RGBColor hitPointColor = intersection.getOwner().getMaterial().getColor();
 
         double lightPower = object.getMaterial().getEmissionValue();
         double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
@@ -158,13 +203,10 @@ public class PixelColor {
                 shadowRay.getNormal()
             );
 
-            return hitPointColor
-                .filter(
-                    emissionColor
-                        .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
-                        .scale(lambertCos)
-                        .scale(surfaceCost)
-                );
+            return emissionColor
+                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
+                .scale(lambertCos)
+                .scale(surfaceCost);
         } else {
             return RGBColor.BLACK;
         }

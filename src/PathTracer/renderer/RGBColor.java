@@ -106,6 +106,16 @@ public class RGBColor {
         );
     }
 
+    public RGBColor inverse () {
+        return RGBColor.clampRGBColor(
+            new RGBColor(
+                255 - this.getRed(),
+                255 - this.getGreen(),
+                255 - this.getBlue()
+            )
+        );
+    }
+
     public boolean equals (RGBColor color) {
         if (color == null) {
             return false;
