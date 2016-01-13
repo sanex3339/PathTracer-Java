@@ -6,6 +6,7 @@ public class Camera {
     private Vector forwardVector;
     private Vector rightVector;
     private Vector upVector;
+    private double zoom = 3;
     private int screenWidth;
     private int screenHeight;
 
@@ -23,7 +24,7 @@ public class Camera {
                     new Vector(0, -1, 0)
                 )
             ),
-            3
+            this.zoom
         );
         this.upVector = Vector.scale(
             Vector.normalize(
@@ -32,7 +33,7 @@ public class Camera {
                     this.rightVector
                 )
             ),
-            3
+            this.zoom
         );
     }
 

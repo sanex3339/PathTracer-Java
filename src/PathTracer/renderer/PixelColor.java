@@ -99,25 +99,34 @@ public class PixelColor {
         nextIterationPixelColor.calculatePixelColor();
 
         this.ambientOcclusionColor = this.lightSamplingColor
+            .filter(
+                nextIterationPixelColor
+                    .getDirectLightingColor()
+                    .add(
+                        nextIterationPixelColor
+                            .getLightSamplingColor()
+                    )
+            )
             .add(
                 nextIterationPixelColor
                     .getAmbientOcclusionColor()
-                    .substract(this.lightSamplingColor)
             );
 
-        this.globalIlluminationColor = this.lightSamplingColor
-            .add(this.surfaceColor)
-            .scale(iteration)
+        this.globalIlluminationColor = this.surfaceColor
+            .filter(
+                nextIterationPixelColor
+                    .getDirectLightingColor()
+                    /*.filter(
+                        nextIterationPixelColor
+                            .getLightSamplingColor()
+                    )*/
+            )
+            .scale(iteration + 1)
             .add(
                 nextIterationPixelColor
-                    .getLightSamplingColor()
-                    .add(
-                        nextIterationPixelColor
-                            .getSurfaceColor()
-                            .divide(iteration + 1)
-                    )
-            )
-            .filter(this.ambientOcclusionColor);
+                    .getGlobalIlluminationColor()
+                .divide(iteration + 1)
+            );
 
         return this.surfaceColor.filter(
             this.lightSamplingColor.add(
@@ -204,9 +213,8 @@ public class PixelColor {
             );
 
             return emissionColor
-                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
-                .scale(lambertCos)
-                .scale(surfaceCost);
+                .scale(lambertCos * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))))
+                .scale(surfaceCost * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))));
         } else {
             return RGBColor.BLACK;
         }

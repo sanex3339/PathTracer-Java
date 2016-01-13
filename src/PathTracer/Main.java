@@ -12,8 +12,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 100;
-        int screenHeight = 100;
+        int screenWidth = 200;
+        int screenHeight = 200;
 
         List<SceneObject> objects = new ArrayList<>();
 
@@ -23,7 +23,7 @@ final public class Main {
                 .setMaterial(
                     new Material(
                         new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 1, 1600)
+                        new Emission(new RGBColor(255, 250, 249), 1.6, 1600)
                     )
                 )
         );*/
@@ -31,29 +31,29 @@ final public class Main {
         // light square
         objects.add(
             new Polygon(Arrays.asList(
-                new Vector(-300, 299, 300),
-                new Vector(300, 499, 300),
-                new Vector(300, 499, 0),
-                new Vector(-300, 299, 0)
+                new Vector(-250, 699, 510),
+                new Vector(250, 699, 510),
+                new Vector(250, 699, 340),
+                new Vector(-250, 699, 340)
             ))
-                .setMaterial(
-                    new Material(
-                        new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 1, 1900)
-                    )
+            .setMaterial(
+                new Material(
+                    new RGBColor(115, 115, 115),
+                    new Emission(new RGBColor(255, 250, 249), 2.2, 2000)
                 )
+            )
         );
 
         // mirror sphere
         objects.add(
-            new Sphere(new Vector(-300, -100, 400), 200)
+            new Sphere(new Vector(-300, -475, 480), 250)
                 .setMaterial(new Material(RGBColor.BLACK, 1))
         );
 
-        // green sphere
+        // gray sphere
         objects.add(
-            new Sphere(new Vector(300, -300, 400), 200)
-                .setMaterial(new Material(new RGBColor(72, 201, 26)))
+            new Sphere(new Vector(300, -475, 450), 250)
+                .setMaterial(new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
         );
 
         // top polygon
@@ -74,7 +74,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
+                    new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -83,7 +83,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(-1, 0, 0), new Vector (700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.25 * 255, 0.25 * 255, 0.75 * 255))
+                    new Material(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -92,7 +92,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(1, 0, 0), new Vector (-700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.25 * 255, 0.25 * 255))
+                    new Material(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -101,7 +101,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, -1), new Vector (0, 0, 700))
                 .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
+                    new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -110,7 +110,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
                 .setMaterial(
-                    new Material(new RGBColor(0.75 * 255, 0.75 * 255, 0.75 * 255))
+                    new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
                         .setLambertCoeff(1)
                 )
         );
