@@ -31,15 +31,15 @@ final public class Main {
         // light square
         objects.add(
             new Polygon(Arrays.asList(
-                new Vector(-250, 699, 510),
-                new Vector(250, 699, 510),
-                new Vector(250, 699, 340),
-                new Vector(-250, 699, 340)
+                new Vector(-700, 699, 700),
+                new Vector(700, 699, 700),
+                new Vector(700, 699, -700),
+                new Vector(-700, 699, -700)
             ))
             .setMaterial(
                 new Material(
                     new RGBColor(115, 115, 115),
-                    new Emission(new RGBColor(255, 250, 249), 2.2, 2000)
+                    new Emission(new RGBColor(255, 250, 249), 1.8, 2000)
                 )
             )
         );

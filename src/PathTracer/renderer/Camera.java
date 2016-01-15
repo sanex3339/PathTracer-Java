@@ -17,24 +17,26 @@ public class Camera {
         this.screenHeight = screenHeight;
 
         this.forwardVector = Vector.normalize(Vector.substract(this.direction, this.position));
-        this.rightVector = Vector.scale(
-            Vector.normalize(
-                Vector.cross(
-                    this.forwardVector,
-                    new Vector(0, -1, 0)
-                )
-            ),
-            this.zoom
-        );
-        this.upVector = Vector.scale(
-            Vector.normalize(
-                Vector.cross(
-                    this.forwardVector,
-                    this.rightVector
-                )
-            ),
-            this.zoom
-        );
+        this.rightVector = Vector
+            .scale(
+                Vector.normalize(
+                    Vector.cross(
+                        this.forwardVector,
+                        new Vector(0, -1, 0)
+                    )
+                ),
+                this.zoom
+            );
+        this.upVector = Vector
+            .scale(
+                Vector.normalize(
+                    Vector.cross(
+                        this.forwardVector,
+                        this.rightVector
+                    )
+                ),
+                this.zoom
+            );
     }
 
     public Vector getDirection () {
@@ -45,15 +47,13 @@ public class Camera {
         return Vector.normalize(
             Vector.add(
                 this.getForwardVector(),
-                Vector.add(
-                    Vector.scale(
-                        this.getRightVector(),
-                        this.recenterX(x)
-                    ),
-                    Vector.scale(
-                        this.getUpVector(),
-                        this.recenterY(y)
-                    )
+                Vector.scale(
+                    this.getRightVector(),
+                    this.recenterX(x)
+                ),
+                Vector.scale(
+                    this.getUpVector(),
+                    this.recenterY(y)
                 )
             )
         );

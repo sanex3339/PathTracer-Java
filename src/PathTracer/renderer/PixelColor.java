@@ -72,6 +72,7 @@ public class PixelColor {
 
         int iteration = ray.getIteration();
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
+        Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
 
         this.surfaceColor = intersection.getOwner().getMaterial().getColor();
 
@@ -87,13 +88,13 @@ public class PixelColor {
             }
 
             this.lightSamplingColor = this.lightSamplingColor
-                .add(this.getLightSamplingColor(intersection, object));
+                .add(this.getLightSamplingColor(intersection, object, newDirection));
         }
 
         this.directLightingColor = this.surfaceColor.filter(this.lightSamplingColor);
 
         nextIterationPixelColor = new PixelColor(
-            this.getNextIterationRandomRay(ray, intersection),
+            this.getNextIterationRandomRay(ray, intersection, newDirection),
             this.scene
         );
         nextIterationPixelColor.calculatePixelColor();
@@ -167,7 +168,7 @@ public class PixelColor {
         return reflectionColor;
     }
 
-    private RGBColor getLightSamplingColor (IntersectPoint intersection, SceneObject object) {
+    private RGBColor getLightSamplingColor (IntersectPoint intersection, SceneObject object, Vector newDirection) {
         Vector lightSourceRandomPoint = object.getRandomPoint();
         Vector rayLine;
 
@@ -176,6 +177,7 @@ public class PixelColor {
         double lightPower = object.getMaterial().getEmissionValue();
         double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
         double lambertCos;
+        double specular;
         double surfaceCost;
 
         rayLine = Vector.substract(
@@ -207,30 +209,30 @@ public class PixelColor {
                 intersection.getNormal()
             );
 
+            specular = -Vector.dot(lightDirection, Vector.normalize(newDirection));
+
             surfaceCost = Vector.dot(
                 lightDirection,
                 shadowRay.getNormal()
             );
 
-            /*
-                .scale(lambertCos * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))))
-                .scale(surfaceCost * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))))
-            */
-
             return emissionColor
-                .scale((lightPower - rayLine.getLength() * (lightPower / fadeRadius)))
-                .scale(Math.sqrt(Math.pow(lambertCos, 2) * Math.pow((lightPower - rayLine.getLength() * (lightPower / fadeRadius)), 2)))
-                .scale(surfaceCost * Math.sqrt((lightPower - rayLine.getLength() * (lightPower / fadeRadius))));
+                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
+                .scale(lambertCos)
+                .scale(surfaceCost);
+
+            /*return RGBColor.BLACK
+                .add(lambertCos > 0 ? emissionColor.scale(lambertCos) : RGBColor.BLACK)
+                .add(specular > 0 ? emissionColor.scale(Math.pow(specular, 250)) : RGBColor.BLACK)
+                //.scale(surfaceCost)
+                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius));*/
         } else {
             return RGBColor.BLACK;
         }
     }
 
-    private Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection) {
-        Vector newDirection;
+    private Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {
         Vector newPoint;
-
-        newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
 
         if (Vector.dot(newDirection, ray.getDirection()) > 0) {
             newPoint = Vector.add(
