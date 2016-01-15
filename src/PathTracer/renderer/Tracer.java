@@ -10,10 +10,22 @@ import java.util.concurrent.Callable;
 
 public class Tracer implements RayTracer, Callable<List<Color>> {
     private Scene scene;
+    private int startX = 0;
+    private int startY = 0;
     private int imageWidth;
     private int imageHeight;
 
     public Tracer (int imageWidth, int imageHeight, Scene scene) {
+        this.startX = 0;
+        this.startY = 0;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+        this.scene = scene;
+    }
+
+    public Tracer (int startX, int startY, int imageWidth, int imageHeight, Scene scene) {
+        this.startX = startX;
+        this.startY = startY;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.scene = scene;
@@ -65,8 +77,8 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
         RGBColor color;
         Ray ray;
 
-        for (int y = 0; y < this.imageHeight; y++) {
-            for (int x = 0; x < this.imageWidth; x++) {
+        for (int y = this.startY; y < this.startY + this.imageHeight; y++) {
+            for (int x = this.startX; x < this.startX + this.imageWidth; x++) {
                 color = RGBColor.BLACK;
 
                 if (Math.random() > 0.5) {

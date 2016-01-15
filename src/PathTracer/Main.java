@@ -32,8 +32,8 @@ final public class Main {
         objects.add(
             new Polygon(Arrays.asList(
                 new Vector(-700, 699, 700),
-                new Vector(700, 699, 700),
-                new Vector(700, 699, -700),
+                new Vector(200, 299, 200),
+                new Vector(200, 299, -200),
                 new Vector(-700, 699, -700)
             ))
             .setMaterial(

@@ -129,11 +129,13 @@ public class PixelColor {
                 .divide(iteration + 1)
             );
 
-        return this.surfaceColor.filter(
+        return lightSamplingColor;
+
+        /*return this.surfaceColor.filter(
             this.lightSamplingColor.add(
                 this.globalIlluminationColor
             )
-        );
+        );*/
     }
 
     private RGBColor getReflectionColor (Ray ray, IntersectPoint intersect) {
@@ -204,6 +206,11 @@ public class PixelColor {
                 )
             );
 
+            /*lambertCos = -Vector.dot(
+                lightDirection,
+                intersection.getNormal()
+            );*/
+
             lambertCos = -Vector.dot(
                 lightDirection,
                 intersection.getNormal()
@@ -224,7 +231,7 @@ public class PixelColor {
             /*return RGBColor.BLACK
                 .add(lambertCos > 0 ? emissionColor.scale(lambertCos) : RGBColor.BLACK)
                 .add(specular > 0 ? emissionColor.scale(Math.pow(specular, 250)) : RGBColor.BLACK)
-                //.scale(surfaceCost)
+                .scale(surfaceCost)
                 .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius));*/
         } else {
             return RGBColor.BLACK;

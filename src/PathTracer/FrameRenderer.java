@@ -17,22 +17,39 @@ final public class FrameRenderer extends Canvas {
 
     private List<Color> averageColors;
     private int currentSample = 1;
+
+    /**
+     * Coordinate of first X pixel
+     */
+    private int startX;
+
+    /**
+     * Coordinate of first Y pixel
+     */
+    private int startY;
+
+    /**
+     * Render image width
+     */
     private int imageWidth;
+
+    /**
+     * Render image height
+     */
     private int imageHeight;
 
-    public FrameRenderer (int imageWidth, int imageHeight) {
+    public FrameRenderer (int startX, int startY, int imageWidth, int imageHeight) {
+        this.startX = startX;
+        this.startY = startY;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
 
-        this.setSize(new Dimension(imageWidth, imageHeight));
         this.initBuffer();
     }
 
     @Override
     public void paint (Graphics g) {
         super.paint(g);
-
-        this.createBufferStrategy(2);
     }
 
     /**
@@ -47,6 +64,9 @@ final public class FrameRenderer extends Canvas {
         this.render();
     }
 
+    /**
+     * Save current render state to jpg file
+     */
     public void saveToFile () {
         BufferedImage image = new BufferedImage(this.imageWidth, this.imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
@@ -112,12 +132,14 @@ final public class FrameRenderer extends Canvas {
      * render image
      */
     private void render () {
+        this.createBufferStrategy(2);
+
         BufferStrategy bufferStrategy = this.getBufferStrategy();
         Graphics graphics = bufferStrategy.getDrawGraphics();
         int i = 0;
 
-        for (int y = 0; y < this.imageHeight; y++) {
-            for (int x = 0; x < this.imageWidth; x++) {
+        for (int y = this.startY; y < this.startY + this.imageHeight; y++) {
+            for (int x = this.startX; x < this.startX + this.imageWidth; x++) {
                 graphics.setColor(this.averageColors.get(i));
                 graphics.fillRect(x, y, 1, 1);
 
