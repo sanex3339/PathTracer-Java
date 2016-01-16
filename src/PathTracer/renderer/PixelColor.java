@@ -21,14 +21,7 @@ public class PixelColor {
 
     public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
-
-        if (intersection.getOwner().getMaterial().isLightSource()) {
-            this.pixelColor = intersection.getOwner().getMaterial().getEmission().getEmissionColor();
-
-            return;
-        }
-
-        if (!intersection.isIntersected() || ray.getIteration() >= 5) {
+        if (!intersection.isIntersected() || ray.getIteration() > 5) {
             this.pixelColor = RGBColor.BLACK;
 
             return;
@@ -74,6 +67,16 @@ public class PixelColor {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
         Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
 
+        // for light source we must assign color passes variables
+        if (intersection.getOwner().getMaterial().isLightSource()) {
+            this.surfaceColor = intersection.getOwner().getMaterial().getEmission().getEmissionColor();
+            this.lightSamplingColor = RGBColor.WHITE;
+            this.ambientOcclusionColor = this.lightSamplingColor;
+            this.globalIlluminationColor = this.surfaceColor;
+
+            return this.surfaceColor;
+        }
+
         this.surfaceColor = intersection.getOwner().getMaterial().getColor();
 
         // get light sampling color
@@ -117,16 +120,12 @@ public class PixelColor {
             .filter(
                 nextIterationPixelColor
                     .getDirectLightingColor()
-                    /*.filter(
-                        nextIterationPixelColor
-                            .getLightSamplingColor()
-                    )*/
             )
             .scale(iteration + 1)
             .add(
                 nextIterationPixelColor
                     .getGlobalIlluminationColor()
-                .divide(iteration + 1)
+                    .divide(iteration + 1)
             );
 
         return this.surfaceColor.filter(
@@ -175,7 +174,6 @@ public class PixelColor {
         RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
 
         double lightPower = object.getMaterial().getEmissionValue();
-        double fadeRadius = object.getMaterial().getEmission().getFadeRadius();
         double lambertCos;
         double specular;
         double surfaceCost;
@@ -216,16 +214,11 @@ public class PixelColor {
                 shadowRay.getNormal()
             );
 
-            /*return emissionColor
-                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius))
+            return emissionColor
                 .scale(lambertCos)
-                .scale(surfaceCost);*/
-
-            return RGBColor.BLACK
-                .add(lambertCos > 0 ? emissionColor.scale(lambertCos) : RGBColor.BLACK)
-                .add(specular > 0 ? emissionColor.scale(Math.pow(specular, 250)) : RGBColor.BLACK)
+                .scale(specular)
                 .scale(surfaceCost)
-                .scale(lightPower - rayLine.getLength() * (lightPower / fadeRadius));
+                .scale(lightPower / Math.pow(rayLine.getLength(), 2));
         } else {
             return RGBColor.BLACK;
         }

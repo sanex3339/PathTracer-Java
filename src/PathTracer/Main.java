@@ -12,8 +12,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 200;
-        int screenHeight = 200;
+        int screenWidth = 512;
+        int screenHeight = 512;
 
         List<SceneObject> objects = new ArrayList<>();
 
@@ -31,15 +31,15 @@ final public class Main {
         // light square
         objects.add(
             new Polygon(Arrays.asList(
-                new Vector(-700, 699, 700),
-                new Vector(200, 299, 200),
-                new Vector(200, 299, -200),
-                new Vector(-700, 699, -700)
+                new Vector(-250, 699, 600),
+                new Vector(250, 699, 600),
+                new Vector(250, 699, 300),
+                new Vector(-250, 699, 300)
             ))
             .setMaterial(
                 new Material(
-                    new RGBColor(115, 115, 115),
-                    new Emission(new RGBColor(255, 250, 249), 1.8, 2000)
+                    new RGBColor(255, 250, 249),
+                    new Emission(new RGBColor(255, 250, 249), 5400)
                 )
             )
         );

@@ -2,17 +2,10 @@ package PathTracer.renderer;
 
 public class Emission {
     private RGBColor emissionColor;
-    private double emissionValue = 1;
-    private double fadeRadius = 2500;
+    private double emissionValue = 1360;
 
-    public Emission (RGBColor emissionColor, double emissionValue, double fadeRadius) {
+    public Emission (RGBColor emissionColor, double emissionValue) {
         this.emissionColor = emissionColor;
-        this.emissionValue = emissionValue;
-        this.fadeRadius = fadeRadius;
-    }
-
-    public Emission (RGBColor emission, double emissionValue) {
-        this.emissionColor = emission;
         this.emissionValue = emissionValue;
     }
 
@@ -25,11 +18,7 @@ public class Emission {
     }
 
     public double getEmissionValue () {
-        return this.emissionValue;
-    }
-
-    public double getFadeRadius () {
-        return this.fadeRadius;
+        return this.emissionValue * 255;
     }
 
     public boolean isLightSource () {

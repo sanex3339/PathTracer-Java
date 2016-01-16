@@ -7,6 +7,8 @@ public class RGBColor {
 
     public static RGBColor BLACK = new RGBColor(0, 0, 0);
     public static RGBColor black = RGBColor.BLACK;
+    public static RGBColor WHITE = new RGBColor(255, 255, 255);
+    public static RGBColor white = RGBColor.WHITE;
     public static RGBColor GRAY = new RGBColor(115, 115, 115);
     public static RGBColor gray = RGBColor.GRAY;
     public static RGBColor RED = new RGBColor(255, 0, 0);
