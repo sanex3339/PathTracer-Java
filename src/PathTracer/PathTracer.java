@@ -123,7 +123,13 @@ final public class PathTracer implements Runnable {
         this.saveMenu
             .getSaveImageItem()
             .addMouseListener((ClickListener)
-                (e) -> this.frameRenderer.saveToFile()
+                (event) -> {
+                    if (SwingUtilities.isRightMouseButton(event)) {
+                        return;
+                    }
+
+                    this.frameRenderer.saveToFile();
+                }
             );
     }
 

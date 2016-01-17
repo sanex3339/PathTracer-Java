@@ -50,6 +50,8 @@ final public class FrameRenderer extends Canvas {
     @Override
     public void paint (Graphics g) {
         super.paint(g);
+
+        this.createBufferStrategy(2);
     }
 
     /**
@@ -61,7 +63,12 @@ final public class FrameRenderer extends Canvas {
         this.averageColors = this.getAverageColors(sampleColors);
         this.currentSample++;
 
-        this.render();
+        BufferStrategy bufferStrategy = this.getBufferStrategy();
+        Graphics graphics = bufferStrategy.getDrawGraphics();
+
+        this.render(graphics);
+
+        bufferStrategy.show();
     }
 
     /**
@@ -70,13 +77,15 @@ final public class FrameRenderer extends Canvas {
     public void saveToFile () {
         BufferedImage image = new BufferedImage(this.imageWidth, this.imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
-        this.render();
+
+        this.render(graphics);
+
         graphics.dispose();
 
         try {
             System.out.println("Exporting image");
 
-            ImageIO.write(image, "jpg", new File("render.jpg"));
+            ImageIO.write(image, "png", new File("render.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,11 +140,7 @@ final public class FrameRenderer extends Canvas {
     /**
      * render image
      */
-    private void render () {
-        this.createBufferStrategy(2);
-
-        BufferStrategy bufferStrategy = this.getBufferStrategy();
-        Graphics graphics = bufferStrategy.getDrawGraphics();
+    private void render (Graphics graphics) {
         int i = 0;
 
         for (int y = this.startY; y < this.startY + this.imageHeight; y++) {
@@ -148,6 +153,5 @@ final public class FrameRenderer extends Canvas {
         }
 
         graphics.dispose();
-        bufferStrategy.show();
     }
 }
