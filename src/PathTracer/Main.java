@@ -12,8 +12,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 200;
-        int screenHeight = 200;
+        int screenWidth = 512;
+        int screenHeight = 512;
 
         List<SceneObject> objects = new ArrayList<>();
 
@@ -23,7 +23,7 @@ final public class Main {
                 .setMaterial(
                     new Material(
                         new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 1.6, 1600)
+                        new Emission(new RGBColor(255, 250, 249), 4000)
                     )
                 )
         );*/
@@ -45,15 +45,9 @@ final public class Main {
         );
 
         // mirror sphere
-        /*objects.add(
-            new Sphere(new Vector(-300, -475, 480), 250)
-                .setMaterial(new Material(RGBColor.BLACK, 1))
-        );*/
-
-        // gray sphere
         objects.add(
             new Sphere(new Vector(-350, -475, 480), 250)
-                .setMaterial(new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
+                .setMaterial(new Material(RGBColor.BLACK, 1))
         );
 
         // gray sphere
