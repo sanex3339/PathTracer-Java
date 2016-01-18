@@ -104,19 +104,8 @@ public class PixelColor {
             .getOwner()
             .getMaterial()
             .getColor()
-            .scale(
-                Math.max(
-                    cosTheta,
-                    0
-                )
-            )
-            .scale(1.0 / Math.PI)
-            .scale(
-                1.0 / Math.max(
-                    cosTheta * (1 / Math.PI),
-                    1.0e-20
-                )
-            );
+            .scale(cosTheta)
+            .divide(Math.PI);
 
         nextIterationPixelColor = new PixelColor(
             this.getNextIterationRandomRay(ray, intersection, newDirection),
@@ -172,6 +161,7 @@ public class PixelColor {
                     .getPixelColor()
                     .filter(
                         this.BRDF
+                            .divide(pdf)
                     )
             );
     }
@@ -208,8 +198,8 @@ public class PixelColor {
         return reflectionColor;
     }
 
-    private RGBColor getExplicitColor(IntersectPoint intersection, SceneObject object, Vector newDirection) {
-        Vector lightSourceRandomPoint = object.getRandomPoint();
+    private RGBColor getExplicitColor(IntersectPoint intersection, SceneObject light, Vector newDirection) {
+        Vector lightSourceRandomPoint = light.getRandomPoint();
         Vector rayLine = Vector.substract(
             lightSourceRandomPoint,
             intersection.getHitPoint()
@@ -227,9 +217,9 @@ public class PixelColor {
             shadowRay.isIntersected() &&
             shadowRay.getOwner().getMaterial().isLightSource()
         ) {
-            RGBColor emissionColor = object.getMaterial().getEmission().getEmissionColor();
+            RGBColor emissionColor = light.getMaterial().getEmission().getEmissionColor();
 
-            double lightPower = object.getMaterial().getEmissionValue();
+            double lightPower = light.getMaterial().getEmissionValue();
             double rayLength = rayLine.getLength();
 
             Vector sdir = Vector.normalize(
@@ -239,33 +229,24 @@ public class PixelColor {
                 )
             );
 
-            double cosTheta1 = Math.max(
-                Vector.dot(
-                    sdir,
-                    Vector.scale(
-                        shadowRay.getNormal(),
-                        -1
-                    )
-                ),
-                0.0
+            double cosTheta1 = - Vector.dot(
+                sdir,
+                shadowRay.getNormal()
             );
 
-            double cosTheta2 = Math.max(
-                Vector.dot(
-                    sdir,
-                    intersection.getNormal()
-                ),
-                0.0
+            double cosTheta2 = Vector.dot(
+                sdir,
+                intersection.getNormal()
             );
 
-            double lgtPdf = (1.0 / object.getArea()) * rayLength * rayLength / Math.max(cosTheta1, 1.0e-20);
+            double lgtPdf = (1.0 / light.getArea()) * rayLength * rayLength / cosTheta1;
 
             RGBColor lgtVal = intersection
                 .getOwner()
                 .getMaterial()
                 .getColor()
                 .scale(cosTheta2)
-                .scale(1.0 / Math.PI)
+                .divide(Math.PI)
                 .filter(emissionColor)
                 .scale(lightPower);
 

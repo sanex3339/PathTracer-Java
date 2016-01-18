@@ -31,15 +31,15 @@ final public class Main {
         // light square
         objects.add(
             new Polygon(Arrays.asList(
-                new Vector(-700, 699, 700),
-                new Vector(700, 699, 700),
-                new Vector(700, 699, -700),
-                new Vector(-700, 699, -700)
+                new Vector(-250, 699, 250),
+                new Vector(250, 699, 250),
+                new Vector(250, 699, -250),
+                new Vector(-250, 699, -250)
             ))
             .setMaterial(
                 new Material(
                     new RGBColor(255, 250, 249),
-                    new Emission(new RGBColor(255, 250, 249), 1)
+                    new Emission(new RGBColor(255, 250, 249), 10)
                 )
             )
         );
@@ -65,7 +65,7 @@ final public class Main {
                 new Vector(-700, 700, -700)
             ))
                 .setMaterial(
-                    new Material(new RGBColor(0.9 * 255, 0.9 * 255, 0.9 * 255))
+                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -74,7 +74,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.9 * 255, 0.9 * 255, 0.9 * 255))
+                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -101,7 +101,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, -1), new Vector (0, 0, 700))
                 .setMaterial(
-                    new Material(new RGBColor(0.9 * 255, 0.9 * 255, 0.9 * 255))
+                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                         .setLambertCoeff(1)
                 )
         );
@@ -110,7 +110,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
                 .setMaterial(
-                    new Material(new RGBColor(0.9 * 255, 0.9 * 255, 0.9 * 255))
+                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                         .setLambertCoeff(1)
                 )
         );
