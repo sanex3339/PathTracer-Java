@@ -10,7 +10,7 @@ public class MirrorMaterial extends AbstractMaterial {
 
     @Override
     public RGBColor getBRDF (Vector direction, Vector normal) {
-        return RGBColor.BLACK;
+        return this.getColor();
     }
 
     @Override
