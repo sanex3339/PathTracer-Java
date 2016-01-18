@@ -22,6 +22,16 @@ public class Polygon implements SceneObject {
         this.triangulatePolygon();
     }
 
+    public double getArea () {
+        double area = 0;
+
+        for (Triangle triangle : this.triangles) {
+            area += triangle.getArea();
+        }
+
+        return area;
+    }
+
     public IntersectData getIntersectData(Ray ray) {
         IntersectData intersectData;
 

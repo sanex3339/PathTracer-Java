@@ -13,6 +13,10 @@ public class Sphere implements SceneObject {
         this.radius = radius;
     }
 
+    public double getArea () {
+        return  4 * Math.PI * Math.pow(this.radius, 2);
+    }
+
     public IntersectData getIntersectData (Ray ray) {
         Vector k = Vector.substract(ray.getOrigin(), this.position);
         double b = Vector.dot(k, ray.getDirection());

@@ -18,6 +18,13 @@ public class Triangle implements SceneObject {
         this.vertices = vertices;
     }
 
+    public double getArea () {
+        Vector edge1 = Vector.substract(this.vertices.get(2), this.vertices.get(0));
+        Vector edge2 = Vector.substract(this.vertices.get(1), this.vertices.get(0));
+
+        return Vector.dot(edge1, edge2) / 2;
+    }
+
     public IntersectData getIntersectData (Ray ray) {
         double distance;
         double distanceFromAxisCenter;

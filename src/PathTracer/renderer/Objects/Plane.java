@@ -17,6 +17,10 @@ public class Plane implements SceneObject {
         this.normal = normal;
     }
 
+    public double getArea () {
+        return Double.POSITIVE_INFINITY;
+    }
+
     public IntersectData getIntersectData (Ray ray) {
         double distance;
         Vector hitPoint;
