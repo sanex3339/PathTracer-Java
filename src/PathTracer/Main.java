@@ -46,13 +46,13 @@ final public class Main {
 
         // mirror sphere
         objects.add(
-            new Sphere(new Vector(-350, -475, 480), 250)
+            new Sphere(new Vector(-330, -400, 300), 300)
                 .setMaterial(new Material(RGBColor.BLACK, 1))
         );
 
         // gray sphere
         objects.add(
-            new Sphere(new Vector(400, -475, 450), 250)
+            new Sphere(new Vector(330, -400, -50), 300)
                 .setMaterial(new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
         );
 
@@ -106,13 +106,18 @@ final public class Main {
                 )
         );
 
-        // back plane
+        // back polygon
         objects.add(
-            new Plane(new Vector(0, 0, 1), new Vector (0, 0, -700))
-                .setMaterial(
-                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
-                        .setLambertCoeff(1)
-                )
+            new Polygon(Arrays.asList(
+                new Vector(-700, 700, -700),
+                new Vector(700, 700, -700),
+                new Vector(700, -700, -700),
+                new Vector(-700, -700, -700)
+            ))
+            .setMaterial(
+                new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                    .setLambertCoeff(1)
+            )
         );
 
         PathTracer pathTracer = new PathTracer(
@@ -121,7 +126,7 @@ final public class Main {
             new Scene(
                 objects,
                 new Camera(
-                    new Vector(0, 0, -699),
+                    new Vector(0, 0, -2400),
                     new Vector(0, 0, 1),
                     screenWidth,
                     screenHeight

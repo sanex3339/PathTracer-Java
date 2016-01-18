@@ -6,7 +6,7 @@ public class Camera {
     private Vector forwardVector;
     private Vector rightVector;
     private Vector upVector;
-    private double zoom = 3;
+    private double zoom = 1.5;
     private int screenWidth;
     private int screenHeight;
 
