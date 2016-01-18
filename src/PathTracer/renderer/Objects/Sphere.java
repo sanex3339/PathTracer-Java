@@ -2,11 +2,13 @@ package PathTracer.renderer.Objects;
 
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import PathTracer.renderer.Materials.AbstractMaterial;
+import PathTracer.renderer.Materials.DiffuseMaterial;
 
 public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
-    private Material material = Material.BASE_MATERIAL;
+    private AbstractMaterial material = DiffuseMaterial.BASE_MATERIAL;
 
     public Sphere(Vector center, double radius) {
         this.position = center;
@@ -67,7 +69,7 @@ public class Sphere implements SceneObject {
         );
     }
 
-    public Material getMaterial () {
+    public AbstractMaterial getMaterial () {
         return this.material;
     }
 
@@ -104,7 +106,7 @@ public class Sphere implements SceneObject {
         );
     }
 
-    public Sphere setMaterial (Material material) {
+    public Sphere setMaterial (AbstractMaterial material) {
         this.material = material;
 
         return this;

@@ -2,13 +2,15 @@ package PathTracer.renderer.Objects;
 
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import PathTracer.renderer.Materials.AbstractMaterial;
+import PathTracer.renderer.Materials.DiffuseMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Triangle implements SceneObject {
     private List<Vector> vertices = new ArrayList<>();
-    private Material material = Material.BASE_MATERIAL;
+    private AbstractMaterial material = DiffuseMaterial.BASE_MATERIAL;
 
     public Triangle(List<Vector> vertices) {
         if (vertices.size() != 3) {
@@ -125,7 +127,7 @@ public class Triangle implements SceneObject {
         return x;
     }
 
-    public Material getMaterial () {
+    public AbstractMaterial getMaterial () {
         return this.material;
     }
 
@@ -137,7 +139,7 @@ public class Triangle implements SceneObject {
         return this.vertices.get(index);
     }
 
-    public Triangle setMaterial (Material material) {
+    public Triangle setMaterial (AbstractMaterial material) {
         this.material = material;
 
         return this;

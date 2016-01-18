@@ -2,6 +2,9 @@ package PathTracer;
 
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import PathTracer.renderer.Materials.DiffuseMaterial;
+import PathTracer.renderer.Materials.EmissiveMaterial;
+import PathTracer.renderer.Materials.MirrorMaterial;
 import PathTracer.renderer.Objects.Plane;
 import PathTracer.renderer.Objects.Polygon;
 import PathTracer.renderer.Objects.Sphere;
@@ -21,7 +24,7 @@ final public class Main {
         /*objects.add(
             new Sphere(new Vector(0, 580, 0), 150)
                 .setMaterial(
-                    new Material(
+                    new AbstractMaterial(
                         new RGBColor(115, 115, 115),
                         new Emission(new RGBColor(255, 250, 249), 4000)
                     )
@@ -37,9 +40,9 @@ final public class Main {
                 new Vector(-250, 699, -250)
             ))
             .setMaterial(
-                new Material(
+                new EmissiveMaterial(
                     new RGBColor(255, 250, 249),
-                    new Emission(new RGBColor(255, 250, 249), 10)
+                    10
                 )
             )
         );
@@ -47,13 +50,13 @@ final public class Main {
         // mirror sphere
         objects.add(
             new Sphere(new Vector(-330, -400, 300), 300)
-                .setMaterial(new Material(RGBColor.BLACK, 1))
+                .setMaterial(new MirrorMaterial(RGBColor.BLACK, 1))
         );
 
         // gray sphere
         objects.add(
             new Sphere(new Vector(330, -400, -50), 300)
-                .setMaterial(new Material(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
+                .setMaterial(new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
         );
 
         // top polygon
@@ -65,8 +68,7 @@ final public class Main {
                 new Vector(-700, 700, -700)
             ))
                 .setMaterial(
-                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
-                        .setLambertCoeff(1)
+                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -74,8 +76,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
-                        .setLambertCoeff(1)
+                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -83,8 +84,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(-1, 0, 0), new Vector (700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
-                        .setLambertCoeff(1)
+                    new DiffuseMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
                 )
         );
 
@@ -92,8 +92,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(1, 0, 0), new Vector (-700, 0, 0))
                 .setMaterial(
-                    new Material(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
-                        .setLambertCoeff(1)
+                    new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
                 )
         );
 
@@ -101,8 +100,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, -1), new Vector (0, 0, 700))
                 .setMaterial(
-                    new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
-                        .setLambertCoeff(1)
+                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -115,8 +113,7 @@ final public class Main {
                 new Vector(-700, -700, -700)
             ))
             .setMaterial(
-                new Material(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
-                    .setLambertCoeff(1)
+                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
         );
 

@@ -1,7 +1,7 @@
 package PathTracer.renderer;
 
-import PathTracer.Main;
 import PathTracer.interfaces.SceneObject;
+import PathTracer.renderer.Materials.AbstractMaterial;
 
 public class PixelColor {
     private Ray ray;
@@ -10,10 +10,7 @@ public class PixelColor {
     private RGBColor pixelColor = RGBColor.BLACK;
 
     private RGBColor BRDF = RGBColor.BLACK;
-    private RGBColor explicitColor = RGBColor.BLACK;
-    private RGBColor directLightingColor = RGBColor.BLACK;
-    private RGBColor ambientOcclusionColor = RGBColor.BLACK;
-    private RGBColor globalIlluminationColor = RGBColor.BLACK;
+    private RGBColor explicitLightSamplingColor = RGBColor.BLACK;
 
     public PixelColor (Ray ray, Scene scene) {
         this.ray = ray;
@@ -29,8 +26,11 @@ public class PixelColor {
         }
 
         try {
-            this.pixelColor = this.getDiffuseColor(ray)
-                .add(this.getReflectionColor(ray, intersection));
+            this.pixelColor = this.getDiffuseColor(ray);
+
+            if (intersection.getOwner().getMaterial().getReflectionCoefficient() > 0) {
+                this.pixelColor = this.pixelColor.add(this.getReflectionColor(ray, intersection));
+            }
         } catch (NullPointerException e) {
             // TODO: fix that
             this.pixelColor = RGBColor.BLACK;
@@ -45,123 +45,52 @@ public class PixelColor {
         return this.BRDF;
     }
 
-    public RGBColor getDirectLightingColor () {
-        return this.directLightingColor;
-    }
-
-    public RGBColor getExplicitColor() {
-        return this.explicitColor;
-    }
-
-    public RGBColor getAmbientOcclusionColor () {
-        return this.ambientOcclusionColor;
-    }
-
-    public RGBColor getGlobalIlluminationColor () {
-        return this.globalIlluminationColor;
+    public RGBColor getExplicitLightSamplingColor() {
+        return this.explicitLightSamplingColor;
     }
 
     private RGBColor getDiffuseColor (Ray ray) {
         PixelColor nextIterationPixelColor;
 
-        int iteration = ray.getIteration();
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
         Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
+        AbstractMaterial material = intersection.getOwner().getMaterial();
 
-        // for light source we must assign color passes variables
         if (intersection.getOwner().getMaterial().isLightSource()) {
-            this.BRDF = intersection.getOwner().getMaterial().getEmission().getEmissionColor();
-            this.explicitColor = RGBColor.WHITE;
-            this.ambientOcclusionColor = this.explicitColor;
-            this.globalIlluminationColor = this.BRDF;
-
-            return this.BRDF;
+            return intersection.getOwner().getMaterial().getEmissionColor();
         }
 
-        // get light sampling color
         for (SceneObject object : this.scene.getObjects()) {
             if (
                 object.getMaterial()
-                    .getEmission()
                     .getEmissionColor()
                     .equals(RGBColor.BLACK)
             ) {
                 continue;
             }
 
-            this.explicitColor = this.explicitColor
-                .add(this.getExplicitColor(intersection, object, newDirection));
+            this.explicitLightSamplingColor = this.explicitLightSamplingColor
+                .add(this.getExplicitLightSamplingColor(intersection, object, newDirection));
         }
 
-        double cosTheta = Vector.dot(
-            newDirection,
-            intersection.getNormal()
-        );
-
-        double pdf = cosTheta / Math.PI;
-
-        this.BRDF = intersection
-            .getOwner()
-            .getMaterial()
-            .getColor()
-            .scale(cosTheta)
-            .divide(Math.PI);
-
         nextIterationPixelColor = new PixelColor(
             this.getNextIterationRandomRay(ray, intersection, newDirection),
             this.scene
         );
         nextIterationPixelColor.calculatePixelColor();
 
-        /*this.directLightingColor = this.BRDF.filter(this.explicitColor);
+        this.BRDF = material.getBRDF(newDirection, intersection.getNormal());
 
-        nextIterationPixelColor = new PixelColor(
-            this.getNextIterationRandomRay(ray, intersection, newDirection),
-            this.scene
-        );
-        nextIterationPixelColor.calculatePixelColor();
-
-        this.ambientOcclusionColor = this.explicitColor
-            .filter(
-                nextIterationPixelColor
-                    .getDirectLightingColor()
-                    .add(
-                        nextIterationPixelColor
-                            .getExplicitColor()
-                    )
-            )
-            .add(
-                nextIterationPixelColor
-                    .getAmbientOcclusionColor()
-            );
-
-        this.globalIlluminationColor = this.BRDF
-            .filter(
-                nextIterationPixelColor
-                    .getDirectLightingColor()
-            )
-            .scale(iteration + 1)
-            .add(
-                nextIterationPixelColor
-                    .getGlobalIlluminationColor()
-                    .divide(iteration + 1)
-            );
-
-        return this.directLightingColor;
-
-        /*return this.BRDF.filter(
-            this.explicitColor.add(
-                this.globalIlluminationColor
-            )
-        );*/
-
-        return explicitColor
+        return this.explicitLightSamplingColor
             .add(
                 nextIterationPixelColor
                     .getPixelColor()
                     .filter(
                         this.BRDF
-                            .divide(pdf)
+                            .divide(
+                                material
+                                    .getPDF(newDirection, intersection.getNormal())
+                            )
                     )
             );
     }
@@ -170,7 +99,7 @@ public class PixelColor {
         PixelColor pixelColor;
 
         RGBColor reflectionColor;
-        double reflectionValue = intersect.getOwner().getMaterial().getReflectionCoeff();
+        double reflectionValue = intersect.getOwner().getMaterial().getReflectionCoefficient();
         Vector reflectedRay;
 
         if (reflectionValue == 0) {
@@ -198,7 +127,7 @@ public class PixelColor {
         return reflectionColor;
     }
 
-    private RGBColor getExplicitColor(IntersectPoint intersection, SceneObject light, Vector newDirection) {
+    private RGBColor getExplicitLightSamplingColor(IntersectPoint intersection, SceneObject light, Vector newDirection) {
         Vector lightSourceRandomPoint = light.getRandomPoint();
         Vector rayLine = Vector.substract(
             lightSourceRandomPoint,
@@ -217,40 +146,26 @@ public class PixelColor {
             shadowRay.isIntersected() &&
             shadowRay.getOwner().getMaterial().isLightSource()
         ) {
-            RGBColor emissionColor = light.getMaterial().getEmission().getEmissionColor();
+            RGBColor emissionColor = light.getMaterial().getEmissionColor();
 
-            double lightPower = light.getMaterial().getEmissionValue();
-            double rayLength = rayLine.getLength();
+            double lightPower = light.getMaterial().getIntensity();
+            double shadowRayLength = rayLine.getLength();
 
-            Vector sdir = Vector.normalize(
-                Vector.substract(
-                    lightSourceRandomPoint,
-                    intersection.getHitPoint()
-                )
+            Vector lightDirection = Vector.normalize(
+                Vector.substract(lightSourceRandomPoint, intersection.getHitPoint())
             );
 
-            double cosTheta1 = - Vector.dot(
-                sdir,
-                shadowRay.getNormal()
-            );
+            double cosTheta1 = - Vector.dot(lightDirection, shadowRay.getNormal());
+            double lightPdf = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
 
-            double cosTheta2 = Vector.dot(
-                sdir,
-                intersection.getNormal()
-            );
-
-            double lgtPdf = (1.0 / light.getArea()) * rayLength * rayLength / cosTheta1;
-
-            RGBColor lgtVal = intersection
+            RGBColor lightColor = intersection
                 .getOwner()
                 .getMaterial()
-                .getColor()
-                .scale(cosTheta2)
-                .divide(Math.PI)
+                .getBRDF(lightDirection, intersection.getNormal())
                 .filter(emissionColor)
                 .scale(lightPower);
 
-            return lgtVal.divide(lgtPdf);
+            return lightColor.divide(lightPdf);
         } else {
             return RGBColor.BLACK;
         }
