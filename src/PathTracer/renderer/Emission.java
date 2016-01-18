@@ -2,7 +2,7 @@ package PathTracer.renderer;
 
 public class Emission {
     private RGBColor emissionColor;
-    private double emissionValue = 1360;
+    private double emissionValue = 1;
 
     public Emission (RGBColor emissionColor, double emissionValue) {
         this.emissionColor = emissionColor;
@@ -18,7 +18,7 @@ public class Emission {
     }
 
     public double getEmissionValue () {
-        return this.emissionValue * 255;
+        return this.emissionValue;
     }
 
     public boolean isLightSource () {

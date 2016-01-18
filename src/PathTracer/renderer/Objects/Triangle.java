@@ -19,10 +19,15 @@ public class Triangle implements SceneObject {
     }
 
     public double getArea () {
-        Vector edge1 = Vector.substract(this.vertices.get(2), this.vertices.get(0));
-        Vector edge2 = Vector.substract(this.vertices.get(1), this.vertices.get(0));
+        double a = Vector.substract(this.vertices.get(1), this.vertices.get(0)).getLength();
+        double b = Vector.substract(this.vertices.get(2), this.vertices.get(0)).getLength();
+        double c = Vector.substract(this.vertices.get(2), this.vertices.get(1)).getLength();
 
-        return Vector.dot(edge1, edge2) / 2;
+        double s = (a + b + c) / 2;
+
+        return Math.sqrt(
+            s * (s - a) * (s - b) * (s - c)
+        );
     }
 
     public IntersectData getIntersectData (Ray ray) {

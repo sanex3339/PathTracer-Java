@@ -49,72 +49,58 @@ public class RGBColor {
     }
 
     public RGBColor add (RGBColor color) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                this.getRed() + color.getRed(),
-                this.getGreen() + color.getGreen(),
-                this.getBlue() + color.getBlue()
-            )
+        return new RGBColor(
+            this.getRed() + color.getRed(),
+            this.getGreen() + color.getGreen(),
+            this.getBlue() + color.getBlue()
         );
     }
 
     public RGBColor substract (RGBColor color) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                this.getRed() - color.getRed(),
-                this.getGreen() - color.getGreen(),
-                this.getBlue() - color.getBlue()
-            )
+        return new RGBColor(
+            this.getRed() - color.getRed(),
+            this.getGreen() - color.getGreen(),
+            this.getBlue() - color.getBlue()
         );
     }
 
     public RGBColor scale(double multiplier) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                (int) (this.getRed() * multiplier),
-                (int) (this.getGreen() * multiplier),
-                (int) (this.getBlue() * multiplier)
-            )
+        return new RGBColor(
+            (int) (this.getRed() * multiplier),
+            (int) (this.getGreen() * multiplier),
+            (int) (this.getBlue() * multiplier)
         );
     }
 
     public RGBColor multiple (RGBColor color) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                this.getRed() * color.getRed(),
-                this.getGreen() * color.getGreen(),
-                this.getBlue() * color.getBlue()
-            )
+        return new RGBColor(
+            this.getRed() * color.getRed(),
+            this.getGreen() * color.getGreen(),
+            this.getBlue() * color.getBlue()
         );
     }
 
     public RGBColor divide (double value) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                (int) (this.getRed() / value),
-                (int) (this.getGreen() / value),
-                (int) (this.getBlue() / value)
-            )
+        return new RGBColor(
+            (int) (this.getRed() / value),
+            (int) (this.getGreen() / value),
+            (int) (this.getBlue() / value)
         );
     }
 
     public RGBColor filter (RGBColor color) {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                this.getRed() * (color.getRed() / 255.0),
-                this.getGreen() * (color.getGreen() / 255.0),
-                this.getBlue() * (color.getBlue() / 255.0)
-            )
+        return new RGBColor(
+            this.getRed() * (color.getRed() / 255.0),
+            this.getGreen() * (color.getGreen() / 255.0),
+            this.getBlue() * (color.getBlue() / 255.0)
         );
     }
 
     public RGBColor inverse () {
-        return RGBColor.clampRGBColor(
-            new RGBColor(
-                255 - this.getRed(),
-                255 - this.getGreen(),
-                255 - this.getBlue()
-            )
+        return new RGBColor(
+            255 - this.getRed(),
+            255 - this.getGreen(),
+            255 - this.getBlue()
         );
     }
 
