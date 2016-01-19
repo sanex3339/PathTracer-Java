@@ -137,7 +137,9 @@ final public class PathTracer implements Runnable {
      * @param event event object
      */
     private void renderButtonHandler (MouseEvent event) {
-        if (SwingUtilities.isRightMouseButton(event)) {
+        this.renderButton.setEnabled(false);
+
+        if (this.renderButton.isEnabled() && SwingUtilities.isRightMouseButton(event)) {
             this.startDebugTracing(event.getX(), event.getY());
 
             return;

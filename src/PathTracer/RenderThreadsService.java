@@ -33,9 +33,7 @@ final public class RenderThreadsService {
             );
         }
 
-        int i = 0;
-
-        while (i++ < 2000) {
+        while (true) {
             this.startThread();
         }
     }

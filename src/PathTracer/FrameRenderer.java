@@ -64,6 +64,12 @@ final public class FrameRenderer extends Canvas {
         this.currentSample++;
 
         BufferStrategy bufferStrategy = this.getBufferStrategy();
+
+        if (bufferStrategy == null) {
+            this.createBufferStrategy(2);
+            bufferStrategy = this.getBufferStrategy();
+        }
+
         Graphics graphics = bufferStrategy.getDrawGraphics();
 
         this.render(graphics);
