@@ -2,6 +2,7 @@ package PathTracer.renderer;
 
 import PathTracer.interfaces.SceneObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
@@ -23,5 +24,19 @@ public class Scene {
 
     public List<SceneObject> getObjects () {
         return this.objects;
+    }
+
+    public List<SceneObject> getLights () {
+        List<SceneObject> sceneLights = new ArrayList<>();
+
+        for (SceneObject object : this.objects) {
+            if (!object.getMaterial().isLightSource()) {
+                continue;
+            }
+
+            sceneLights.add(object);
+        }
+
+        return sceneLights;
     }
 }
