@@ -9,7 +9,6 @@ public class PixelColor {
     private Scene scene;
 
     private RGBColor pixelColor = RGBColor.BLACK;
-
     private RGBColor BRDF = RGBColor.BLACK;
     private RGBColor explicitLightSamplingColor = RGBColor.BLACK;
 
@@ -20,6 +19,7 @@ public class PixelColor {
 
     public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
+
         if (!intersection.isIntersected() || ray.getIteration() > 5) {
             this.pixelColor = RGBColor.BLACK;
 
@@ -129,24 +129,15 @@ public class PixelColor {
 
     private Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {
         Vector newPoint;
+        double epsilon = Vector.dot(newDirection, ray.getDirection()) > 0 ? PTMath.EPSILON : -PTMath.EPSILON;
 
-        if (Vector.dot(newDirection, ray.getDirection()) > 0) {
-            newPoint = Vector.add(
-                ray.getOrigin(),
-                Vector.scale(
-                    ray.getDirection(),
-                    intersection.getDistanceFromOrigin() * (1 + PTMath.EPSILON)
-                )
-            );
-        } else {
-            newPoint = Vector.add(
-                ray.getOrigin(),
-                Vector.scale(
-                    ray.getDirection(),
-                    intersection.getDistanceFromOrigin() * (1 - PTMath.EPSILON)
-                )
-            );
-        }
+        newPoint = Vector.add(
+            ray.getOrigin(),
+            Vector.scale(
+                ray.getDirection(),
+                intersection.getDistanceFromOrigin() * (1 + epsilon)
+            )
+        );
 
         return new Ray(
             newPoint,

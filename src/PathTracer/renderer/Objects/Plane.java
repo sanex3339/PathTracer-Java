@@ -3,12 +3,12 @@ package PathTracer.renderer.Objects;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.DiffuseMaterial;
+import PathTracer.renderer.Materials.LambertianMaterial;
 
 public class Plane implements SceneObject {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
-    private AbstractMaterial material = DiffuseMaterial.BASE_MATERIAL;
+    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
 
     public Plane(Vector normal, Vector point) {
         this.normal = normal;

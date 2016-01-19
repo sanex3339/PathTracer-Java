@@ -59,7 +59,7 @@ public class EmissiveMaterial extends AbstractMaterial implements AreaLightSourc
             double cosTheta1 = - Vector.dot(lightDirection, shadowRay.getNormal());
             double lightPDF = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
 
-            RGBColor lightBRDF = intersection
+            RGBColor lightColor = intersection
                 .getOwner()
                 .getMaterial()
                 .getBRDF(lightDirection, intersection.getNormal())
@@ -67,7 +67,7 @@ public class EmissiveMaterial extends AbstractMaterial implements AreaLightSourc
                 .scale(lightPower);
 
             return new LightSourceSamplingData(
-                lightBRDF,
+                lightColor,
                 lightPDF
             );
         } else {

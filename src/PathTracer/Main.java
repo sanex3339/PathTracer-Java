@@ -2,7 +2,7 @@ package PathTracer;
 
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.DiffuseMaterial;
+import PathTracer.renderer.Materials.LambertianMaterial;
 import PathTracer.renderer.Materials.EmissiveMaterial;
 import PathTracer.renderer.Materials.MirrorMaterial;
 import PathTracer.renderer.Objects.Plane;
@@ -24,9 +24,9 @@ final public class Main {
         /*objects.add(
             new Sphere(new Vector(0, 580, 0), 150)
                 .setMaterial(
-                    new AbstractMaterial(
-                        new RGBColor(115, 115, 115),
-                        new Emission(new RGBColor(255, 250, 249), 4000)
+                    new EmissiveMaterial(
+                        new RGBColor(255, 250, 249),
+                        10
                     )
                 )
         );*/
@@ -56,7 +56,7 @@ final public class Main {
         // gray sphere
         objects.add(
             new Sphere(new Vector(330, -400, -50), 300)
-                .setMaterial(new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
+                .setMaterial(new LambertianMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
         );
 
         // top polygon
@@ -68,7 +68,7 @@ final public class Main {
                 new Vector(-700, 700, -700)
             ))
                 .setMaterial(
-                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                    new LambertianMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -76,7 +76,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 1, 0), new Vector (0, -700, 0))
                 .setMaterial(
-                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                    new LambertianMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -84,7 +84,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(-1, 0, 0), new Vector (700, 0, 0))
                 .setMaterial(
-                    new DiffuseMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
+                    new LambertianMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
                 )
         );
 
@@ -92,7 +92,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(1, 0, 0), new Vector (-700, 0, 0))
                 .setMaterial(
-                    new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
+                    new LambertianMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
                 )
         );
 
@@ -100,7 +100,7 @@ final public class Main {
         objects.add(
             new Plane(new Vector(0, 0, -1), new Vector (0, 0, 700))
                 .setMaterial(
-                    new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                    new LambertianMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
                 )
         );
 
@@ -113,7 +113,7 @@ final public class Main {
                 new Vector(-700, -700, -700)
             ))
             .setMaterial(
-                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                new LambertianMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
         );
 

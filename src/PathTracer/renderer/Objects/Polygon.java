@@ -3,7 +3,7 @@ package PathTracer.renderer.Objects;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.DiffuseMaterial;
+import PathTracer.renderer.Materials.LambertianMaterial;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Polygon implements SceneObject {
     private List<Triangle> triangles = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
-    private AbstractMaterial material = DiffuseMaterial.BASE_MATERIAL;
+    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
 
     public Polygon (List<Vector> vertices) {
         if (vertices.size() < 3 || vertices.size() > 4) {

@@ -3,12 +3,12 @@ package PathTracer.renderer.Objects;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.DiffuseMaterial;
+import PathTracer.renderer.Materials.LambertianMaterial;
 
 public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
-    private AbstractMaterial material = DiffuseMaterial.BASE_MATERIAL;
+    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
 
     public Sphere(Vector center, double radius) {
         this.position = center;

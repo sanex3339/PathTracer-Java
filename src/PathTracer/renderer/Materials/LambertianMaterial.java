@@ -3,10 +3,10 @@ package PathTracer.renderer.Materials;
 import PathTracer.renderer.RGBColor;
 import PathTracer.renderer.Vector;
 
-public class DiffuseMaterial extends AbstractMaterial {
-    public static DiffuseMaterial BASE_MATERIAL = new DiffuseMaterial(RGBColor.GRAY);
+public class LambertianMaterial extends AbstractMaterial {
+    public static LambertianMaterial BASE_MATERIAL = new LambertianMaterial(RGBColor.GRAY);
 
-    public DiffuseMaterial (RGBColor color) {
+    public LambertianMaterial(RGBColor color) {
         super(color);
     }
 
