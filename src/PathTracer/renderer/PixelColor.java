@@ -2,6 +2,7 @@ package PathTracer.renderer;
 
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.Materials.AbstractMaterial;
+import PathTracer.renderer.Materials.EmissiveMaterial;
 
 public class PixelColor {
     private Ray ray;
@@ -25,15 +26,10 @@ public class PixelColor {
             return;
         }
 
-        try {
-            this.pixelColor = this.getDiffuseColor(ray);
+        this.pixelColor = this.getDiffuseColor(ray);
 
-            if (intersection.getOwner().getMaterial().getReflectionCoefficient() > 0) {
-                this.pixelColor = this.pixelColor.add(this.getReflectionColor(ray, intersection));
-            }
-        } catch (NullPointerException e) {
-            // TODO: fix that
-            this.pixelColor = RGBColor.BLACK;
+        if (intersection.getOwner().getMaterial().getReflectionCoefficient() > 0) {
+            this.pixelColor = this.pixelColor.add(this.getReflectionColor(ray, intersection));
         }
     }
 
@@ -60,17 +56,9 @@ public class PixelColor {
             return intersection.getOwner().getMaterial().getEmissionColor();
         }
 
-        for (SceneObject object : this.scene.getObjects()) {
-            if (
-                object.getMaterial()
-                    .getEmissionColor()
-                    .equals(RGBColor.BLACK)
-            ) {
-                continue;
-            }
-
+        for (SceneObject object : this.scene.getLights()) {
             this.explicitLightSamplingColor = this.explicitLightSamplingColor
-                .add(this.getExplicitLightSamplingColor(intersection, object, newDirection));
+                .add(this.getExplicitLightSamplingColor(intersection, object));
         }
 
         nextIterationPixelColor = new PixelColor(
@@ -127,48 +115,16 @@ public class PixelColor {
         return reflectionColor;
     }
 
-    private RGBColor getExplicitLightSamplingColor(IntersectPoint intersection, SceneObject light, Vector newDirection) {
-        Vector lightSourceRandomPoint = light.getRandomPoint();
-        Vector rayLine = Vector.substract(
-            lightSourceRandomPoint,
-            intersection.getHitPoint()
-        );
+    private RGBColor getExplicitLightSamplingColor(IntersectPoint intersection, SceneObject light) {
+        EmissiveMaterial lightMaterial = (EmissiveMaterial) light.getMaterial();
+        LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleAreaLight(intersection, light, this.scene);
 
-        IntersectPoint shadowRay = Tracer.trace(
-            new Ray(
-                intersection.getHitPoint(),
-                Vector.normalize(rayLine)
-            ),
-            this.scene
-        );
-
-        if (
-            shadowRay.isIntersected() &&
-            shadowRay.getOwner().getMaterial().isLightSource()
-        ) {
-            RGBColor emissionColor = light.getMaterial().getEmissionColor();
-
-            double lightPower = light.getMaterial().getIntensity();
-            double shadowRayLength = rayLine.getLength();
-
-            Vector lightDirection = Vector.normalize(
-                Vector.substract(lightSourceRandomPoint, intersection.getHitPoint())
+        return lightSourceSamplingData
+            .getLightBRDF()
+            .divide(
+                lightSourceSamplingData
+                    .getLightPDF()
             );
-
-            double cosTheta1 = - Vector.dot(lightDirection, shadowRay.getNormal());
-            double lightPdf = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
-
-            RGBColor lightColor = intersection
-                .getOwner()
-                .getMaterial()
-                .getBRDF(lightDirection, intersection.getNormal())
-                .filter(emissionColor)
-                .scale(lightPower);
-
-            return lightColor.divide(lightPdf);
-        } else {
-            return RGBColor.BLACK;
-        }
     }
 
     private Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {

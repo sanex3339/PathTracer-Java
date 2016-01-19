@@ -5,7 +5,7 @@ public class Ray {
     private Vector direction;
     private int iteration = 0;
 
-    Ray (Vector origin, Vector direction) {
+    public Ray(Vector origin, Vector direction) {
         this.origin = origin;
         this.direction = direction;
     }
