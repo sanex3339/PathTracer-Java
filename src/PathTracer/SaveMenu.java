@@ -14,10 +14,18 @@ public class SaveMenu extends JPopupMenu {
         this.add(this.saveImageItem);
     }
 
+    /**
+     * @return JMenuItem
+     */
     public JMenuItem getSaveImageItem () {
         return this.saveImageItem;
     }
 
+    /**
+     * @param var1
+     * @param var2
+     * @param var3
+     */
     @Override
     public void show (Component var1, int var2, int var3) {
         super.show(var1, var2, var3);

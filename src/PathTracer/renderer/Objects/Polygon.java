@@ -1,29 +1,34 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.LambertianMaterial;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Polygon implements SceneObject {
+public class Polygon <T extends BaseSurface> implements SceneObject <T> {
     private List<Triangle> triangles = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
-    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
+    private T material;
 
-    public Polygon (List<Vector> vertices) {
+    public Polygon (List<Vector> vertices, T material) {
         if (vertices.size() < 3 || vertices.size() > 4) {
             throw new IllegalArgumentException("Each polygon must contain only 3 or 4 vertices.");
         }
 
         this.vertices = vertices;
+        this.material = material;
         this.triangulatePolygon();
     }
 
+    /**
+     * Get area of polygon
+     *
+     * @return double
+     */
     public double getArea () {
         double area = 0;
 
@@ -34,6 +39,12 @@ public class Polygon implements SceneObject {
         return area;
     }
 
+    /**
+     * Get intersection data for polygon
+     *
+     * @param ray
+     * @return IntersectData
+     */
     public IntersectData getIntersectData(Ray ray) {
         IntersectData intersectData;
 
@@ -48,14 +59,23 @@ public class Polygon implements SceneObject {
         return null;
     }
 
-    public AbstractMaterial getMaterial () {
+    /**
+     * @return T extend BaseSurface
+     */
+    public T getMaterial () {
         return this.material;
     }
 
+    /**
+     * @return  Vector
+     */
     public Vector getPosition() {
         return this.getRandomPoint();
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getRandomPoint() {
         List<Vector> randomPoints = this.triangles
             .stream()
@@ -65,25 +85,31 @@ public class Polygon implements SceneObject {
         return randomPoints.get((int) Math.round(Math.random()));
     }
 
+    /**
+     * @return List<Vector>
+     */
     public List<Vector> getVertices () {
         return this.vertices;
     }
 
+    /**
+     * @param index
+     * @return Vector
+     */
     public Vector getVertexByIndex(int index) {
         return this.vertices.get(index);
     }
 
-    public Polygon setMaterial (AbstractMaterial material) {
-        this.material = material;
-
-        return this;
-    }
-
+    /**
+     * Triangulate 4 vertex polygon by two 3 vertex triangles
+     */
     private void triangulatePolygon () {
         if (this.vertices.size() == 3) {
             this.triangles.add(
-                new Triangle(vertices)
-                    .setMaterial(this.material)
+                new Triangle<>(
+                    vertices,
+                    this.material
+                )
             );
 
             return;
@@ -111,16 +137,16 @@ public class Polygon implements SceneObject {
         }
 
         this.triangles.add(
-            new Triangle(
-                Arrays.asList(this.getVertexByIndex(0), this.getVertexByIndex(1), this.getVertexByIndex(ind1))
+            new Triangle<>(
+                Arrays.asList(this.getVertexByIndex(0), this.getVertexByIndex(1), this.getVertexByIndex(ind1)),
+                this.material
             )
-            .setMaterial(this.material)
         );
         this.triangles.add(
-            new Triangle(
-                Arrays.asList(this.getVertexByIndex(ind2), this.getVertexByIndex(2), this.getVertexByIndex(3))
+            new Triangle<>(
+                Arrays.asList(this.getVertexByIndex(ind2), this.getVertexByIndex(2), this.getVertexByIndex(3)),
+                this.material
             )
-            .setMaterial(this.material)
         );
     }
 }

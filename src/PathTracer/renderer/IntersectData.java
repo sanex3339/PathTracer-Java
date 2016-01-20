@@ -11,14 +11,23 @@ public class IntersectData {
         this.distance = distance;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getHitPoint () {
         return this.hitPoint;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getNormal () {
         return this.normal;
     }
 
+    /**
+     * @return double
+     */
     public double getDistance () {
         return this.distance;
     }

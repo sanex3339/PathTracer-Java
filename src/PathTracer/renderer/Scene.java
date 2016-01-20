@@ -14,18 +14,30 @@ public class Scene {
         this.camera = camera;
     }
 
+    /**
+     * @param object
+     */
     public void addObject (SceneObject object) {
         this.objects.add(object);
     }
 
+    /**
+     * @return Camera
+     */
     public Camera getCamera () {
         return this.camera;
     }
 
+    /**
+     * @return List<SceneObject>
+     */
     public List<SceneObject> getObjects () {
         return this.objects;
     }
 
+    /**
+     * @return List<SceneObject>
+     */
     public List<SceneObject> getLights () {
         List<SceneObject> sceneLights = new ArrayList<>();
 

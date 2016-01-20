@@ -1,15 +1,29 @@
 package PathTracer.renderer;
 
+import PathTracer.interfaces.BaseSurface;
+import PathTracer.interfaces.EmissiveSurface;
+import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.interfaces.SceneObject;
-import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.EmissiveMaterial;
 
 public class PixelColor {
     private Ray ray;
     private Scene scene;
 
+    private BaseSurface material;
+
+    /**
+     * Final pixel color
+     */
     private RGBColor pixelColor = RGBColor.BLACK;
+
+    /**
+     * BRDF of surface
+     */
     private RGBColor BRDF = RGBColor.BLACK;
+
+    /**
+     * Explicit direct light sampling color
+     */
     private RGBColor explicitLightSamplingColor = RGBColor.BLACK;
 
     public PixelColor (Ray ray, Scene scene) {
@@ -17,6 +31,9 @@ public class PixelColor {
         this.scene = scene;
     }
 
+    /**
+     * Start calculation of pixel color
+     */
     public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
 
@@ -26,34 +43,47 @@ public class PixelColor {
             return;
         }
 
-        this.pixelColor = this.getDiffuseColor(ray);
+        this.material = intersection.getOwner().getMaterial();
+        this.pixelColor = this.getDirectColor(ray);
 
-        if (intersection.getOwner().getMaterial().getReflectionCoefficient() > 0) {
+        if (this.material instanceof ReflectiveSurface) {
             this.pixelColor = this.pixelColor.add(this.getReflectionColor(ray, intersection));
         }
     }
 
+    /**
+     * @return RGBColor
+     */
     public RGBColor getPixelColor () {
         return this.pixelColor;
     }
 
+    /**
+     * @return RGBColor
+     */
     public RGBColor getBRDF() {
         return this.BRDF;
     }
 
+    /**
+     * @return RGBColor
+     */
     public RGBColor getExplicitLightSamplingColor() {
         return this.explicitLightSamplingColor;
     }
 
-    private RGBColor getDiffuseColor (Ray ray) {
-        PixelColor nextIterationPixelColor;
-
+    /**
+     * Calculate surface direct color (without reflection color)
+     *
+     * @param ray
+     * @return RGBColor
+     */
+    private RGBColor getDirectColor(Ray ray) {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
         Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
-        AbstractMaterial material = intersection.getOwner().getMaterial();
 
-        if (intersection.getOwner().getMaterial().isLightSource()) {
-            return intersection.getOwner().getMaterial().getEmissionColor();
+        if (this.material instanceof EmissiveSurface) {
+            return ((EmissiveSurface) this.material).getEmissionColor();
         }
 
         for (SceneObject object : this.scene.getLights()) {
@@ -61,13 +91,13 @@ public class PixelColor {
                 .add(this.getExplicitLightSamplingColor(intersection, object));
         }
 
-        nextIterationPixelColor = new PixelColor(
+        PixelColor nextIterationPixelColor = new PixelColor(
             this.getNextIterationRandomRay(ray, intersection, newDirection),
             this.scene
         );
         nextIterationPixelColor.calculatePixelColor();
 
-        this.BRDF = material.getBRDF(newDirection, intersection.getNormal());
+        this.BRDF = this.material.getBRDF(newDirection, intersection.getNormal());
 
         return this.explicitLightSamplingColor
             .add(
@@ -76,7 +106,7 @@ public class PixelColor {
                     .filter(
                         this.BRDF
                             .divide(
-                                material
+                                this.material
                                     .getPDF(newDirection, intersection.getNormal())
                             )
                     )
@@ -84,22 +114,18 @@ public class PixelColor {
     }
 
     private RGBColor getReflectionColor (Ray ray, IntersectPoint intersect) {
-        PixelColor pixelColor;
-
-        RGBColor reflectionColor;
-        double reflectionValue = intersect.getOwner().getMaterial().getReflectionCoefficient();
-        Vector reflectedRay;
+        double reflectionValue = ((ReflectiveSurface) this.material).getReflectionCoefficient();
 
         if (reflectionValue == 0) {
             return RGBColor.BLACK;
         }
 
-        reflectedRay = Vector.reflect(
+        Vector reflectedRay = Vector.reflect(
             ray.getDirection(),
             intersect.getNormal()
         );
 
-        pixelColor = new PixelColor(
+        PixelColor pixelColor = new PixelColor(
             new Ray(
                 intersect.getHitPoint(),
                 reflectedRay,
@@ -108,16 +134,15 @@ public class PixelColor {
             this.scene
         );
         pixelColor.calculatePixelColor();
-        reflectionColor = pixelColor
+
+        return pixelColor
             .getPixelColor()
             .scale(reflectionValue);
-
-        return reflectionColor;
     }
 
-    private RGBColor getExplicitLightSamplingColor(IntersectPoint intersection, SceneObject light) {
-        EmissiveMaterial lightMaterial = (EmissiveMaterial) light.getMaterial();
-        LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleAreaLight(intersection, light, this.scene);
+    private RGBColor getExplicitLightSamplingColor (IntersectPoint intersection, SceneObject lightSource) {
+        EmissiveSurface lightMaterial = (EmissiveSurface) lightSource.getMaterial();
+        LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleLight(intersection, lightSource, this.scene);
 
         return lightSourceSamplingData
             .getLightBRDF()
@@ -128,19 +153,16 @@ public class PixelColor {
     }
 
     private Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {
-        Vector newPoint;
         double epsilon = Vector.dot(newDirection, ray.getDirection()) > 0 ? PTMath.EPSILON : -PTMath.EPSILON;
 
-        newPoint = Vector.add(
-            ray.getOrigin(),
-            Vector.scale(
-                ray.getDirection(),
-                intersection.getDistanceFromOrigin() * (1 + epsilon)
-            )
-        );
-
         return new Ray(
-            newPoint,
+            Vector.add(
+                ray.getOrigin(),
+                Vector.scale(
+                    ray.getDirection(),
+                    intersection.getDistanceFromOrigin() * (1 + epsilon)
+                )
+            ),
             newDirection,
             ray.getIteration() + 1
         );

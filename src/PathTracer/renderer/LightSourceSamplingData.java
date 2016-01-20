@@ -9,11 +9,16 @@ public class LightSourceSamplingData {
         this.lightPDF = lightPDF;
     }
 
-
+    /**
+     * @return RGBColor
+     */
     public RGBColor getLightBRDF () {
         return this.lightBRDF;
     }
 
+    /**
+     * @return double
+     */
     public double getLightPDF () {
         return this.lightPDF;
     }

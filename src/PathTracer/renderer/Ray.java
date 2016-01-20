@@ -16,10 +16,16 @@ public class Ray {
         this.iteration = iteration;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getOrigin () {
         return this.origin;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getDirection () {
         return this.direction;
     }
@@ -28,10 +34,17 @@ public class Ray {
         return this.iteration;
     }
 
-    public Vector getHitPoin (double distance) {
+    /**
+     * @param distance
+     * @return Vector
+     */
+    public Vector getHitPoint (double distance) {
         return Vector.add(this.origin, Vector.scale(this.direction, distance));
     }
 
+    /**
+     * @param iteration
+     */
     public void setIteration (int iteration) {
         this.iteration = iteration;
     }

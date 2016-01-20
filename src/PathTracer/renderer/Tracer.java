@@ -36,6 +36,14 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
         return this.render();
     }
 
+    /**
+     * Trace ray into scene and look for intersection.
+     * Return IntersectionPoint data of closest intersection to camera
+     *
+     * @param ray
+     * @param scene
+     * @return IntersectPoint
+     */
     public static IntersectPoint trace (Ray ray, Scene scene) {
         IntersectPoint intersection = new IntersectPoint();
         IntersectData intersectData;
@@ -66,6 +74,11 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
         return intersection;
     }
 
+    /**
+     * Render one sample
+     *
+     * @return List<Color>
+     */
     public List<Color> render () {
         double randomMultiplier = 0.5;
         double randX;

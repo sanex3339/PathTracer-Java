@@ -1,24 +1,35 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.LambertianMaterial;
 
-public class Sphere implements SceneObject {
+public class Sphere <T extends BaseSurface> implements SceneObject <T> {
     private Vector position;
     private double radius;
-    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
+    private T material;
 
-    public Sphere(Vector center, double radius) {
+    public Sphere(Vector center, double radius, T material) {
         this.position = center;
         this.radius = radius;
+        this.material = material;
     }
 
+    /**
+     * Get area of sphere
+     *
+     * @return double
+     */
     public double getArea () {
         return  4 * Math.PI * Math.pow(this.radius, 2);
     }
 
+    /**
+     * Get ray-sphere intersection data
+     *
+     * @param ray
+     * @return IntersectData
+     */
     public IntersectData getIntersectData (Ray ray) {
         Vector k = Vector.substract(ray.getOrigin(), this.position);
         double b = Vector.dot(k, ray.getDirection());
@@ -69,14 +80,23 @@ public class Sphere implements SceneObject {
         );
     }
 
-    public AbstractMaterial getMaterial () {
+    /**
+     * @return T extend BaseSurface
+     */
+    public T getMaterial () {
         return this.material;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getPosition () {
         return this.position;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getRandomPoint () {
         double u = Math.random();
         double v = Math.random();
@@ -93,10 +113,19 @@ public class Sphere implements SceneObject {
         );
     }
 
+    /**
+     * @return double
+     */
     public double getRadius () {
         return this.radius;
     }
 
+    /**
+     * Get normal vector of sphere
+     *
+     * @param point
+     * @return Vector
+     */
     public Vector getNormal (Vector point) {
         return Vector.normalize(
             Vector.scale(
@@ -104,11 +133,5 @@ public class Sphere implements SceneObject {
                 1 / this.radius
             )
         );
-    }
-
-    public Sphere setMaterial (AbstractMaterial material) {
-        this.material = material;
-
-        return this;
     }
 }

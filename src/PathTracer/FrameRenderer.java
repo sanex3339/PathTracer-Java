@@ -56,6 +56,8 @@ final public class FrameRenderer extends Canvas {
 
     /**
      * Update canvas with calculated sample colors
+     *
+     * @param sampleColors
      */
     public void updateFrame (List<Color> sampleColors) {
         System.out.println("Sample: " + this.currentSample);

@@ -13,18 +13,30 @@ public class IntersectPoint {
         return this.isIntersected;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getHitPoint () {
         return this.hitPoint;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getNormal () {
         return this.normal;
     }
 
+    /**
+     * @return SceneObject
+     */
     public SceneObject getOwner () {
         return this.owner;
     }
 
+    /**
+     * @return double
+     */
     public double getDistanceFromOrigin () {
         return this.distanceFromOrigin;
     }

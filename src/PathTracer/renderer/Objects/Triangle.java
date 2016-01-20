@@ -1,25 +1,30 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.LambertianMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Triangle implements SceneObject {
+public class Triangle <T extends BaseSurface> implements SceneObject <T> {
     private List<Vector> vertices = new ArrayList<>();
-    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
+    private T material;
 
-    public Triangle(List<Vector> vertices) {
+    public Triangle(List<Vector> vertices, T material) {
         if (vertices.size() != 3) {
             throw new IllegalArgumentException("Each triangle must contain only 3 vertices.");
         }
 
         this.vertices = vertices;
+        this.material = material;
     }
 
+    /**
+     * Get area of triangle
+     *
+     * @return double
+     */
     public double getArea () {
         double a = Vector.substract(this.vertices.get(1), this.vertices.get(0)).getLength();
         double b = Vector.substract(this.vertices.get(2), this.vertices.get(0)).getLength();
@@ -32,6 +37,12 @@ public class Triangle implements SceneObject {
         );
     }
 
+    /**
+     * Get ray-triangle intersection data
+     *
+     * @param ray
+     * @return IntersectData
+     */
     public IntersectData getIntersectData (Ray ray) {
         double distance;
         double distanceFromAxisCenter;
@@ -56,7 +67,7 @@ public class Triangle implements SceneObject {
             return null;
         }
 
-        hitPoint = ray.getHitPoin(distance);
+        hitPoint = ray.getHitPoint(distance);
 
         if (!isPointInsideTriangle(hitPoint)) {
             return null;
@@ -69,6 +80,11 @@ public class Triangle implements SceneObject {
         );
     }
 
+    /**
+     * Get normal vector of triangle
+     *
+     * @return Vector
+     */
     public Vector getNormal () {
         Vector edge1 = Vector.substract(this.vertices.get(2), this.vertices.get(0));
         Vector edge2 = Vector.substract(this.vertices.get(1), this.vertices.get(0));
@@ -76,10 +92,16 @@ public class Triangle implements SceneObject {
         return Vector.normalize(Vector.cross(edge1, edge2));
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getPosition () {
         return this.getRandomPoint();
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getRandomPoint () {
         double rand1 = Math.random();
         double rand2 = Math.random();
@@ -127,24 +149,34 @@ public class Triangle implements SceneObject {
         return x;
     }
 
-    public AbstractMaterial getMaterial () {
+    /**
+     * @return T extend BaseSurface
+     */
+    public T getMaterial () {
         return this.material;
     }
 
+    /**
+     * @return List<Vector>
+     */
     public List<Vector> getVertices () {
         return this.vertices;
     }
 
+    /**
+     * @param index
+     * @return Vector
+     */
     public Vector getVertexByIndex(int index) {
         return this.vertices.get(index);
     }
 
-    public Triangle setMaterial (AbstractMaterial material) {
-        this.material = material;
-
-        return this;
-    }
-
+    /**
+     * Check - if point placed inside triangle
+     *
+     * @param point
+     * @return boolean
+     */
     private boolean isPointInsideTriangle (Vector point) {
         for (int i = 0, verticesLength = this.vertices.size(); i < verticesLength; i++) {
             Vector vertex1 = this.vertices.get(i);
@@ -170,6 +202,12 @@ public class Triangle implements SceneObject {
         return true;
     }
 
+    /**
+     * @param vector1
+     * @param vector2
+     * @param normal
+     * @return boolean
+     */
     private static boolean checkSameClockDir (Vector vector1, Vector vector2, Vector normal) {
         Vector normalV1V2 = Vector.cross(vector2, vector1);
 

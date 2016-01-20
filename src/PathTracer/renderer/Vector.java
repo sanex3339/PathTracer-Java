@@ -14,6 +14,9 @@ public class Vector {
         this.z = z;
     }
 
+    /**
+     * @return Map<String, Double>
+     */
     public Map<String, Double> getCoordinates () {
         Map<String, Double> coordinates = new HashMap<>();
         coordinates.put("x", this.x);
@@ -23,24 +26,40 @@ public class Vector {
         return coordinates;
     }
 
+    /**
+     * @return double
+     */
     public double getX () {
         return this.x;
     }
 
+    /**
+     * @return double
+     */
     public double getY () {
         return this.y;
     }
 
+    /**
+     * @return double
+     */
     public double getZ () {
         return this.z;
     }
 
+    /**
+     * @return double
+     */
     public double getLength () {
         return Math.sqrt(
             Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2)
         );
     }
 
+    /**
+     * @param vector
+     * @return boolean
+     */
     public boolean equals (Vector vector) {
         if (vector == null) {
             return false;
@@ -51,12 +70,21 @@ public class Vector {
             this.getZ() == vector.getZ();
     }
 
+    /**
+     * @param vector
+     * @param multiplier
+     * @return Vector
+     */
     public static Vector scale (Vector vector, double multiplier) {
         return new Vector(
             vector.x * multiplier, vector.y * multiplier, vector.z * multiplier
         );
     }
 
+    /**
+     * @param vectors
+     * @return Vector
+     */
     public static Vector add (Vector ...vectors) {
         double x = vectors[0].getX();
         double y = vectors[0].getY();
@@ -73,6 +101,10 @@ public class Vector {
         );
     }
 
+    /**
+     * @param vectors
+     * @return Vector
+     */
     public static Vector substract (Vector ...vectors) {
         double x = vectors[0].getX();
         double y = vectors[0].getY();
@@ -89,10 +121,20 @@ public class Vector {
         );
     }
 
+    /**
+     * @param vector1
+     * @param vector2
+     * @return double
+     */
     public static double dot (Vector vector1, Vector vector2) {
         return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
     }
 
+    /**
+     * @param vector1
+     * @param vector2
+     * @return Vector
+     */
     public static Vector cross (Vector vector1, Vector vector2) {
         return new Vector(
             vector1.y * vector2.z - vector1.z * vector2.y,
@@ -101,10 +143,19 @@ public class Vector {
         );
     }
 
+    /**
+     * @param vector
+     * @return Vector
+     */
     public static Vector normalize (Vector vector) {
         return Vector.scale(vector, 1 / vector.getLength());
     }
 
+    /**
+     * @param vector
+     * @param value
+     * @return Vector
+     */
     public static Vector pow (Vector vector, double value) {
         return new Vector(
             Math.pow(vector.y, value),
@@ -113,10 +164,19 @@ public class Vector {
         );
     }
 
+    /**
+     * @param vector
+     * @return Vector
+     */
     public static Vector inverse (Vector vector) {
         return Vector.scale(vector, -1);
     }
 
+    /**
+     * @param vector
+     * @param normal
+     * @return Vector
+     */
     public static Vector reflect (Vector vector, Vector normal) {
         double f = 2 * Vector.dot(vector, normal);
 

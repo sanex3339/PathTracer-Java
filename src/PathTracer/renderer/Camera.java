@@ -39,10 +39,18 @@ public class Camera {
             );
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getDirection () {
         return this.direction;
     }
 
+    /**
+     * @param x
+     * @param y
+     * @return Vector
+     */
     public Vector getPerspectiveVector (double x, double y) {
         return Vector.normalize(
             Vector.add(
@@ -59,29 +67,49 @@ public class Camera {
         );
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getPosition () {
         return this.position;
     }
 
-    public Vector getForwardVector () {
+    /**
+     * @return Vector
+     */
+    private Vector getForwardVector () {
         return this.forwardVector;
     }
 
-    public Vector  getRightVector () {
+    /**
+     * @return Vector
+     */
+    private Vector  getRightVector () {
         return this.rightVector;
     }
 
-    public Vector getUpVector () {
+    /**
+     * @return Vector
+     */
+    private Vector getUpVector () {
         return this.upVector;
     }
 
-    public double recenterX (double x) {
+    /**
+     * @param x
+     * @return double
+     */
+    private double recenterX (double x) {
         double aspectCoeff = (this.screenHeight / this.screenWidth) * 2;
 
         return (x - (this.screenWidth / 2)) / aspectCoeff / this.screenWidth;
     }
 
-    public double recenterY (double y) {
+    /**
+     * @param y
+     * @return double
+     */
+    private double recenterY (double y) {
         return -(y - (this.screenHeight / 2)) / 2 / this.screenHeight;
     }
 }

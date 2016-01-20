@@ -36,10 +36,16 @@ public class RGBColor {
         this.b = (int) blue;
     }
 
+    /**
+     * @return int
+     */
     public int getRed () {
         return this.r;
     }
 
+    /**
+     * @return int
+     */
     public int getGreen () {
         return this.g;
     }
@@ -48,6 +54,10 @@ public class RGBColor {
         return this.b;
     }
 
+    /**
+     * @param color
+     * @return RGBColor
+     */
     public RGBColor add (RGBColor color) {
         return new RGBColor(
             this.getRed() + color.getRed(),
@@ -56,6 +66,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param color
+     * @return RGBColor
+     */
     public RGBColor substract (RGBColor color) {
         return new RGBColor(
             this.getRed() - color.getRed(),
@@ -64,6 +78,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param multiplier
+     * @return RGBColor
+     */
     public RGBColor scale(double multiplier) {
         return new RGBColor(
             (int) (this.getRed() * multiplier),
@@ -72,6 +90,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param color
+     * @return RGBColor
+     */
     public RGBColor multiple (RGBColor color) {
         return new RGBColor(
             this.getRed() * color.getRed(),
@@ -80,6 +102,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param value
+     * @return RGBColor
+     */
     public RGBColor divide (double value) {
         return new RGBColor(
             (int) (this.getRed() / value),
@@ -88,6 +114,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param color
+     * @return RGBColor
+     */
     public RGBColor filter (RGBColor color) {
         return new RGBColor(
             this.getRed() * (color.getRed() / 255.0),
@@ -96,6 +126,9 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @return RGBColor
+     */
     public RGBColor inverse () {
         return new RGBColor(
             255 - this.getRed(),
@@ -104,6 +137,10 @@ public class RGBColor {
         );
     }
 
+    /**
+     * @param color
+     * @return boolean
+     */
     public boolean equals (RGBColor color) {
         if (color == null) {
             return false;
@@ -114,6 +151,10 @@ public class RGBColor {
             this.getBlue() == color.getBlue();
     }
 
+    /**
+     * @param color
+     * @return RGBColor
+     */
     public static RGBColor clampRGBColor (RGBColor color) {
         if (color.getRed() > 255) {
             color.setR(255);
@@ -142,14 +183,23 @@ public class RGBColor {
         return color;
     }
 
+    /**
+     * @param value
+     */
     private void setR(int value) {
         this.r = value;
     }
 
+    /**
+     * @param value
+     */
     private void setG(int value) {
         this.g = value;
     }
 
+    /**
+     * @param value
+     */
     private void setB(int value) {
         this.b = value;
     }

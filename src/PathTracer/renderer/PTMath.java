@@ -3,6 +3,12 @@ package PathTracer.renderer;
 public final class PTMath {
     public final static double EPSILON = 0.001;
 
+    /**
+     * Get random point on hemisphere
+     *
+     * @param normal
+     * @return Vector
+     */
     public static Vector cosineSampleHemisphere (Vector normal) {
         double u = Math.random();
         double v = Math.random();

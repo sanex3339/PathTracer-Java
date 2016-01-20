@@ -1,28 +1,40 @@
 package PathTracer.renderer.Objects;
 
+import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.AbstractMaterial;
-import PathTracer.renderer.Materials.LambertianMaterial;
 
-public class Plane implements SceneObject {
+public class Plane <T extends BaseSurface> implements SceneObject <T> {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
-    private AbstractMaterial material = LambertianMaterial.BASE_MATERIAL;
+    private T material;
 
-    public Plane(Vector normal, Vector point) {
+    public Plane(Vector normal, Vector point, T material) {
         this.normal = normal;
         this.point = point;
+        this.material = material;
     }
 
-    Plane (Vector normal) {
+    Plane (Vector normal, T material) {
         this.normal = normal;
+        this.material = material;
     }
 
+    /**
+     * Get area of plane
+     *
+     * @return double
+     */
     public double getArea () {
         return Double.POSITIVE_INFINITY;
     }
 
+    /**
+     * Get ray-plane intersection data
+     *
+     * @param ray
+     * @return IntersectData
+     */
     public IntersectData getIntersectData (Ray ray) {
         double distance;
         Vector hitPoint;
@@ -63,25 +75,33 @@ public class Plane implements SceneObject {
         );
     }
 
-    public AbstractMaterial getMaterial () {
+    /**
+     * @return T extend BaseSurface
+     */
+    public T getMaterial () {
         return this.material;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getPosition () {
         return this.point;
     }
 
+    /**
+     * @return Vector
+     */
     public Vector getRandomPoint () {
         return this.getPosition();
     }
 
+    /**
+     * Get normal vector
+     *
+     * @return Vector
+     */
     public Vector getNormal () {
         return this.normal;
-    }
-
-    public Plane setMaterial (AbstractMaterial material) {
-        this.material = material;
-
-        return this;
     }
 }

@@ -3,13 +3,16 @@ package PathTracer.renderer.Materials;
 import PathTracer.renderer.RGBColor;
 import PathTracer.renderer.Vector;
 
-public class LambertianMaterial extends AbstractMaterial {
-    public static LambertianMaterial BASE_MATERIAL = new LambertianMaterial(RGBColor.GRAY);
-
-    public LambertianMaterial(RGBColor color) {
+public class DiffuseMaterial extends AbstractMaterial {
+    public DiffuseMaterial (RGBColor color) {
         super(color);
     }
 
+    /**
+     * @param direction
+     * @param normal
+     * @return RGBColor
+     */
     @Override
     public RGBColor getBRDF (Vector direction, Vector normal) {
         double cosTheta = Vector.dot(
@@ -23,6 +26,11 @@ public class LambertianMaterial extends AbstractMaterial {
             .divide(Math.PI);
     }
 
+    /**
+     * @param direction
+     * @param normal
+     * @return double
+     */
     @Override
     public double getPDF (Vector direction, Vector normal) {
         double cosTheta = Vector.dot(
@@ -31,5 +39,13 @@ public class LambertianMaterial extends AbstractMaterial {
         );
 
         return cosTheta / Math.PI;
+    }
+
+    /**
+     * @return boolean
+     */
+    @Override
+    public boolean isLightSource () {
+        return false;
     }
 }
