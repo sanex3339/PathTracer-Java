@@ -7,11 +7,11 @@ import PathTracer.renderer.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Triangle <T extends BaseSurface> implements SceneObject <T> {
+public class Triangle implements SceneObject {
     private List<Vector> vertices = new ArrayList<>();
-    private T material;
+    private BaseSurface material;
 
-    public Triangle(List<Vector> vertices, T material) {
+    public Triangle(List<Vector> vertices, BaseSurface material) {
         if (vertices.size() != 3) {
             throw new IllegalArgumentException("Each triangle must contain only 3 vertices.");
         }
@@ -152,7 +152,7 @@ public class Triangle <T extends BaseSurface> implements SceneObject <T> {
     /**
      * @return T extend BaseSurface
      */
-    public T getMaterial () {
+    public BaseSurface getMaterial () {
         return this.material;
     }
 

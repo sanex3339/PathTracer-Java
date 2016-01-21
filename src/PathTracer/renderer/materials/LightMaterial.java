@@ -18,13 +18,13 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     private double intensity = 0;
 
     public LightMaterial (RGBColor emissionColor, double intensity) {
-        this.color = emissionColor;
+        this.surfaceColor = emissionColor;
         this.emissionColor = emissionColor;
         this.intensity = intensity;
     }
 
     public LightMaterial (RGBColor emissionColor) {
-        this.color = emissionColor;
+        this.surfaceColor = emissionColor;
         this.emissionColor = emissionColor;
         this.intensity = 1;
     }
@@ -91,7 +91,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
      * @param scene
      * @return LightSourceSamplingData
      */
-    public LightSourceSamplingData sampleLight(IntersectPoint intersection, SceneObject light, Scene scene) {
+    public LightSourceSamplingData sampleLight (IntersectPoint intersection, SceneObject light, Scene scene) {
         Vector lightSourceRandomPoint = light.getRandomPoint();
         Vector rayLine = Vector.substract(
             lightSourceRandomPoint,

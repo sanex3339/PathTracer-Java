@@ -4,12 +4,12 @@ import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 
-public class Sphere <T extends BaseSurface> implements SceneObject <T> {
+public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
-    private T material;
+    private BaseSurface material;
 
-    public Sphere(Vector center, double radius, T material) {
+    public Sphere(Vector center, double radius, BaseSurface material) {
         this.position = center;
         this.radius = radius;
         this.material = material;
@@ -83,7 +83,7 @@ public class Sphere <T extends BaseSurface> implements SceneObject <T> {
     /**
      * @return T extend BaseSurface
      */
-    public T getMaterial () {
+    public BaseSurface getMaterial () {
         return this.material;
     }
 

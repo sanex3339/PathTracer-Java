@@ -37,7 +37,7 @@ final public class Main {
 
         // light square
         objects.add(
-            new Polygon<EmissiveSurface>(
+            new Polygon(
                 Arrays.asList(
                     new Vector(-250, 699, 250),
                     new Vector(250, 699, 250),
@@ -53,7 +53,7 @@ final public class Main {
 
         // mirror sphere
         objects.add(
-            new Sphere<ReflectiveSurface>(
+            new Sphere(
                 new Vector(-330, -400, 300),
                 300,
                 new MirrorMaterial(RGBColor.BLACK, 1)
@@ -62,7 +62,7 @@ final public class Main {
 
         // gray sphere
         objects.add(
-            new Sphere<BaseSurface>(
+            new Sphere(
                 new Vector(330, -400, -50),
                 300,
                 new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
@@ -71,7 +71,7 @@ final public class Main {
 
         // top polygon
         objects.add(
-            new Polygon<BaseSurface>(
+            new Polygon(
                 Arrays.asList(
                     new Vector(-700, 700, 700),
                     new Vector(700, 700, 700),
@@ -84,7 +84,7 @@ final public class Main {
 
         // bottom plane
         objects.add(
-            new Plane<BaseSurface>(
+            new Plane(
                 new Vector(0, 1, 0),
                 new Vector (0, -700, 0),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
@@ -93,7 +93,7 @@ final public class Main {
 
         // right plane
         objects.add(
-            new Plane<BaseSurface>(
+            new Plane(
                 new Vector(-1, 0, 0),
                 new Vector (700, 0, 0),
                 new DiffuseMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
@@ -102,7 +102,7 @@ final public class Main {
 
         // left plane
         objects.add(
-            new Plane<BaseSurface>(
+            new Plane(
                 new Vector(1, 0, 0),
                 new Vector (-700, 0, 0),
                 new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
@@ -111,7 +111,7 @@ final public class Main {
 
         // front plane
         objects.add(
-            new Plane<BaseSurface>(
+            new Plane(
                 new Vector(0, 0, -1),
                 new Vector (0, 0, 700),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
@@ -120,7 +120,7 @@ final public class Main {
 
         // back polygon
         objects.add(
-            new Polygon<BaseSurface>(
+            new Polygon(
                 Arrays.asList(
                     new Vector(-700, 700, -700),
                     new Vector(700, 700, -700),

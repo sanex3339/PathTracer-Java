@@ -5,8 +5,8 @@ import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
 
 public class DiffuseMaterial extends AbstractMaterial {
-    public DiffuseMaterial (RGBColor color) {
-        super(color);
+    public DiffuseMaterial (RGBColor surfaceColor) {
+        super(surfaceColor);
     }
 
     /**
@@ -34,7 +34,7 @@ public class DiffuseMaterial extends AbstractMaterial {
         );
 
         return this
-            .getColor()
+            .getSurfaceColor()
             .scale(cosTheta)
             .divide(Math.PI);
     }

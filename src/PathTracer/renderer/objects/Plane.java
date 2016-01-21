@@ -4,18 +4,18 @@ import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 
-public class Plane <T extends BaseSurface> implements SceneObject <T> {
+public class Plane implements SceneObject {
     private Vector normal;
     private Vector point = new Vector(0, 0, 0);
-    private T material;
+    private BaseSurface material;
 
-    public Plane(Vector normal, Vector point, T material) {
+    public Plane(Vector normal, Vector point, BaseSurface material) {
         this.normal = normal;
         this.point = point;
         this.material = material;
     }
 
-    Plane (Vector normal, T material) {
+    Plane (Vector normal, BaseSurface material) {
         this.normal = normal;
         this.material = material;
     }
@@ -78,7 +78,7 @@ public class Plane <T extends BaseSurface> implements SceneObject <T> {
     /**
      * @return T extend BaseSurface
      */
-    public T getMaterial () {
+    public BaseSurface getMaterial () {
         return this.material;
     }
 

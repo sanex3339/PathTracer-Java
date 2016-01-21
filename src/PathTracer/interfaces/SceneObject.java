@@ -4,10 +4,10 @@ import PathTracer.renderer.IntersectData;
 import PathTracer.renderer.Ray;
 import PathTracer.renderer.Vector;
 
-public interface SceneObject <T extends BaseSurface> {
+public interface SceneObject {
     double getArea ();
     IntersectData getIntersectData (Ray ray);
-    T getMaterial ();
+    BaseSurface getMaterial ();
     Vector getPosition ();
     Vector getRandomPoint ();
 }

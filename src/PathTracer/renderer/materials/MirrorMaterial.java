@@ -11,8 +11,8 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     private double reflectionCoefficient = 0;
 
-    public MirrorMaterial(RGBColor color, double reflectionCoefficient) {
-        this.color = color;
+    public MirrorMaterial(RGBColor surfaceColor, double reflectionCoefficient) {
+        this.surfaceColor = surfaceColor;
         this.reflectionCoefficient = reflectionCoefficient;
     }
 
@@ -40,7 +40,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     @Override
     public RGBColor getBRDF (Vector direction, Vector normal) {
-        return this.getColor();
+        return this.getSurfaceColor();
     }
 
     /**

@@ -2,6 +2,6 @@ package PathTracer.interfaces;
 
 import PathTracer.renderer.RGBColor;
 
-public interface ColorComputation <T extends BaseSurface> {
+public interface ColorComputation {
     RGBColor calculateColor ();
 }

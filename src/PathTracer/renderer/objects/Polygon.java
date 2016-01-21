@@ -9,12 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Polygon <T extends BaseSurface> implements SceneObject <T> {
+public class Polygon implements SceneObject {
     private List<Triangle> triangles = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
-    private T material;
+    private BaseSurface material;
 
-    public Polygon (List<Vector> vertices, T material) {
+    public Polygon (List<Vector> vertices, BaseSurface material) {
         if (vertices.size() < 3 || vertices.size() > 4) {
             throw new IllegalArgumentException("Each polygon must contain only 3 or 4 vertices.");
         }
@@ -62,7 +62,7 @@ public class Polygon <T extends BaseSurface> implements SceneObject <T> {
     /**
      * @return T extend BaseSurface
      */
-    public T getMaterial () {
+    public BaseSurface getMaterial () {
         return this.material;
     }
 
@@ -106,7 +106,7 @@ public class Polygon <T extends BaseSurface> implements SceneObject <T> {
     private void triangulatePolygon () {
         if (this.vertices.size() == 3) {
             this.triangles.add(
-                new Triangle<>(
+                new Triangle(
                     vertices,
                     this.material
                 )
@@ -137,13 +137,13 @@ public class Polygon <T extends BaseSurface> implements SceneObject <T> {
         }
 
         this.triangles.add(
-            new Triangle<>(
+            new Triangle(
                 Arrays.asList(this.getVertexByIndex(0), this.getVertexByIndex(1), this.getVertexByIndex(ind1)),
                 this.material
             )
         );
         this.triangles.add(
-            new Triangle<>(
+            new Triangle(
                 Arrays.asList(this.getVertexByIndex(ind2), this.getVertexByIndex(2), this.getVertexByIndex(3)),
                 this.material
             )

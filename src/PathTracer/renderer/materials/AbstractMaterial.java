@@ -7,15 +7,15 @@ public abstract class AbstractMaterial implements BaseSurface {
     /**
      * RGB color 0..255
      */
-    protected RGBColor color = RGBColor.GRAY;
+    protected RGBColor surfaceColor = RGBColor.GRAY;
 
     /**
      * Default constructor
      */
     protected AbstractMaterial () { }
 
-    public AbstractMaterial(RGBColor color) {
-        this.color = color;
+    public AbstractMaterial (RGBColor surfaceColor) {
+        this.surfaceColor = surfaceColor;
     }
 
     /**
@@ -40,8 +40,8 @@ public abstract class AbstractMaterial implements BaseSurface {
     /**
      * @return RGBColor
      */
-    public RGBColor getColor () {
-        return this.color;
+    public RGBColor getSurfaceColor () {
+        return this.surfaceColor;
     }
 
     /**
