@@ -17,6 +17,9 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
         this.material = material;
     }
 
+    /**
+     * @return RGBColor
+     */
     public RGBColor calculateColor () {
         double reflectionValue = this.material.getReflectionCoefficient();
 
@@ -37,7 +40,7 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
             ),
             this.scene
         );
-        colorComputationService.calculatePixelColor();
+        colorComputationService.calculateColor();
 
         return colorComputationService
             .getPixelColor()

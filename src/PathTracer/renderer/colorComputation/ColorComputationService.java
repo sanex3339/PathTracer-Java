@@ -21,7 +21,7 @@ public class ColorComputationService {
     /**
      * Start calculation of pixel color
      */
-    public void calculatePixelColor() {
+    public void calculateColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
 
         if (!intersection.isIntersected() || ray.getIteration() > 5) {
@@ -43,6 +43,12 @@ public class ColorComputationService {
         return this.pixelColor;
     }
 
+    /**
+     * @param intersection
+     * @param scene
+     * @param lightSource
+     * @return RGBColor
+     */
     public static RGBColor getExplicitLightSamplingColor (IntersectPoint intersection, Scene scene, SceneObject lightSource) {
         EmissiveSurface lightMaterial = (EmissiveSurface) lightSource.getMaterial();
         LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleLight(intersection, lightSource, scene);
@@ -55,6 +61,12 @@ public class ColorComputationService {
             );
     }
 
+    /**
+     * @param ray
+     * @param intersection
+     * @param newDirection
+     * @return Ray
+     */
     public static Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {
         double epsilon = Vector.dot(newDirection, ray.getDirection()) > 0 ? PTMath.EPSILON : -PTMath.EPSILON;
 
