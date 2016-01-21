@@ -5,12 +5,12 @@ import PathTracer.interfaces.EmissiveSurface;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.Materials.DiffuseMaterial;
-import PathTracer.renderer.Materials.LightMaterial;
-import PathTracer.renderer.Materials.MirrorMaterial;
-import PathTracer.renderer.Objects.Plane;
-import PathTracer.renderer.Objects.Polygon;
-import PathTracer.renderer.Objects.Sphere;
+import PathTracer.renderer.materials.DiffuseMaterial;
+import PathTracer.renderer.materials.LightMaterial;
+import PathTracer.renderer.materials.MirrorMaterial;
+import PathTracer.renderer.objects.Plane;
+import PathTracer.renderer.objects.Polygon;
+import PathTracer.renderer.objects.Sphere;
 
 import java.util.ArrayList;
 import java.util.Arrays;

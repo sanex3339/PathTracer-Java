@@ -1,9 +1,9 @@
-package PathTracer.renderer.Materials;
+package PathTracer.renderer.materials;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.renderer.*;
-import PathTracer.renderer.ColorComputation.*;
+import PathTracer.renderer.colorComputation.*;
 
 public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurface {
     /**

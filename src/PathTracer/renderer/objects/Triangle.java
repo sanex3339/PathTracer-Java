@@ -1,4 +1,4 @@
-package PathTracer.renderer.Objects;
+package PathTracer.renderer.objects;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;

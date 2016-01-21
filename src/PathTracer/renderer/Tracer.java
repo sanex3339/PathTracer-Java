@@ -2,7 +2,7 @@ package PathTracer.renderer;
 
 import PathTracer.interfaces.RayTracer;
 import PathTracer.interfaces.SceneObject;
-import PathTracer.renderer.ColorComputation.ColorComputationService;
+import PathTracer.renderer.colorComputation.ColorComputationService;
 
 import java.awt.*;
 import java.util.ArrayList;

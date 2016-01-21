@@ -1,10 +1,10 @@
-package PathTracer.renderer.Materials;
+package PathTracer.renderer.materials;
 
 import PathTracer.interfaces.EmissiveSurface;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
-import PathTracer.renderer.ColorComputation.*;
+import PathTracer.renderer.colorComputation.*;
 
 public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**

@@ -1,4 +1,4 @@
-package PathTracer.renderer.Materials;
+package PathTracer.renderer.materials;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.renderer.*;

@@ -1,8 +1,8 @@
-package PathTracer.renderer.Materials;
+package PathTracer.renderer.materials;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.renderer.*;
-import PathTracer.renderer.ColorComputation.*;
+import PathTracer.renderer.colorComputation.*;
 
 public class DiffuseMaterial extends AbstractMaterial {
     public DiffuseMaterial (RGBColor color) {

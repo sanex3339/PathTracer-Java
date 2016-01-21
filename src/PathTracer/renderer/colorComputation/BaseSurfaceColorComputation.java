@@ -1,4 +1,4 @@
-package PathTracer.renderer.ColorComputation;
+package PathTracer.renderer.colorComputation;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ColorComputation;
