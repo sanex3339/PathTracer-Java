@@ -1,11 +1,24 @@
 package PathTracer.renderer.Materials;
 
-import PathTracer.renderer.RGBColor;
-import PathTracer.renderer.Vector;
+import PathTracer.interfaces.BaseSurface;
+import PathTracer.renderer.*;
+import PathTracer.renderer.ColorComputation.*;
 
 public class DiffuseMaterial extends AbstractMaterial {
     public DiffuseMaterial (RGBColor color) {
         super(color);
+    }
+
+    /**
+     * @param ray
+     * @param scene
+     * @return RGBColor
+     */
+    @Override
+    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
+
+        return baseColorComputation.calculateColor();
     }
 
     /**

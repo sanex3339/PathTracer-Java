@@ -4,6 +4,7 @@ import PathTracer.interfaces.EmissiveSurface;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import PathTracer.renderer.ColorComputation.*;
 
 public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
@@ -26,6 +27,18 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
         this.color = emissionColor;
         this.emissionColor = emissionColor;
         this.intensity = 1;
+    }
+
+    /**
+     * @param ray
+     * @param scene
+     * @return RGBColor
+     */
+    @Override
+    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+        EmissiveSurfaceColorComputation emissiveSurfaceColorComputation = new EmissiveSurfaceColorComputation<EmissiveSurface>(this);
+
+        return emissiveSurfaceColorComputation.calculateColor();
     }
 
     /**

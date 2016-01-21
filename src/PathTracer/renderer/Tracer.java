@@ -2,6 +2,7 @@ package PathTracer.renderer;
 
 import PathTracer.interfaces.RayTracer;
 import PathTracer.interfaces.SceneObject;
+import PathTracer.renderer.ColorComputation.ColorComputationService;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
         double randX;
         double randY;
 
-        PixelColor pixelColor;
+        ColorComputationService colorComputationService;
 
         List<Color> buffer = new ArrayList<>();
         RGBColor color;
@@ -111,9 +112,9 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
                     this.scene.getCamera().getPerspectiveVector(randX, randY)
                 );
 
-                pixelColor = new PixelColor(ray, this.scene);
-                pixelColor.calculatePixelColor();
-                color = color.add(RGBColor.clampRGBColor(pixelColor.getPixelColor()));
+                colorComputationService = new ColorComputationService(ray, this.scene);
+                colorComputationService.calculatePixelColor();
+                color = color.add(RGBColor.clampRGBColor(colorComputationService.getPixelColor()));
 
                 buffer.add(
                     new Color(

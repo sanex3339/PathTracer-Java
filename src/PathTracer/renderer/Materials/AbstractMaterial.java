@@ -1,8 +1,7 @@
 package PathTracer.renderer.Materials;
 
 import PathTracer.interfaces.BaseSurface;
-import PathTracer.renderer.RGBColor;
-import PathTracer.renderer.Vector;
+import PathTracer.renderer.*;
 
 public abstract class AbstractMaterial implements BaseSurface {
     /**
@@ -44,4 +43,11 @@ public abstract class AbstractMaterial implements BaseSurface {
     public RGBColor getColor () {
         return this.color;
     }
+
+    /**
+     * @param ray
+     * @param scene
+     * @return RGBColor
+     */
+    public abstract RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene);
 }

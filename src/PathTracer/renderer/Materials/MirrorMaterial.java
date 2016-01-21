@@ -1,8 +1,9 @@
 package PathTracer.renderer.Materials;
 
+import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ReflectiveSurface;
-import PathTracer.renderer.RGBColor;
-import PathTracer.renderer.Vector;
+import PathTracer.renderer.*;
+import PathTracer.renderer.ColorComputation.*;
 
 public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurface {
     /**
@@ -13,6 +14,23 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
     public MirrorMaterial(RGBColor color, double reflectionCoefficient) {
         this.color = color;
         this.reflectionCoefficient = reflectionCoefficient;
+    }
+
+    /**
+     * @param ray
+     * @param scene
+     * @return RGBColor
+     */
+    @Override
+    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
+        ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<ReflectiveSurface>(ray, intersection, scene, this);
+
+        return baseColorComputation
+            .calculateColor()
+            .add(
+                reflectiveSurfaceColorComputation.calculateColor()
+            );
     }
 
     /**
