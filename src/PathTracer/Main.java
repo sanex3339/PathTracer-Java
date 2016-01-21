@@ -1,8 +1,5 @@
 package PathTracer;
 
-import PathTracer.interfaces.BaseSurface;
-import PathTracer.interfaces.EmissiveSurface;
-import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.materials.DiffuseMaterial;

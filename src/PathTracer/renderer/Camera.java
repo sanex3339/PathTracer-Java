@@ -7,8 +7,8 @@ public class Camera {
     private Vector rightVector;
     private Vector upVector;
     private double zoom = 1.5;
-    private int screenWidth;
-    private int screenHeight;
+    private double screenWidth;
+    private double screenHeight;
 
     public Camera (Vector position, Vector direction, int screenWidth, int screenHeight) {
         this.position = position;
@@ -100,9 +100,9 @@ public class Camera {
      * @return double
      */
     private double recenterX (double x) {
-        double aspectCoeff = (this.screenHeight / this.screenWidth) * 2;
+        double aspectCoefficient = (this.screenHeight / this.screenWidth) * 2;
 
-        return (x - (this.screenWidth / 2)) / aspectCoeff / this.screenWidth;
+        return (x - (this.screenWidth / 2)) / aspectCoefficient / this.screenWidth;
     }
 
     /**
