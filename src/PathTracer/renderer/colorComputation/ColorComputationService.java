@@ -21,7 +21,7 @@ public class ColorComputationService {
     /**
      * Start calculation of pixel color
      */
-    public void calculateColor() {
+    public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
 
         if (!intersection.isIntersected() || ray.getIteration() > 5) {

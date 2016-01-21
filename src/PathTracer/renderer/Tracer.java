@@ -113,7 +113,7 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
                 );
 
                 colorComputationService = new ColorComputationService(ray, this.scene);
-                colorComputationService.calculateColor();
+                colorComputationService.calculatePixelColor();
                 color = color.add(RGBColor.clampRGBColor(colorComputationService.getPixelColor()));
 
                 buffer.add(

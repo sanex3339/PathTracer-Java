@@ -40,7 +40,7 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
             ),
             this.scene
         );
-        colorComputationService.calculateColor();
+        colorComputationService.calculatePixelColor();
 
         return colorComputationService
             .getPixelColor()

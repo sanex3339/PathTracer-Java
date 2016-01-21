@@ -34,7 +34,7 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
             ColorComputationService.getNextIterationRandomRay(ray, intersection, newDirection),
             this.scene
         );
-        nextIterationPixelColor.calculateColor();
+        nextIterationPixelColor.calculatePixelColor();
 
         return explicitLightSamplingColor
             .add(
