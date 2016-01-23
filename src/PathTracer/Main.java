@@ -3,6 +3,7 @@ package PathTracer;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.materials.DiffuseMaterial;
+import PathTracer.renderer.materials.GlassMaterial;
 import PathTracer.renderer.materials.LightMaterial;
 import PathTracer.renderer.materials.MirrorMaterial;
 import PathTracer.renderer.objects.Plane;
@@ -15,8 +16,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 200;
-        int screenHeight = 200;
+        int screenWidth = 500;
+        int screenHeight = 500;
 
         List<SceneObject> objects = new ArrayList<>();
 
@@ -57,12 +58,12 @@ final public class Main {
             )
         );
 
-        // gray sphere
+        // glass sphere
         objects.add(
             new Sphere(
                 new Vector(330, -400, -50),
                 300,
-                new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
+                new GlassMaterial()
             )
         );
 

@@ -23,10 +23,6 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
     public RGBColor calculateColor () {
         double reflectionValue = this.material.getReflectionCoefficient();
 
-        if (reflectionValue == 0) {
-            return RGBColor.BLACK;
-        }
-
         Vector reflectedRay = Vector.reflect(
             ray.getDirection(),
             intersection.getNormal()
