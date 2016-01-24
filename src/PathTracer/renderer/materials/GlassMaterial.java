@@ -18,7 +18,7 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0.08;
+    private double reflectionCoefficient = 0.75;
 
     /**
      * Refraction coefficient 0..1

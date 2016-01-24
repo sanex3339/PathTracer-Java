@@ -82,4 +82,44 @@ public class ColorComputationService {
             ray.getIteration() + 1
         );
     }
+
+    /**
+     * @param cosTheta1
+     * @param etaExt
+     * @param etaInt
+     * @return
+     */
+    public static double fresnel (double cosTheta1, double etaExt, double etaInt) {
+        double temp;
+
+        if (cosTheta1 < PTMath.EPSILON) {
+            temp = etaExt;
+            etaExt = etaInt;
+            etaInt = temp;
+        }
+
+        double sinTheta = (etaExt / etaInt) * Math.sqrt(Math.max(PTMath.EPSILON, 1 - cosTheta1 * cosTheta1));
+
+        if (sinTheta > 1) {
+            return 1;
+        }
+
+        double cosTheta2 = Math.sqrt(Math.max(PTMath.EPSILON, 1 - sinTheta * sinTheta));
+
+        return ColorComputationService.fresnelDielectric(Math.abs(cosTheta1), cosTheta2, etaInt, etaExt);
+    }
+
+    /**
+     * @param cosTheta1
+     * @param cosTheta2
+     * @param etaExt
+     * @param etaInt
+     * @return
+     */
+    public static double fresnelDielectric (double cosTheta1, double cosTheta2, double etaExt, double etaInt) {
+        double Rs = (etaExt * cosTheta1 - etaInt * cosTheta2) / (etaExt * cosTheta1 + etaInt * cosTheta2);
+        double Rp = (etaInt * cosTheta1 - etaExt * cosTheta2) / (etaInt * cosTheta1 + etaExt * cosTheta2);
+
+        return (Rs * Rs + Rp * Rp) / 2;
+    }
 }

@@ -22,22 +22,25 @@ public class RefractiveSurfaceColorComputation <T extends RefractiveSurface> imp
      * @return RGBColor
      */
     public RGBColor calculateColor () {
-        double refractionCoefficient = this.material.getRefractionCoefficient();
-        Vector refractedRay = this.getRefractiveRayDirection();
-
         ColorComputationService colorComputationService = new ColorComputationService(
             new Ray(
                 intersection.getHitPoint(),
-                refractedRay,
+                this.getRefractiveRayDirection(),
                 ray.getIteration() + 1
             ),
             this.scene
         );
         colorComputationService.calculatePixelColor();
 
+        double fresnelCoefficient = ColorComputationService.fresnel(
+            Vector.dot(ray.getDirection(), intersection.getNormal()),
+            this.material.getIOR(),
+            1
+        );
+
         return colorComputationService
             .getPixelColor()
-            .scale(refractionCoefficient);
+            .scale(this.material.getRefractionCoefficient() * (1 - fresnelCoefficient));
     }
 
     private Vector getRefractiveRayDirection () {
