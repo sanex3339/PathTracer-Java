@@ -32,15 +32,8 @@ public class RefractiveSurfaceColorComputation <T extends RefractiveSurface> imp
         );
         colorComputationService.calculatePixelColor();
 
-        double fresnelCoefficient = ColorComputationService.fresnel(
-            Vector.dot(ray.getDirection(), intersection.getNormal()),
-            this.material.getIOR(),
-            1
-        );
-
         return colorComputationService
-            .getPixelColor()
-            .scale(this.material.getRefractionCoefficient() * (1 - fresnelCoefficient));
+            .getPixelColor();
     }
 
     private Vector getRefractiveRayDirection () {

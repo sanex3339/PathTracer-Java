@@ -16,7 +16,6 @@ public class EmissiveSurfaceColorComputation <T extends EmissiveSurface> impleme
      */
     public RGBColor calculateColor () {
         return this.material
-            .getEmissionColor()
-            .scale(this.material.getIntensity());
+            .getEmissionColor();
     }
 }

@@ -6,6 +6,7 @@ import PathTracer.interfaces.RefractiveSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.RGBColor;
 import PathTracer.renderer.colorComputation.BaseSurfaceColorComputation;
+import PathTracer.renderer.colorComputation.ColorComputationService;
 import PathTracer.renderer.colorComputation.ReflectiveSurfaceColorComputation;
 import PathTracer.renderer.colorComputation.RefractiveSurfaceColorComputation;
 
@@ -18,12 +19,12 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0.75;
+    private double reflectionCoefficient = 0.65;
 
     /**
      * Refraction coefficient 0..1
      */
-    private double refractionCoefficient = 0.92;
+    private double refractionCoefficient = 1;
 
     /**
      * Index of refraction, for glass 1.51
@@ -52,9 +53,17 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
         ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
         RefractiveSurfaceColorComputation refractiveSurfaceColorComputation = new RefractiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
+        double fresnelCoefficient = ColorComputationService.fresnel(
+            Vector.dot(ray.getDirection(), intersection.getNormal()),
+            this.IOR,
+            1
+        );
+
         return reflectiveSurfaceColorComputation.calculateColor()
+            .scale(this.reflectionCoefficient * fresnelCoefficient)
             .add(
                 refractiveSurfaceColorComputation.calculateColor()
+                    .scale(this.refractionCoefficient * (1 - fresnelCoefficient))
             );
     }
 

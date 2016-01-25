@@ -92,19 +92,19 @@ public class ColorComputationService {
     public static double fresnel (double cosTheta1, double etaExt, double etaInt) {
         double temp;
 
-        if (cosTheta1 < PTMath.EPSILON) {
+        if (cosTheta1 < 0) {
             temp = etaExt;
             etaExt = etaInt;
             etaInt = temp;
         }
 
-        double sinTheta = (etaExt / etaInt) * Math.sqrt(Math.max(PTMath.EPSILON, 1 - cosTheta1 * cosTheta1));
+        double sinTheta = (etaExt / etaInt) * Math.sqrt(Math.max(0, 1 - cosTheta1 * cosTheta1));
 
         if (sinTheta > 1) {
             return 1;
         }
 
-        double cosTheta2 = Math.sqrt(Math.max(PTMath.EPSILON, 1 - sinTheta * sinTheta));
+        double cosTheta2 = Math.sqrt(Math.max(0, 1 - sinTheta * sinTheta));
 
         return ColorComputationService.fresnelDielectric(Math.abs(cosTheta1), cosTheta2, etaInt, etaExt);
     }

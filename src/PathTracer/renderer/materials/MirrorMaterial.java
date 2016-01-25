@@ -11,11 +11,6 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     private double reflectionCoefficient = 0;
 
-    /**
-     * Index of refraction, for mirror 16
-     */
-    private double IOR = 16;
-
     public MirrorMaterial(RGBColor surfaceColor, double reflectionCoefficient) {
         this.surfaceColor = surfaceColor;
         this.reflectionCoefficient = reflectionCoefficient;
@@ -35,6 +30,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
             .calculateColor()
             .add(
                 reflectiveSurfaceColorComputation.calculateColor()
+                    .scale(reflectionCoefficient)
             );
     }
 
@@ -63,13 +59,6 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     public double getReflectionCoefficient () {
         return this.reflectionCoefficient;
-    }
-
-    /**
-     * @return double
-     */
-    public double getIOR () {
-        return this.IOR;
     }
 
     /**

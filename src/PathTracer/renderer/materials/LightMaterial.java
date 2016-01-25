@@ -38,7 +38,8 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
         EmissiveSurfaceColorComputation emissiveSurfaceColorComputation = new EmissiveSurfaceColorComputation<EmissiveSurface>(this);
 
-        return emissiveSurfaceColorComputation.calculateColor();
+        return emissiveSurfaceColorComputation.calculateColor()
+            .scale(this.intensity);
     }
 
     /**
