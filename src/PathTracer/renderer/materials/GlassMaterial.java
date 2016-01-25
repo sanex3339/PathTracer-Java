@@ -1,25 +1,18 @@
 package PathTracer.renderer.materials;
 
-import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.interfaces.RefractiveSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.RGBColor;
-import PathTracer.renderer.colorComputation.BaseSurfaceColorComputation;
 import PathTracer.renderer.colorComputation.ColorComputationService;
 import PathTracer.renderer.colorComputation.ReflectiveSurfaceColorComputation;
 import PathTracer.renderer.colorComputation.RefractiveSurfaceColorComputation;
 
 public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface, RefractiveSurface {
     /**
-     * diffuse coefficient
-     */
-    private double diffuseCoefficient = 0;
-
-    /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0.65;
+    private double reflectionCoefficient = 0.75;
 
     /**
      * Refraction coefficient 0..1
@@ -49,12 +42,11 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
      */
     @Override
     public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
         ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
         RefractiveSurfaceColorComputation refractiveSurfaceColorComputation = new RefractiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
         double fresnelCoefficient = ColorComputationService.fresnel(
-            Vector.dot(ray.getDirection(), intersection.getNormal()),
+            Vector.dot(intersection.getNormal(), ray.getDirection()),
             this.IOR,
             1
         );

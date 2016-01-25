@@ -9,7 +9,6 @@ public class RefractiveSurfaceColorComputation <T extends RefractiveSurface> imp
     private IntersectPoint intersection;
     private Scene scene;
     private T material;
-    private double schlick;
 
     public RefractiveSurfaceColorComputation (Ray ray, IntersectPoint intersection, Scene scene, T material) {
         this.ray = ray;

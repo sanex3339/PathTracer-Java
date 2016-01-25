@@ -122,4 +122,22 @@ public class ColorComputationService {
 
         return (Rs * Rs + Rp * Rp) / 2;
     }
+
+    /**
+     * Fresnel Schlick approximation
+     *
+     * @param cosTheta
+     * @param n1
+     * @param n2
+     * @return double fresnel coefficient
+     */
+    public static double fresnelSchlick (double cosTheta, double n1, double n2) {
+        if (cosTheta <= PTMath.EPSILON) {
+            cosTheta = - cosTheta;
+        }
+
+        double r0 = Math.pow((n1 - n2) / (n1 + n2), 2);
+
+        return r0 + (1 - r0) * Math.pow((1 - cosTheta), 5);
+    }
 }
