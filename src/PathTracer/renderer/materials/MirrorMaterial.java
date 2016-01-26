@@ -9,7 +9,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
     /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0;
+    private double reflectionCoefficient = 1;
 
     public MirrorMaterial(RGBColor surfaceColor, double reflectionCoefficient) {
         this.surfaceColor = surfaceColor;
@@ -23,8 +23,8 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     @Override
     public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
-        ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<ReflectiveSurface>(ray, intersection, scene, this);
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, this, scene);
+        ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
         return baseColorComputation
             .calculateColor()

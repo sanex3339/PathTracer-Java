@@ -12,7 +12,7 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0.75;
+    private double reflectionCoefficient = 0.7;
 
     /**
      * Refraction coefficient 0..1
@@ -22,7 +22,7 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * Index of refraction, for glass 1.51
      */
-    private double IOR = 1.51;
+    private double IOR = 1.6;
 
     public GlassMaterial () {
         this.surfaceColor = RGBColor.BLACK;

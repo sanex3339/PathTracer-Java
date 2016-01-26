@@ -16,7 +16,7 @@ public class DiffuseMaterial extends AbstractMaterial {
      */
     @Override
     public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, this, scene);
 
         return baseColorComputation.calculateColor();
     }

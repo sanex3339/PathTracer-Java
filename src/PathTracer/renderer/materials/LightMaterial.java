@@ -10,7 +10,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
      * RGB emission color 0..255
      */
-    private RGBColor emissionColor = RGBColor.BLACK;
+    private RGBColor emissionColor = RGBColor.WHITE;
 
     /**
      * Emission intensity
@@ -36,7 +36,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
      */
     @Override
     public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        EmissiveSurfaceColorComputation emissiveSurfaceColorComputation = new EmissiveSurfaceColorComputation<EmissiveSurface>(this);
+        EmissiveSurfaceColorComputation emissiveSurfaceColorComputation = new EmissiveSurfaceColorComputation<>(this);
 
         return emissiveSurfaceColorComputation.calculateColor()
             .scale(this.intensity);

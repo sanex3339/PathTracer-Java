@@ -43,13 +43,13 @@ public class RefractiveSurfaceColorComputation <T extends RefractiveSurface> imp
             ray.getDirection()
         );
 
-        if (cos_theta < PTMath.EPSILON) {
+        if (cos_theta < 0) {
             cos_theta *= -1;
             normal = Vector.scale(normal, -1);
             eta = 1 / eta;
         }
 
-        double k = 1 - eta * eta * (1 - cos_theta * cos_theta);
+        double k = 1 - Math.pow(eta, 2) * (1 - Math.pow(cos_theta, 2));
 
         return Vector.normalize(
             Vector.add(
