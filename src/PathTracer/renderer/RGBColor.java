@@ -50,6 +50,9 @@ public class RGBColor {
         return this.g;
     }
 
+    /**
+     * @return int
+     */
     public int getBlue () {
         return this.b;
     }

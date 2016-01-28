@@ -1,6 +1,5 @@
 package PathTracer.renderer.materials;
 
-import PathTracer.interfaces.BaseSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
 
@@ -33,10 +32,8 @@ public class DiffuseMaterial extends AbstractMaterial {
             normal
         );
 
-        return this
-            .getSurfaceColor()
-            .scale(cosTheta)
-            .divide(Math.PI);
+        return this.getSurfaceColor()
+            .scale(cosTheta / Math.PI);
     }
 
     /**
