@@ -124,11 +124,13 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
             );
 
             double cosTheta1 = - Vector.dot(lightDirection, shadowRay.getNormal());
+            double cosTheta2 = Vector.dot(lightDirection, intersection.getNormal());
             double lightPDF = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
 
             RGBColor lightColor = intersectionMaterial
                 .getBRDF(lightDirection, intersection.getNormal())
                 .filter(emissionColor)
+                //.scale(cosTheta2 / Math.PI)
                 .scale(lightPower);
 
             return new LightSourceSamplingData(

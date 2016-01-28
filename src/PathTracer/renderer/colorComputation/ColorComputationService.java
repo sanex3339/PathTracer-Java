@@ -72,7 +72,19 @@ public class ColorComputationService {
 
         return new Ray(
             Vector.add(
-                ray.getOrigin(),
+                Vector.add(
+                    ray.getOrigin(),
+                    Vector.scale(
+                        Vector.scale(
+                            intersection.getNormal(),
+                            PTMath.EPSILON
+                        ),
+                        Vector.dot(
+                            newDirection,
+                            intersection.getNormal()
+                        )
+                    )
+                ),
                 Vector.scale(
                     ray.getDirection(),
                     intersection.getDistanceFromOrigin() * (1 + epsilon)
