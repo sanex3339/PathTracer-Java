@@ -23,17 +23,19 @@ public class ColorComputationService {
      */
     public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
+        double terminationProbability = this.terminationProbability(ray.getIteration());
 
-        if (!intersection.isIntersected() || ray.getIteration() > 7) {
+        if (!intersection.isIntersected() || Math.random() < terminationProbability) {
             this.pixelColor = RGBColor.BLACK;
 
             return;
         }
 
-        this.pixelColor = intersection.
-            getOwner().
-            getMaterial().
-            getComputedColor(this.ray, intersection, this.scene);
+        this.pixelColor = intersection
+            .getOwner()
+            .getMaterial()
+            .getComputedColor(this.ray, intersection, this.scene)
+            .scale(1 / (1 - terminationProbability));
     }
 
     /**
@@ -151,5 +153,16 @@ public class ColorComputationService {
         double r0 = Math.pow((n1 - n2) / (n1 + n2), 2);
 
         return r0 + (1 - r0) * Math.pow((1 - cosTheta), 5);
+    }
+
+    /**
+     * Return ray termination probability based on current ray iteration.
+     * probability = (1 / (1 + sqrt(iteration) / 6)
+     *
+     * @param iteration
+     * @return double
+     */
+    private double terminationProbability (double iteration) {
+        return 1 - (1 / (1 + Math.sqrt(iteration) / 6));
     }
 }

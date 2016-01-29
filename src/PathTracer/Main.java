@@ -16,8 +16,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 200;
-        int screenHeight = 200;
+        int screenWidth = 400;
+        int screenHeight = 400;
 
         List<SceneObject> objects = new ArrayList<>();
 
@@ -103,7 +103,7 @@ final public class Main {
             new Plane(
                 new Vector(1, 0, 0),
                 new Vector (-700, 0, 0),
-                new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
+                new DiffuseMaterial(new RGBColor(255, 134, 127))
             )
         );
 
