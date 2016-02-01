@@ -18,9 +18,9 @@ public class RefractiveSurfaceColorComputation <T extends RefractiveSurface> imp
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor calculateColor () {
+    public PTColor calculateColor () {
         ColorComputationService colorComputationService = new ColorComputationService(
             new Ray(
                 intersection.getHitPoint(),

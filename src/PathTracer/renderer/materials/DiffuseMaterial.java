@@ -4,17 +4,17 @@ import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
 
 public class DiffuseMaterial extends AbstractMaterial {
-    public DiffuseMaterial (RGBColor surfaceColor) {
+    public DiffuseMaterial (PTColor surfaceColor) {
         super(surfaceColor);
     }
 
     /**
      * @param ray
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+    public PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
         BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, this, scene);
 
         return baseColorComputation.calculateColor();
@@ -23,10 +23,10 @@ public class DiffuseMaterial extends AbstractMaterial {
     /**
      * @param direction
      * @param normal
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public PTColor getBRDF (Vector direction, Vector normal) {
         double cosTheta = Vector.dot(
             direction,
             normal

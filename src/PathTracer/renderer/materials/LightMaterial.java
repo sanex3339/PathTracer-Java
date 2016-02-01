@@ -10,20 +10,20 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
      * RGB emission color 0..255
      */
-    private RGBColor emissionColor = RGBColor.WHITE;
+    private PTColor emissionColor = PTColor.WHITE;
 
     /**
      * Emission intensity
      */
     private double intensity = 0;
 
-    public LightMaterial (RGBColor emissionColor, double intensity) {
+    public LightMaterial (PTColor emissionColor, double intensity) {
         this.surfaceColor = emissionColor;
         this.emissionColor = emissionColor;
         this.intensity = intensity;
     }
 
-    public LightMaterial (RGBColor emissionColor) {
+    public LightMaterial (PTColor emissionColor) {
         this.surfaceColor = emissionColor;
         this.emissionColor = emissionColor;
         this.intensity = 1;
@@ -32,10 +32,10 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
      * @param ray
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+    public PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
         EmissiveSurfaceColorComputation emissiveSurfaceColorComputation = new EmissiveSurfaceColorComputation<>(this);
 
         return emissiveSurfaceColorComputation.calculateColor()
@@ -45,10 +45,10 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
      * @param direction
      * @param normal
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public PTColor getBRDF (Vector direction, Vector normal) {
         return this.getEmissionColor();
     }
 
@@ -63,9 +63,9 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor getEmissionColor () {
+    public PTColor getEmissionColor () {
         return this.emissionColor;
     }
 
@@ -114,7 +114,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
             shadowRay.isIntersected() && shadowRayMaterial.isLightSource()
         ) {
             EmissiveSurface lightMaterial = (EmissiveSurface) light.getMaterial();
-            RGBColor emissionColor = lightMaterial.getEmissionColor();
+            PTColor emissionColor = lightMaterial.getEmissionColor();
 
             double lightPower = lightMaterial.getIntensity();
             double shadowRayLength = rayLine.getLength();
@@ -127,11 +127,19 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
             double cosTheta2 = Vector.dot(lightDirection, intersection.getNormal());
             double lightPDF = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
 
-            RGBColor lightColor = intersectionMaterial
+            double r = Vector.substract(
+                light.getPosition(),
+                intersection.getHitPoint()
+            ).getLength();
+            double pe = Math.pow(r, 2) / (light.getArea() * cosTheta1);
+            double pi = cosTheta1 / Math.PI;
+            double we = Math.pow(pe, 2) / (Math.pow(pe, 2) + Math.pow(pi, 2));
+
+            PTColor lightColor = intersectionMaterial
                 .getBRDF(lightDirection, intersection.getNormal())
-                .filter(emissionColor)
-                //.scale(cosTheta2 / Math.PI)
-                .scale(lightPower);
+                .multiple(emissionColor)
+                .scale(lightPower)
+                .scale(we);
 
             return new LightSourceSamplingData(
                 lightColor,
@@ -139,7 +147,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
             );
         } else {
             return new LightSourceSamplingData(
-                RGBColor.BLACK,
+                PTColor.BLACK,
                 1
             );
         }

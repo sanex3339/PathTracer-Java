@@ -11,7 +11,7 @@ public class ColorComputationService {
     /**
      * Final pixel color
      */
-    private RGBColor pixelColor = RGBColor.BLACK;
+    private PTColor pixelColor = PTColor.BLACK;
 
     public ColorComputationService(Ray ray, Scene scene) {
         this.ray = ray;
@@ -26,7 +26,7 @@ public class ColorComputationService {
         double terminationProbability = this.terminationProbability(ray.getIteration());
 
         if (!intersection.isIntersected() || Math.random() < terminationProbability) {
-            this.pixelColor = RGBColor.BLACK;
+            this.pixelColor = PTColor.BLACK;
 
             return;
         }
@@ -39,9 +39,9 @@ public class ColorComputationService {
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor getPixelColor () {
+    public PTColor getPixelColor () {
         return this.pixelColor;
     }
 
@@ -49,9 +49,9 @@ public class ColorComputationService {
      * @param intersection
      * @param scene
      * @param lightSource
-     * @return RGBColor
+     * @return PTColor
      */
-    public static RGBColor getExplicitLightSamplingColor (IntersectPoint intersection, Scene scene, SceneObject lightSource) {
+    public static PTColor getExplicitLightSamplingColor (IntersectPoint intersection, Scene scene, SceneObject lightSource) {
         EmissiveSurface lightMaterial = (EmissiveSurface) lightSource.getMaterial();
         LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleLight(intersection, lightSource, scene);
 

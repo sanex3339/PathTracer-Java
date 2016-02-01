@@ -3,7 +3,7 @@ package PathTracer.renderer.materials;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.interfaces.RefractiveSurface;
 import PathTracer.renderer.*;
-import PathTracer.renderer.RGBColor;
+import PathTracer.renderer.PTColor;
 import PathTracer.renderer.colorComputation.ColorComputationService;
 import PathTracer.renderer.colorComputation.ReflectiveSurfaceColorComputation;
 import PathTracer.renderer.colorComputation.RefractiveSurfaceColorComputation;
@@ -25,10 +25,10 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     private double IOR = 1.6;
 
     public GlassMaterial () {
-        this.surfaceColor = RGBColor.BLACK;
+        this.surfaceColor = PTColor.BLACK;
     }
 
-    public GlassMaterial (RGBColor surfaceColor, double reflectionCoefficient, double IOR) {
+    public GlassMaterial (PTColor surfaceColor, double reflectionCoefficient, double IOR) {
         this.surfaceColor = surfaceColor;
         this.reflectionCoefficient = reflectionCoefficient;
         this.refractionCoefficient = 1 - this.reflectionCoefficient;
@@ -38,10 +38,10 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * @param ray
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+    public PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
         ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
         RefractiveSurfaceColorComputation refractiveSurfaceColorComputation = new RefractiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
@@ -62,10 +62,10 @@ public class GlassMaterial extends AbstractMaterial implements ReflectiveSurface
     /**
      * @param direction
      * @param normal
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public PTColor getBRDF (Vector direction, Vector normal) {
         return this.getSurfaceColor();
     }
 

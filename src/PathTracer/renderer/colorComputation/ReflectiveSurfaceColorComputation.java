@@ -18,9 +18,9 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor calculateColor () {
+    public PTColor calculateColor () {
         Vector reflectedRay = Vector.reflect(
             ray.getDirection(),
             intersection.getNormal()

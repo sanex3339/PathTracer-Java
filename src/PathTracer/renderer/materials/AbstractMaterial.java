@@ -7,23 +7,23 @@ public abstract class AbstractMaterial implements BaseSurface {
     /**
      * RGB color 0..255
      */
-    protected RGBColor surfaceColor = RGBColor.GRAY;
+    protected PTColor surfaceColor = PTColor.GRAY;
 
     /**
      * Default constructor
      */
     protected AbstractMaterial () { }
 
-    public AbstractMaterial (RGBColor surfaceColor) {
+    public AbstractMaterial (PTColor surfaceColor) {
         this.surfaceColor = surfaceColor;
     }
 
     /**
      * @param direction
      * @param normal
-     * @return RGBColor - material BRDF
+     * @return PTColor - material BRDF
      */
-    public abstract RGBColor getBRDF (Vector direction, Vector normal);
+    public abstract PTColor getBRDF (Vector direction, Vector normal);
 
     /**
      * @param direction
@@ -38,16 +38,16 @@ public abstract class AbstractMaterial implements BaseSurface {
     public abstract boolean isLightSource ();
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor getSurfaceColor () {
+    public PTColor getSurfaceColor () {
         return this.surfaceColor;
     }
 
     /**
      * @param ray
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
-    public abstract RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene);
+    public abstract PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene);
 }

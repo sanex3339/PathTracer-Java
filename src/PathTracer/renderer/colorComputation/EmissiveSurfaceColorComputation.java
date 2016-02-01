@@ -2,7 +2,7 @@ package PathTracer.renderer.colorComputation;
 
 import PathTracer.interfaces.ColorComputation;
 import PathTracer.interfaces.EmissiveSurface;
-import PathTracer.renderer.RGBColor;
+import PathTracer.renderer.PTColor;
 
 public class EmissiveSurfaceColorComputation <T extends EmissiveSurface> implements ColorComputation {
     private T material;
@@ -12,9 +12,9 @@ public class EmissiveSurfaceColorComputation <T extends EmissiveSurface> impleme
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor calculateColor () {
+    public PTColor calculateColor () {
         return this.material
             .getEmissionColor();
     }

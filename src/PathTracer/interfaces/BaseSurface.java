@@ -7,16 +7,16 @@ public interface BaseSurface {
      * @param ray
      * @param intersection
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
-    RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene);
+    PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene);
 
     /**
      * @param direction
      * @param normal
-     * @return RGBColor
+     * @return PTColor
      */
-    RGBColor getBRDF (Vector direction, Vector normal);
+    PTColor getBRDF (Vector direction, Vector normal);
 
     /**
      * @param direction
@@ -33,7 +33,7 @@ public interface BaseSurface {
     /**
      * Return raw surface color without any mixing with lighting or global illumination
      *
-     * @return RGBColor
+     * @return PTColor
      */
-    RGBColor getSurfaceColor ();
+    PTColor getSurfaceColor ();
 }
