@@ -82,7 +82,7 @@ public class Polygon implements SceneObject {
             .map(Triangle::getRandomPoint)
             .collect(Collectors.toList());
 
-        return randomPoints.get((int) Math.round(Math.random()));
+        return randomPoints.get((int) Math.round(RandomGenerator.getRandomDouble()));
     }
 
     /**

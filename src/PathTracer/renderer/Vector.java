@@ -15,18 +15,6 @@ public class Vector {
     }
 
     /**
-     * @return Map<String, Double>
-     */
-    public Map<String, Double> getCoordinates () {
-        Map<String, Double> coordinates = new HashMap<>();
-        coordinates.put("x", this.x);
-        coordinates.put("y", this.y);
-        coordinates.put("z", this.z);
-
-        return coordinates;
-    }
-
-    /**
      * @return double
      */
     public double getX () {

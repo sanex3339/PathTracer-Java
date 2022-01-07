@@ -95,16 +95,16 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
             for (int x = this.startX; x < this.startX + this.imageWidth; x++) {
                 color = RGBColor.BLACK;
 
-                if (Math.random() > 0.5) {
-                    randX = x + Math.random() * randomMultiplier;
+                if (RandomGenerator.getRandomDouble() > 0.5) {
+                    randX = x + RandomGenerator.getRandomDouble() * randomMultiplier;
                 } else {
-                    randX = x - Math.random() * randomMultiplier;
+                    randX = x - RandomGenerator.getRandomDouble() * randomMultiplier;
                 }
 
-                if (Math.random() > 0.5) {
-                    randY = y + Math.random() * randomMultiplier;
+                if (RandomGenerator.getRandomDouble() > 0.5) {
+                    randY = y + RandomGenerator.getRandomDouble() * randomMultiplier;
                 } else {
-                    randY = y - Math.random() * randomMultiplier;
+                    randY = y - RandomGenerator.getRandomDouble() * randomMultiplier;
                 }
 
                 ray = new Ray(

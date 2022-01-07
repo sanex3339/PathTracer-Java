@@ -98,8 +98,8 @@ public class Sphere implements SceneObject {
      * @return Vector
      */
     public Vector getRandomPoint () {
-        double u = Math.random();
-        double v = Math.random();
+        double u = RandomGenerator.getRandomDouble();
+        double v = RandomGenerator.getRandomDouble();
         double q = 2 * Math.PI * u;
         double f = Math.pow(Math.cos(2 * v - 1), -1);
 

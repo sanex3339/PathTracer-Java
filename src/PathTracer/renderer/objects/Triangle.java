@@ -103,8 +103,8 @@ public class Triangle implements SceneObject {
      * @return Vector
      */
     public Vector getRandomPoint () {
-        double rand1 = Math.random();
-        double rand2 = Math.random();
+        double rand1 = RandomGenerator.getRandomDouble();
+        double rand2 = RandomGenerator.getRandomDouble();
 
         Vector x = Vector.add(
             this.getVertexByIndex(0),

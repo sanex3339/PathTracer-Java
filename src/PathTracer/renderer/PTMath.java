@@ -10,14 +10,14 @@ public final class PTMath {
      * @return Vector
      */
     public static Vector cosineSampleHemisphere (Vector normal) {
-        double u = Math.random();
-        double v = Math.random();
+        double u = RandomGenerator.getRandomDouble();
+        double v = RandomGenerator.getRandomDouble();
         double r = Math.sqrt(u);
         double angle = 2 * Math.PI * v;
         Vector sDir;
         Vector tDir;
 
-        if (Math.abs(normal.getCoordinates().get("x")) < 0.5) {
+        if (Math.abs(normal.getX()) < 0.5) {
             sDir = Vector.cross(normal, new Vector(1,0,0));
         } else {
             sDir = Vector.cross(normal, new Vector(0,1,0));

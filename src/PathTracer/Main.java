@@ -15,8 +15,8 @@ import java.util.List;
 
 final public class Main {
     public static void main (String[] args) {
-        int screenWidth = 200;
-        int screenHeight = 200;
+        int screenWidth = 512;
+        int screenHeight = 512;
 
         List<SceneObject> objects = new ArrayList<>();
 
