@@ -1,8 +1,5 @@
 package PathTracer.renderer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Vector {
     private double x;
     private double y;
@@ -65,7 +62,22 @@ public class Vector {
      */
     public static Vector scale (Vector vector, double multiplier) {
         return new Vector(
-            vector.x * multiplier, vector.y * multiplier, vector.z * multiplier
+            vector.x * multiplier,
+            vector.y * multiplier,
+            vector.z * multiplier
+        );
+    }
+
+    /**
+     * @param vector1
+     * @param vector2
+     * @return Vector
+     */
+    public static Vector add (Vector vector1, Vector vector2) {
+        return new Vector(
+            vector1.getX() + vector2.getX(),
+            vector1.getY() + vector2.getY(),
+            vector1.getZ() + vector2.getZ()
         );
     }
 
@@ -90,22 +102,15 @@ public class Vector {
     }
 
     /**
-     * @param vectors
+     * @param vector1
+     * @param vector2
      * @return Vector
      */
-    public static Vector substract (Vector ...vectors) {
-        double x = vectors[0].getX();
-        double y = vectors[0].getY();
-        double z = vectors[0].getZ();
-
-        for (int i = 1, len = vectors.length; i < len; i++) {
-            x -= vectors[i].getX();
-            y -= vectors[i].getY();
-            z -= vectors[i].getZ();
-        }
-
+    public static Vector substract (Vector vector1, Vector vector2) {
         return new Vector(
-            x, y, z
+            vector1.getX() - vector2.getX(),
+            vector1.getY() - vector2.getY(),
+            vector1.getZ() - vector2.getZ()
         );
     }
 

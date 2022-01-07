@@ -26,9 +26,13 @@ public class Triangle implements SceneObject {
      * @return double
      */
     public double getArea () {
-        double a = Vector.substract(this.vertices.get(1), this.vertices.get(0)).getLength();
-        double b = Vector.substract(this.vertices.get(2), this.vertices.get(0)).getLength();
-        double c = Vector.substract(this.vertices.get(2), this.vertices.get(1)).getLength();
+        Vector vertex0 = this.vertices.get(0);
+        Vector vertex1 = this.vertices.get(1);
+        Vector vertex2 = this.vertices.get(2);
+
+        double a = Vector.substract(vertex1, vertex0).getLength();
+        double b = Vector.substract(vertex2, vertex0).getLength();
+        double c = Vector.substract(vertex2, vertex1).getLength();
 
         double s = (a + b + c) / 2;
 
@@ -86,8 +90,12 @@ public class Triangle implements SceneObject {
      * @return Vector
      */
     public Vector getNormal () {
-        Vector edge1 = Vector.substract(this.vertices.get(2), this.vertices.get(0));
-        Vector edge2 = Vector.substract(this.vertices.get(1), this.vertices.get(0));
+        Vector vertex0 = this.vertices.get(0);
+        Vector vertex1 = this.vertices.get(1);
+        Vector vertex2 = this.vertices.get(2);
+
+        Vector edge1 = Vector.substract(vertex2, vertex0);
+        Vector edge2 = Vector.substract(vertex1, vertex0);
 
         return Vector.normalize(Vector.cross(edge1, edge2));
     }
@@ -103,22 +111,26 @@ public class Triangle implements SceneObject {
      * @return Vector
      */
     public Vector getRandomPoint () {
+        Vector vertex0 = this.vertices.get(0);
+        Vector vertex1 = this.vertices.get(1);
+        Vector vertex2 = this.vertices.get(2);
+
         double rand1 = RandomGenerator.getRandomDouble();
         double rand2 = RandomGenerator.getRandomDouble();
 
         Vector x = Vector.add(
-            this.getVertexByIndex(0),
+            vertex0,
             Vector.scale(
                 Vector.substract(
-                    this.getVertexByIndex(1),
-                    this.getVertexByIndex(0)
+                    vertex1,
+                    vertex0
                 ),
                 rand1
             ),
             Vector.scale(
                 Vector.substract(
-                    this.getVertexByIndex(2),
-                    this.getVertexByIndex(0)
+                    vertex2,
+                    vertex0
                 ),
                 rand2
             )
@@ -126,19 +138,19 @@ public class Triangle implements SceneObject {
 
         if (!isPointInsideTriangle(x)) {
             Vector v3 = Vector.add(
-                this.getVertexByIndex(0),
+                vertex0,
                 Vector.substract(
-                    this.getVertexByIndex(1),
-                    this.getVertexByIndex(0)
+                    vertex1,
+                    vertex0
                 ),
                 Vector.substract(
-                    this.getVertexByIndex(2),
-                    this.getVertexByIndex(0)
+                    vertex2,
+                    vertex0
                 )
             );
 
             x = Vector.add(
-                this.getVertexByIndex(0),
+                vertex0,
                 Vector.substract(
                     v3,
                     x
@@ -178,7 +190,9 @@ public class Triangle implements SceneObject {
      * @return boolean
      */
     private boolean isPointInsideTriangle (Vector point) {
-        for (int i = 0, verticesLength = this.vertices.size(); i < verticesLength; i++) {
+        int verticesLength = this.vertices.size();
+
+        for (int i = 0; i < verticesLength; i++) {
             Vector vertex1 = this.vertices.get(i);
             Vector vertex2;
 
