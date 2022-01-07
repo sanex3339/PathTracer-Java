@@ -3,6 +3,7 @@ package PathTracer.renderer.objects;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +12,10 @@ import java.util.stream.Collectors;
 
 public class Polygon implements SceneObject {
     private List<Triangle> triangles = new ArrayList<>();
-    private List<Vector> vertices = new ArrayList<>();
+    private List<Vector3> vertices = new ArrayList<>();
     private BaseSurface material;
 
-    public Polygon (List<Vector> vertices, BaseSurface material) {
+    public Polygon (List<Vector3> vertices, BaseSurface material) {
         if (vertices.size() < 3 || vertices.size() > 4) {
             throw new IllegalArgumentException("Each polygon must contain only 3 or 4 vertices.");
         }
@@ -69,15 +70,15 @@ public class Polygon implements SceneObject {
     /**
      * @return  Vector
      */
-    public Vector getPosition() {
+    public Vector3 getPosition() {
         return this.getRandomPoint();
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getRandomPoint() {
-        List<Vector> randomPoints = this.triangles
+    public Vector3 getRandomPoint() {
+        List<Vector3> randomPoints = this.triangles
             .stream()
             .map(Triangle::getRandomPoint)
             .collect(Collectors.toList());
@@ -88,15 +89,15 @@ public class Polygon implements SceneObject {
     /**
      * @return List<Vector>
      */
-    public List<Vector> getVertices () {
+    public List<Vector3> getVertices () {
         return this.vertices;
     }
 
     /**
      * @param index
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getVertexByIndex(int index) {
+    public Vector3 getVertexByIndex(int index) {
         return this.vertices.get(index);
     }
 
@@ -115,15 +116,15 @@ public class Polygon implements SceneObject {
             return;
         }
 
-        double dist1 = Vector.substract(
+        double dist1 = PTVector.substract(
             this.getVertexByIndex(2),
             this.getVertexByIndex(0)
-        ).getLength();
+        ).magnitude();
 
-        double dist2 = Vector.substract(
+        double dist2 = PTVector.substract(
             this.getVertexByIndex(1),
             this.getVertexByIndex(3)
-        ).getLength();
+        ).magnitude();
 
         int ind1;
         int ind2;

@@ -1,6 +1,7 @@
 package PathTracer.interfaces;
 
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public interface BaseSurface {
     /**
@@ -16,14 +17,14 @@ public interface BaseSurface {
      * @param normal
      * @return RGBColor
      */
-    RGBColor getBRDF (Vector direction, Vector normal);
+    RGBColor getBRDF (Vector3 direction, Vector3 normal);
 
     /**
      * @param direction
      * @param normal
      * @return double
      */
-    double getPDF (Vector direction, Vector normal);
+    double getPDF (Vector3 direction, Vector3 normal);
 
     /**
      * @return boolean

@@ -1,11 +1,12 @@
 package PathTracer.renderer;
 
 import PathTracer.interfaces.SceneObject;
+import mikera.vectorz.Vector3;
 
 public class IntersectPoint {
     private boolean isIntersected = false;
-    private Vector hitPoint;
-    private Vector normal;
+    private Vector3 hitPoint;
+    private Vector3 normal;
     private double distanceFromOrigin;
     private SceneObject owner;
 
@@ -14,16 +15,16 @@ public class IntersectPoint {
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getHitPoint () {
+    public Vector3 getHitPoint () {
         return this.hitPoint;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getNormal () {
+    public Vector3 getNormal () {
         return this.normal;
     }
 
@@ -45,11 +46,11 @@ public class IntersectPoint {
         this.isIntersected = true;
     }
 
-    public void setHitPoint (Vector hitPoint) {
+    public void setHitPoint (Vector3 hitPoint) {
         this.hitPoint = hitPoint;
     }
 
-    public void setNormal (Vector normal) {
+    public void setNormal (Vector3 normal) {
         this.normal = normal;
     }
 

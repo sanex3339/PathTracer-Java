@@ -3,6 +3,7 @@ package PathTracer.renderer.colorComputation;
 import PathTracer.interfaces.ColorComputation;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> implements ColorComputation {
     private Ray ray;
@@ -27,7 +28,7 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
             return RGBColor.BLACK;
         }
 
-        Vector reflectedRay = Vector.reflect(
+        Vector3 reflectedRay = PTVector.reflect(
             ray.getDirection(),
             intersection.getNormal()
         );

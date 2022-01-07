@@ -3,6 +3,7 @@ package PathTracer.renderer.colorComputation;
 import PathTracer.interfaces.EmissiveSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public class ColorComputationService {
     private Ray ray;
@@ -67,13 +68,13 @@ public class ColorComputationService {
      * @param newDirection
      * @return Ray
      */
-    public static Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector newDirection) {
-        double epsilon = Vector.dot(newDirection, ray.getDirection()) > 0 ? PTMath.EPSILON : -PTMath.EPSILON;
+    public static Ray getNextIterationRandomRay (Ray ray, IntersectPoint intersection, Vector3 newDirection) {
+        double epsilon = PTVector.dot(newDirection, ray.getDirection()) > 0 ? PTMath.EPSILON : -PTMath.EPSILON;
 
         return new Ray(
-            Vector.add(
+            PTVector.add(
                 ray.getOrigin(),
-                Vector.scale(
+                PTVector.scale(
                     ray.getDirection(),
                     intersection.getDistanceFromOrigin() * (1 + epsilon)
                 )

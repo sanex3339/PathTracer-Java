@@ -3,13 +3,14 @@ package PathTracer.renderer.objects;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public class Sphere implements SceneObject {
-    private Vector position;
+    private Vector3 position;
     private double radius;
     private BaseSurface material;
 
-    public Sphere(Vector center, double radius, BaseSurface material) {
+    public Sphere(Vector3 center, double radius, BaseSurface material) {
         this.position = center;
         this.radius = radius;
         this.material = material;
@@ -21,7 +22,7 @@ public class Sphere implements SceneObject {
      * @return double
      */
     public double getArea () {
-        return  4 * Math.PI * Math.pow(this.radius, 2);
+        return 4 * Math.PI * (this.radius * this.radius);
     }
 
     /**
@@ -31,17 +32,17 @@ public class Sphere implements SceneObject {
      * @return IntersectData
      */
     public IntersectData getIntersectData (Ray ray) {
-        Vector k = Vector.substract(ray.getOrigin(), this.position);
-        double b = Vector.dot(k, ray.getDirection());
-        double c = Vector.dot(k, k) - Math.pow(this.radius, 2);
-        double d = Math.pow(b, 2) - c;
+        Vector3 k = PTVector.substract(ray.getOrigin(), this.position);
+        double b = PTVector.dot(k, ray.getDirection());
+        double c = PTVector.dot(k, k) - (this.radius * this.radius);
+        double d = (b * b) - c;
         double distance;
         double t1;
         double t2;
         double minT;
         double maxT;
         double intersectionPoint = 0;
-        Vector hitPoint;
+        Vector3 hitPoint;
 
         if (b > 0 || d < 0) {
             return null;
@@ -64,14 +65,14 @@ public class Sphere implements SceneObject {
             }
         }
 
-        hitPoint = Vector.add(
-            Vector.scale(ray.getDirection(), intersectionPoint),
+        hitPoint = PTVector.add(
+            PTVector.scale(ray.getDirection(), intersectionPoint),
             ray.getOrigin()
         );
-        distance = Vector.substract(
+        distance = PTVector.substract(
             hitPoint,
             ray.getOrigin()
-        ).getLength();
+        ).magnitude();
 
         return new IntersectData(
             hitPoint,
@@ -88,28 +89,28 @@ public class Sphere implements SceneObject {
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getPosition () {
+    public Vector3 getPosition () {
         return this.position;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getRandomPoint () {
+    public Vector3 getRandomPoint () {
         double u = RandomGenerator.getRandomDouble();
         double v = RandomGenerator.getRandomDouble();
         double q = 2 * Math.PI * u;
         double f = Math.pow(Math.cos(2 * v - 1), -1);
 
-        return Vector.substract(
+        return PTVector.substract(
             this.getPosition(),
-            new Vector(
+            new PTVector(
                 this.radius * Math.cos(q) * Math.sin(f),
                 this.radius * Math.sin(q) * Math.sin(f),
                 this.radius * Math.cos(f)
-            )
+            ).getVector()
         );
     }
 
@@ -124,12 +125,12 @@ public class Sphere implements SceneObject {
      * Get normal vector of sphere
      *
      * @param point
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getNormal (Vector point) {
-        return Vector.normalize(
-            Vector.scale(
-                Vector.substract(point, this.position),
+    public Vector3 getNormal (Vector3 point) {
+        return PTVector.normalize(
+            PTVector.scale(
+                PTVector.substract(point, this.position),
                 1 / this.radius
             )
         );

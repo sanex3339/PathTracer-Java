@@ -3,6 +3,7 @@ package PathTracer.renderer.materials;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
+import mikera.vectorz.Vector3;
 
 public class DiffuseMaterial extends AbstractMaterial {
     public DiffuseMaterial (RGBColor surfaceColor) {
@@ -27,8 +28,8 @@ public class DiffuseMaterial extends AbstractMaterial {
      * @return RGBColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
-        double cosTheta = Vector.dot(
+    public RGBColor getBRDF (Vector3 direction, Vector3 normal) {
+        double cosTheta = PTVector.dot(
             direction,
             normal
         );
@@ -45,8 +46,8 @@ public class DiffuseMaterial extends AbstractMaterial {
      * @return double
      */
     @Override
-    public double getPDF (Vector direction, Vector normal) {
-        double cosTheta = Vector.dot(
+    public double getPDF (Vector3 direction, Vector3 normal) {
+        double cosTheta = PTVector.dot(
             direction,
             normal
         );

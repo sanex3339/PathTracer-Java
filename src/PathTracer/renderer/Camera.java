@@ -1,36 +1,38 @@
 package PathTracer.renderer;
 
+import mikera.vectorz.Vector3;
+
 public class Camera {
-    private Vector direction;
-    private Vector position;
-    private Vector forwardVector;
-    private Vector rightVector;
-    private Vector upVector;
+    private Vector3 direction;
+    private Vector3 position;
+    private Vector3 forwardVector;
+    private Vector3 rightVector;
+    private Vector3 upVector;
     private double zoom = 1.5;
     private double screenWidth;
     private double screenHeight;
 
-    public Camera (Vector position, Vector direction, int screenWidth, int screenHeight) {
+    public Camera (Vector3 position, Vector3 direction, int screenWidth, int screenHeight) {
         this.position = position;
         this.direction = direction;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-        this.forwardVector = Vector.normalize(Vector.substract(this.direction, this.position));
-        this.rightVector = Vector
+        this.forwardVector = PTVector.normalize(PTVector.substract(this.direction, this.position));
+        this.rightVector = PTVector
             .scale(
-                Vector.normalize(
-                    Vector.cross(
+                PTVector.normalize(
+                    PTVector.cross(
                         this.forwardVector,
-                        new Vector(0, -1, 0)
+                        new PTVector(0, -1, 0).getVector()
                     )
                 ),
                 this.zoom
             );
-        this.upVector = Vector
+        this.upVector = PTVector
             .scale(
-                Vector.normalize(
-                    Vector.cross(
+                PTVector.normalize(
+                    PTVector.cross(
                         this.forwardVector,
                         this.rightVector
                     )
@@ -40,26 +42,26 @@ public class Camera {
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getDirection () {
+    public Vector3 getDirection () {
         return this.direction;
     }
 
     /**
      * @param x
      * @param y
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getPerspectiveVector (double x, double y) {
-        return Vector.normalize(
-            Vector.add(
+    public Vector3 getPerspectiveVector (double x, double y) {
+        return PTVector.normalize(
+            PTVector.add(
                 this.getForwardVector(),
-                Vector.scale(
+                PTVector.scale(
                     this.getRightVector(),
                     this.recenterX(x)
                 ),
-                Vector.scale(
+                PTVector.scale(
                     this.getUpVector(),
                     this.recenterY(y)
                 )
@@ -68,30 +70,30 @@ public class Camera {
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getPosition () {
+    public Vector3 getPosition () {
         return this.position;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    private Vector getForwardVector () {
+    private Vector3 getForwardVector () {
         return this.forwardVector;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    private Vector  getRightVector () {
+    private Vector3  getRightVector () {
         return this.rightVector;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    private Vector getUpVector () {
+    private Vector3 getUpVector () {
         return this.upVector;
     }
 

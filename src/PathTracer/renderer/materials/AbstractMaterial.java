@@ -2,6 +2,7 @@ package PathTracer.renderer.materials;
 
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public abstract class AbstractMaterial implements BaseSurface {
     /**
@@ -23,14 +24,14 @@ public abstract class AbstractMaterial implements BaseSurface {
      * @param normal
      * @return RGBColor - material BRDF
      */
-    public abstract RGBColor getBRDF (Vector direction, Vector normal);
+    public abstract RGBColor getBRDF (Vector3 direction, Vector3 normal);
 
     /**
      * @param direction
      * @param normal
      * @return double - material PDF
      */
-    public abstract double getPDF (Vector direction, Vector normal);
+    public abstract double getPDF (Vector3 direction, Vector3 normal);
 
     /**
      * @return boolean

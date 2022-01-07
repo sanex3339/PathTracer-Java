@@ -3,19 +3,20 @@ package PathTracer.renderer.objects;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public class Plane implements SceneObject {
-    private Vector normal;
-    private Vector point = new Vector(0, 0, 0);
+    private Vector3 normal;
+    private Vector3 point = new PTVector(0, 0, 0).getVector();
     private BaseSurface material;
 
-    public Plane(Vector normal, Vector point, BaseSurface material) {
+    public Plane(Vector3 normal, Vector3 point, BaseSurface material) {
         this.normal = normal;
         this.point = point;
         this.material = material;
     }
 
-    Plane (Vector normal, BaseSurface material) {
+    Plane (Vector3 normal, BaseSurface material) {
         this.normal = normal;
         this.material = material;
     }
@@ -37,16 +38,16 @@ public class Plane implements SceneObject {
      */
     public IntersectData getIntersectData (Ray ray) {
         double distance;
-        Vector hitPoint;
+        Vector3 hitPoint;
         double t =
-            Vector.dot(
-                Vector.substract(
+            PTVector.dot(
+                PTVector.substract(
                     this.point,
                     ray.getOrigin()
                 ),
                 this.normal
             ) /
-            Vector.dot(
+            PTVector.dot(
                 ray.getDirection(),
                 this.getNormal()
             );
@@ -55,18 +56,18 @@ public class Plane implements SceneObject {
             return null;
         }
 
-        hitPoint = Vector.add(
+        hitPoint = PTVector.add(
             ray.getOrigin(),
-            Vector.scale(
+            PTVector.scale(
                 ray.getDirection(),
                 t
             )
         );
 
-        distance = Vector.substract(
+        distance = PTVector.substract(
             hitPoint,
             ray.getOrigin()
-        ).getLength();
+        ).magnitude();
 
         return new IntersectData(
             hitPoint,
@@ -83,25 +84,25 @@ public class Plane implements SceneObject {
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getPosition () {
+    public Vector3 getPosition () {
         return this.point;
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getRandomPoint () {
+    public Vector3 getRandomPoint () {
         return this.getPosition();
     }
 
     /**
      * Get normal vector
      *
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getNormal () {
+    public Vector3 getNormal () {
         return this.normal;
     }
 }

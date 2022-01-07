@@ -5,6 +5,7 @@ import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
+import mikera.vectorz.Vector3;
 
 public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
     /**
@@ -47,7 +48,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
      * @return RGBColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public RGBColor getBRDF (Vector3 direction, Vector3 normal) {
         return this.getEmissionColor();
     }
 
@@ -57,7 +58,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
      * @return double
      */
     @Override
-    public double getPDF (Vector direction, Vector normal) {
+    public double getPDF (Vector3 direction, Vector3 normal) {
         return 1;
     }
 
@@ -92,8 +93,8 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
      * @return LightSourceSamplingData
      */
     public LightSourceSamplingData sampleLight (IntersectPoint intersection, SceneObject light, Scene scene) {
-        Vector lightSourceRandomPoint = light.getRandomPoint();
-        Vector rayLine = Vector.substract(
+        Vector3 lightSourceRandomPoint = light.getRandomPoint();
+        Vector3 rayLine = PTVector.substract(
             lightSourceRandomPoint,
             intersection.getHitPoint()
         );
@@ -101,7 +102,7 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
         IntersectPoint shadowRay = Tracer.trace(
             new Ray(
                 intersection.getHitPoint(),
-                Vector.normalize(rayLine)
+                PTVector.normalize(rayLine)
             ),
             scene
         );
@@ -116,13 +117,13 @@ public class LightMaterial extends AbstractMaterial implements EmissiveSurface {
             RGBColor emissionColor = lightMaterial.getEmissionColor();
 
             double lightPower = lightMaterial.getIntensity();
-            double shadowRayLength = rayLine.getLength();
+            double shadowRayLength = rayLine.magnitude();
 
-            Vector lightDirection = Vector.normalize(
-                Vector.substract(lightSourceRandomPoint, intersection.getHitPoint())
+            Vector3 lightDirection = PTVector.normalize(
+                PTVector.substract(lightSourceRandomPoint, intersection.getHitPoint())
             );
 
-            double cosTheta1 = - Vector.dot(lightDirection, shadowRay.getNormal());
+            double cosTheta1 = - PTVector.dot(lightDirection, shadowRay.getNormal());
             double lightPDF = (1.0 / light.getArea()) * shadowRayLength * shadowRayLength / cosTheta1;
 
             RGBColor lightColor = intersectionMaterial

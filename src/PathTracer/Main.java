@@ -36,10 +36,10 @@ final public class Main {
         objects.add(
             new Polygon(
                 Arrays.asList(
-                    new Vector(-250, 699, 250),
-                    new Vector(250, 699, 250),
-                    new Vector(250, 699, -250),
-                    new Vector(-250, 699, -250)
+                    new PTVector(-250, 699, 250).getVector(),
+                    new PTVector(250, 699, 250).getVector(),
+                    new PTVector(250, 699, -250).getVector(),
+                    new PTVector(-250, 699, -250).getVector()
                 ),
                 new LightMaterial(
                     new RGBColor(255, 250, 249),
@@ -51,7 +51,7 @@ final public class Main {
         // mirror sphere
         objects.add(
             new Sphere(
-                new Vector(-330, -400, 300),
+                new PTVector(-330, -400, 300).getVector(),
                 300,
                 new MirrorMaterial(RGBColor.BLACK, 1)
             )
@@ -60,7 +60,7 @@ final public class Main {
         // gray sphere
         objects.add(
             new Sphere(
-                new Vector(330, -400, -50),
+                new PTVector(330, -400, -50).getVector(),
                 300,
                 new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
             )
@@ -70,10 +70,10 @@ final public class Main {
         objects.add(
             new Polygon(
                 Arrays.asList(
-                    new Vector(-700, 700, 700),
-                    new Vector(700, 700, 700),
-                    new Vector(700, 700, -700),
-                    new Vector(-700, 700, -700)
+                    new PTVector(-700, 700, 700).getVector(),
+                    new PTVector(700, 700, 700).getVector(),
+                    new PTVector(700, 700, -700).getVector(),
+                    new PTVector(-700, 700, -700).getVector()
                 ),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
@@ -82,8 +82,8 @@ final public class Main {
         // bottom plane
         objects.add(
             new Plane(
-                new Vector(0, 1, 0),
-                new Vector (0, -700, 0),
+                new PTVector(0, 1, 0).getVector(),
+                new PTVector(0, -700, 0).getVector(),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
         );
@@ -91,8 +91,8 @@ final public class Main {
         // right plane
         objects.add(
             new Plane(
-                new Vector(-1, 0, 0),
-                new Vector (700, 0, 0),
+                new PTVector(-1, 0, 0).getVector(),
+                new PTVector(700, 0, 0).getVector(),
                 new DiffuseMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
             )
         );
@@ -100,8 +100,8 @@ final public class Main {
         // left plane
         objects.add(
             new Plane(
-                new Vector(1, 0, 0),
-                new Vector (-700, 0, 0),
+                new PTVector(1, 0, 0).getVector(),
+                new PTVector(-700, 0, 0).getVector(),
                 new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
             )
         );
@@ -109,8 +109,8 @@ final public class Main {
         // front plane
         objects.add(
             new Plane(
-                new Vector(0, 0, -1),
-                new Vector (0, 0, 700),
+                new PTVector(0, 0, -1).getVector(),
+                new PTVector(0, 0, 700).getVector(),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
         );
@@ -119,10 +119,10 @@ final public class Main {
         objects.add(
             new Polygon(
                 Arrays.asList(
-                    new Vector(-700, 700, -700),
-                    new Vector(700, 700, -700),
-                    new Vector(700, -700, -700),
-                    new Vector(-700, -700, -700)
+                    new PTVector(-700, 700, -700).getVector(),
+                    new PTVector(700, 700, -700).getVector(),
+                    new PTVector(700, -700, -700).getVector(),
+                    new PTVector(-700, -700, -700).getVector()
                 ),
                 new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
             )
@@ -134,8 +134,8 @@ final public class Main {
             new Scene(
                 objects,
                 new Camera(
-                    new Vector(0, 0, -2400),
-                    new Vector(0, 0, 1),
+                    new PTVector(0, 0, -2400).getVector(),
+                    new PTVector(0, 0, 1).getVector(),
                     screenWidth,
                     screenHeight
                 )

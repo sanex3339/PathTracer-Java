@@ -4,6 +4,7 @@ import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
+import mikera.vectorz.Vector3;
 
 public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurface {
     /**
@@ -39,7 +40,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      * @return RGBColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public RGBColor getBRDF (Vector3 direction, Vector3 normal) {
         return this.getSurfaceColor();
     }
 
@@ -49,7 +50,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      * @return double
      */
     @Override
-    public double getPDF (Vector direction, Vector normal) {
+    public double getPDF (Vector3 direction, Vector3 normal) {
         return 1;
     }
 

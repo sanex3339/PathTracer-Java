@@ -3,15 +3,16 @@ package PathTracer.renderer.objects;
 import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Triangle implements SceneObject {
-    private List<Vector> vertices = new ArrayList<>();
+    private List<Vector3> vertices = new ArrayList<>();
     private BaseSurface material;
 
-    public Triangle(List<Vector> vertices, BaseSurface material) {
+    public Triangle(List<Vector3> vertices, BaseSurface material) {
         if (vertices.size() != 3) {
             throw new IllegalArgumentException("Each triangle must contain only 3 vertices.");
         }
@@ -26,13 +27,13 @@ public class Triangle implements SceneObject {
      * @return double
      */
     public double getArea () {
-        Vector vertex0 = this.vertices.get(0);
-        Vector vertex1 = this.vertices.get(1);
-        Vector vertex2 = this.vertices.get(2);
+        Vector3 vertex0 = this.vertices.get(0);
+        Vector3 vertex1 = this.vertices.get(1);
+        Vector3 vertex2 = this.vertices.get(2);
 
-        double a = Vector.substract(vertex1, vertex0).getLength();
-        double b = Vector.substract(vertex2, vertex0).getLength();
-        double c = Vector.substract(vertex2, vertex1).getLength();
+        double a = PTVector.substract(vertex1, vertex0).magnitude();
+        double b = PTVector.substract(vertex2, vertex0).magnitude();
+        double c = PTVector.substract(vertex2, vertex1).magnitude();
 
         double s = (a + b + c) / 2;
 
@@ -53,13 +54,13 @@ public class Triangle implements SceneObject {
         double numerator;
         double denominator;
 
-        Vector hitPoint;
-        Vector normal = this.getNormal();
+        Vector3 hitPoint;
+        Vector3 normal = this.getNormal();
 
-        distanceFromAxisCenter = Vector.dot(this.vertices.get(0), normal);
+        distanceFromAxisCenter = PTVector.dot(this.vertices.get(0), normal);
 
-        denominator = Vector.dot(normal, ray.getDirection());
-        numerator = -Vector.dot(normal, ray.getOrigin()) + distanceFromAxisCenter;
+        denominator = PTVector.dot(normal, ray.getDirection());
+        numerator = -PTVector.dot(normal, ray.getOrigin()) + distanceFromAxisCenter;
 
         if (numerator >= PTMath.EPSILON) {
             return null;
@@ -87,48 +88,48 @@ public class Triangle implements SceneObject {
     /**
      * Get normal vector of triangle
      *
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getNormal () {
-        Vector vertex0 = this.vertices.get(0);
-        Vector vertex1 = this.vertices.get(1);
-        Vector vertex2 = this.vertices.get(2);
+    public Vector3 getNormal () {
+        Vector3 vertex0 = this.vertices.get(0);
+        Vector3 vertex1 = this.vertices.get(1);
+        Vector3 vertex2 = this.vertices.get(2);
 
-        Vector edge1 = Vector.substract(vertex2, vertex0);
-        Vector edge2 = Vector.substract(vertex1, vertex0);
+        Vector3 edge1 = PTVector.substract(vertex2, vertex0);
+        Vector3 edge2 = PTVector.substract(vertex1, vertex0);
 
-        return Vector.normalize(Vector.cross(edge1, edge2));
+        return PTVector.normalize(PTVector.cross(edge1, edge2));
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getPosition () {
+    public Vector3 getPosition () {
         return this.getRandomPoint();
     }
 
     /**
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getRandomPoint () {
-        Vector vertex0 = this.vertices.get(0);
-        Vector vertex1 = this.vertices.get(1);
-        Vector vertex2 = this.vertices.get(2);
+    public Vector3 getRandomPoint () {
+        Vector3 vertex0 = this.vertices.get(0);
+        Vector3 vertex1 = this.vertices.get(1);
+        Vector3 vertex2 = this.vertices.get(2);
 
         double rand1 = RandomGenerator.getRandomDouble();
         double rand2 = RandomGenerator.getRandomDouble();
 
-        Vector x = Vector.add(
+        Vector3 x = PTVector.add(
             vertex0,
-            Vector.scale(
-                Vector.substract(
+            PTVector.scale(
+                PTVector.substract(
                     vertex1,
                     vertex0
                 ),
                 rand1
             ),
-            Vector.scale(
-                Vector.substract(
+            PTVector.scale(
+                PTVector.substract(
                     vertex2,
                     vertex0
                 ),
@@ -137,21 +138,21 @@ public class Triangle implements SceneObject {
         );
 
         if (!isPointInsideTriangle(x)) {
-            Vector v3 = Vector.add(
+            Vector3 v3 = PTVector.add(
                 vertex0,
-                Vector.substract(
+                PTVector.substract(
                     vertex1,
                     vertex0
                 ),
-                Vector.substract(
+                PTVector.substract(
                     vertex2,
                     vertex0
                 )
             );
 
-            x = Vector.add(
+            x = PTVector.add(
                 vertex0,
-                Vector.substract(
+                PTVector.substract(
                     v3,
                     x
                 )
@@ -171,15 +172,15 @@ public class Triangle implements SceneObject {
     /**
      * @return List<Vector>
      */
-    public List<Vector> getVertices () {
+    public List<Vector3> getVertices () {
         return this.vertices;
     }
 
     /**
      * @param index
-     * @return Vector
+     * @return Vector3
      */
-    public Vector getVertexByIndex(int index) {
+    public Vector3 getVertexByIndex(int index) {
         return this.vertices.get(index);
     }
 
@@ -189,12 +190,12 @@ public class Triangle implements SceneObject {
      * @param point
      * @return boolean
      */
-    private boolean isPointInsideTriangle (Vector point) {
+    private boolean isPointInsideTriangle (Vector3 point) {
         int verticesLength = this.vertices.size();
 
         for (int i = 0; i < verticesLength; i++) {
-            Vector vertex1 = this.vertices.get(i);
-            Vector vertex2;
+            Vector3 vertex1 = this.vertices.get(i);
+            Vector3 vertex2;
 
             if (i == verticesLength - 1) {
                 vertex2 = this.vertices.get(0);
@@ -204,8 +205,8 @@ public class Triangle implements SceneObject {
 
             if (
                 !Triangle.checkSameClockDir(
-                    Vector.substract(vertex2, vertex1),
-                    Vector.substract(point, vertex1),
+                    PTVector.substract(vertex2, vertex1),
+                    PTVector.substract(point, vertex1),
                     this.getNormal()
                 )
             ) {
@@ -222,9 +223,9 @@ public class Triangle implements SceneObject {
      * @param normal
      * @return boolean
      */
-    private static boolean checkSameClockDir (Vector vector1, Vector vector2, Vector normal) {
-        Vector normalV1V2 = Vector.cross(vector2, vector1);
+    private static boolean checkSameClockDir (Vector3 vector1, Vector3 vector2, Vector3 normal) {
+        Vector3 normalV1V2 = PTVector.cross(vector2, vector1);
 
-        return Vector.dot(normalV1V2, normal) >= 0;
+        return PTVector.dot(normalV1V2, normal) >= 0;
     }
 }

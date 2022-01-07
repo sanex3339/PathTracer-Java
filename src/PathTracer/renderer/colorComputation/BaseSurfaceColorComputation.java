@@ -4,6 +4,7 @@ import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ColorComputation;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
+import mikera.vectorz.Vector3;
 
 public class BaseSurfaceColorComputation <T extends BaseSurface> implements ColorComputation {
     private Ray ray;
@@ -21,7 +22,7 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
      */
     public RGBColor calculateColor () {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
-        Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
+        Vector3 newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
 
         RGBColor explicitLightSamplingColor = RGBColor.BLACK;
 

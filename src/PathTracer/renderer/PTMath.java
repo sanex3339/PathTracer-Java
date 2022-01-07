@@ -1,5 +1,7 @@
 package PathTracer.renderer;
 
+import mikera.vectorz.Vector3;
+
 public final class PTMath {
     public final static double EPSILON = 0.001;
 
@@ -7,29 +9,29 @@ public final class PTMath {
      * Get random point on hemisphere
      *
      * @param normal
-     * @return Vector
+     * @return Vector3
      */
-    public static Vector cosineSampleHemisphere (Vector normal) {
+    public static Vector3 cosineSampleHemisphere (Vector3 normal) {
         double u = RandomGenerator.getRandomDouble();
         double v = RandomGenerator.getRandomDouble();
         double r = Math.sqrt(u);
         double angle = 2 * Math.PI * v;
-        Vector sDir;
-        Vector tDir;
+        Vector3 sDir;
+        Vector3 tDir;
 
         if (Math.abs(normal.getX()) < 0.5) {
-            sDir = Vector.cross(normal, new Vector(1,0,0));
+            sDir = PTVector.cross(normal, new PTVector(1,0,0).getVector());
         } else {
-            sDir = Vector.cross(normal, new Vector(0,1,0));
+            sDir = PTVector.cross(normal, new PTVector(0,1,0).getVector());
         }
 
-        tDir = Vector.cross(normal, sDir);
+        tDir = PTVector.cross(normal, sDir);
 
-        return Vector.add(
-            Vector.scale(normal,  Math.sqrt(1 - u)),
-            Vector.add(
-                Vector.scale(sDir, r * Math.cos(angle)),
-                Vector.scale(tDir, r * Math.sin(angle))
+        return PTVector.add(
+            PTVector.scale(normal,  Math.sqrt(1 - u)),
+            PTVector.add(
+                PTVector.scale(sDir, r * Math.cos(angle)),
+                PTVector.scale(tDir, r * Math.sin(angle))
             )
         );
     }
