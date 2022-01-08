@@ -4,6 +4,7 @@ public class Vector {
     public double x;
     public double y;
     public double z;
+    private Double length = null;
 
     public Vector(double x, double y, double z) {
         this.x = x;
@@ -15,9 +16,15 @@ public class Vector {
      * @return double
      */
     public double getLength () {
-        return Math.sqrt(
+        if (this.length != null) {
+            return this.length;
+        }
+
+        this.length = Math.sqrt(
             Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2)
         );
+
+        return this.length;
     }
 
     /**

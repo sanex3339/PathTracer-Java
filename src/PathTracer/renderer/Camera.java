@@ -84,7 +84,7 @@ public class Camera {
     /**
      * @return Vector
      */
-    private Vector  getRightVector () {
+    private Vector getRightVector () {
         return this.rightVector;
     }
 
