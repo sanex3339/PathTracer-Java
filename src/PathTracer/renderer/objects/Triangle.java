@@ -12,6 +12,7 @@ public class Triangle implements SceneObject {
     private BaseSurface material;
     private Double area = null;
     private Vector normal;
+    private Double distanceFromAxisCenter;
 
     public Triangle(List<Vector> vertices, BaseSurface material) {
         if (vertices.size() != 3) {
@@ -57,17 +58,18 @@ public class Triangle implements SceneObject {
      */
     public IntersectData getIntersectData (Ray ray) {
         double distance;
-        double distanceFromAxisCenter;
         double numerator;
         double denominator;
 
         Vector hitPoint;
         Vector normal = this.getNormal();
 
-        distanceFromAxisCenter = Vector.dot(this.vertices.get(0), normal);
+        if (this.distanceFromAxisCenter == null) {
+            this.distanceFromAxisCenter = Vector.dot(this.vertices.get(0), normal);
+        }
 
         denominator = Vector.dot(normal, ray.getDirection());
-        numerator = -Vector.dot(normal, ray.getOrigin()) + distanceFromAxisCenter;
+        numerator = -Vector.dot(normal, ray.getOrigin()) + this.distanceFromAxisCenter;
 
         if (numerator >= PTMath.EPSILON) {
             return null;
