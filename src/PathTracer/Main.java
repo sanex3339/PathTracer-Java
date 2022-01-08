@@ -54,16 +54,16 @@ final public class Main {
             new Sphere(
                 new Vector(-330, -400, 300),
                 300,
-                new MirrorMaterial(PTColor.BLACK, 1)
+                new MirrorMaterial(new PTColor(RGBColor.BLACK), 1)
             )
         );
 
-        // glass sphere
+        // gray sphere
         objects.add(
             new Sphere(
                 new Vector(330, -400, -50),
                 300,
-                new GlassMaterial()
+                new DiffuseMaterial(new PTColor(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255)))
             )
         );
 
