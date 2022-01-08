@@ -77,12 +77,10 @@ public class Polygon implements SceneObject {
      * @return Vector
      */
     public Vector getRandomPoint() {
-        List<Vector> randomPoints = this.triangles
-            .stream()
-            .map(Triangle::getRandomPoint)
-            .collect(Collectors.toList());
+        int randomTriangleIndex = (int) Math.round(RandomGenerator.getRandomDouble(0, this.triangles.size() - 1));
+        Triangle randomTriangle = this.triangles.get(randomTriangleIndex);
 
-        return randomPoints.get((int) Math.round(RandomGenerator.getRandomDouble()));
+        return randomTriangle.getRandomPoint();
     }
 
     /**
