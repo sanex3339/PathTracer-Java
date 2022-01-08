@@ -25,7 +25,7 @@ public class ColorComputationService {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
         double terminationProbability = this.terminationProbability(ray.getIteration());
 
-        if (!intersection.isIntersected() || Math.random() < terminationProbability) {
+        if (!intersection.isIntersected() || RandomGenerator.getRandomDouble() < terminationProbability) {
             this.pixelColor = PTColor.BLACK;
 
             return;
