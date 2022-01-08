@@ -8,6 +8,7 @@ import java.util.List;
 public class Scene {
     private Camera camera;
     private List<SceneObject> objects;
+    private List<SceneObject> lights;
 
     public Scene(List<SceneObject> objects, Camera camera) {
         this.objects = objects;
@@ -39,6 +40,10 @@ public class Scene {
      * @return List<SceneObject>
      */
     public List<SceneObject> getLights () {
+        if (this.lights != null) {
+            return this.lights;
+        }
+
         List<SceneObject> sceneLights = new ArrayList<>();
 
         for (SceneObject object : this.objects) {
@@ -49,6 +54,8 @@ public class Scene {
             sceneLights.add(object);
         }
 
-        return sceneLights;
+        this.lights = sceneLights;
+
+        return this.lights;
     }
 }
