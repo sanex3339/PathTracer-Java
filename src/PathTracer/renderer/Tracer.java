@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
 
 public class Tracer implements RayTracer, Callable<RenderResult> {
     private Scene scene;
-    private int startX = 0;
-    private int endX = 0;
-    private int startY = 0;
-    private int endY = 0;
+    private int startX;
+    private int endX;
+    private int startY;
+    private int endY;
 
     public Tracer (int imageWidth, int imageHeight, Scene scene) {
         this.startX = 0;
@@ -28,7 +28,11 @@ public class Tracer implements RayTracer, Callable<RenderResult> {
 
     public Tracer (int startX, int startY, int imageWidth, int imageHeight, Scene scene) {
         this.startX = startX;
+        this.endX = this.startY + imageWidth;
+
         this.startY = startY;
+        this.endY = this.startY + imageHeight;
+
         this.scene = scene;
     }
 

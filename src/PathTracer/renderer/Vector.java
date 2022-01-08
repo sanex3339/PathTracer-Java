@@ -29,20 +29,6 @@ public class Vector {
 
     /**
      * @param vector
-     * @return boolean
-     */
-    public boolean equals (Vector vector) {
-        if (vector == null) {
-            return false;
-        }
-
-        return this.x == vector.x &&
-            this.y == vector.y &&
-            this.z == vector.z;
-    }
-
-    /**
-     * @param vector
      * @param multiplier
      * @return Vector
      */
@@ -128,27 +114,6 @@ public class Vector {
      */
     public static Vector normalize (Vector vector) {
         return Vector.scale(vector, 1 / vector.getLength());
-    }
-
-    /**
-     * @param vector
-     * @param value
-     * @return Vector
-     */
-    public static Vector pow (Vector vector, double value) {
-        return new Vector(
-            Math.pow(vector.y, value),
-            Math.pow(vector.z, value),
-            Math.pow(vector.x, value)
-        );
-    }
-
-    /**
-     * @param vector
-     * @return Vector
-     */
-    public static Vector inverse (Vector vector) {
-        return Vector.scale(vector, -1);
     }
 
     /**

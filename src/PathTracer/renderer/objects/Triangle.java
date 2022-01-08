@@ -11,6 +11,7 @@ public class Triangle implements SceneObject {
     private List<Vector> vertices = new ArrayList<>();
     private BaseSurface material;
     private Double area = null;
+    private Vector normal;
 
     public Triangle(List<Vector> vertices, BaseSurface material) {
         if (vertices.size() != 3) {
@@ -97,6 +98,10 @@ public class Triangle implements SceneObject {
      * @return Vector
      */
     public Vector getNormal () {
+        if (this.normal != null) {
+            return this.normal;
+        }
+
         Vector vertex0 = this.vertices.get(0);
         Vector vertex1 = this.vertices.get(1);
         Vector vertex2 = this.vertices.get(2);
@@ -104,7 +109,9 @@ public class Triangle implements SceneObject {
         Vector edge1 = Vector.substract(vertex2, vertex0);
         Vector edge2 = Vector.substract(vertex1, vertex0);
 
-        return Vector.normalize(Vector.cross(edge1, edge2));
+        this.normal = Vector.normalize(Vector.cross(edge1, edge2));
+
+        return this.normal;
     }
 
     /**
