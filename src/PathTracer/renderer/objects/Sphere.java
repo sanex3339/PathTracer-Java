@@ -8,6 +8,7 @@ public class Sphere implements SceneObject {
     private Vector position;
     private double radius;
     private BaseSurface material;
+    private Double area = null;
 
     public Sphere(Vector center, double radius, BaseSurface material) {
         this.position = center;
@@ -21,7 +22,13 @@ public class Sphere implements SceneObject {
      * @return double
      */
     public double getArea () {
-        return  4 * Math.PI * Math.pow(this.radius, 2);
+        if (this.area != null) {
+            return this.area;
+        }
+
+        this.area = 4 * Math.PI * Math.pow(this.radius, 2);
+
+        return this.area;
     }
 
     /**

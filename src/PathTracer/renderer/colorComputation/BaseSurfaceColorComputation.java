@@ -5,15 +5,19 @@ import PathTracer.interfaces.ColorComputation;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 
+import java.util.List;
+
 public class BaseSurfaceColorComputation <T extends BaseSurface> implements ColorComputation {
     private Ray ray;
     private T material;
     private Scene scene;
+    private List<SceneObject> sceneLights;
 
     public BaseSurfaceColorComputation(Ray ray, T material, Scene scene) {
         this.ray = ray;
         this.material = material;
         this.scene = scene;
+        this.sceneLights = this.scene.getLights();
     }
 
     /**
@@ -25,7 +29,7 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
 
         RGBColor explicitLightSamplingColor = RGBColor.BLACK;
 
-        for (SceneObject object : this.scene.getLights()) {
+        for (SceneObject object : this.sceneLights) {
             explicitLightSamplingColor = explicitLightSamplingColor
                 .add(ColorComputationService.getExplicitLightSamplingColor(intersection, this.scene, object));
         }

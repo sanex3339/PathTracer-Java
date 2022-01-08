@@ -10,6 +10,7 @@ import java.util.List;
 public class Triangle implements SceneObject {
     private List<Vector> vertices = new ArrayList<>();
     private BaseSurface material;
+    private Double area = null;
 
     public Triangle(List<Vector> vertices, BaseSurface material) {
         if (vertices.size() != 3) {
@@ -26,6 +27,10 @@ public class Triangle implements SceneObject {
      * @return double
      */
     public double getArea () {
+        if (this.area != null) {
+            return this.area;
+        }
+
         Vector vertex0 = this.vertices.get(0);
         Vector vertex1 = this.vertices.get(1);
         Vector vertex2 = this.vertices.get(2);
@@ -36,9 +41,11 @@ public class Triangle implements SceneObject {
 
         double s = (a + b + c) / 2;
 
-        return Math.sqrt(
+        this.area = Math.sqrt(
             s * (s - a) * (s - b) * (s - c)
         );
+
+        return this.area;
     }
 
     /**

@@ -13,6 +13,7 @@ public class Polygon implements SceneObject {
     private List<Triangle> triangles = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
     private BaseSurface material;
+    private Double area = null;
 
     public Polygon (List<Vector> vertices, BaseSurface material) {
         if (vertices.size() < 3 || vertices.size() > 4) {
@@ -30,13 +31,19 @@ public class Polygon implements SceneObject {
      * @return double
      */
     public double getArea () {
+        if (this.area != null) {
+            return this.area;
+        }
+
         double area = 0;
 
         for (Triangle triangle : this.triangles) {
             area += triangle.getArea();
         }
 
-        return area;
+        this.area = area;
+
+        return this.area;
     }
 
     /**

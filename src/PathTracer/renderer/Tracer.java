@@ -12,23 +12,23 @@ import java.util.concurrent.Callable;
 public class Tracer implements RayTracer, Callable<RenderResult> {
     private Scene scene;
     private int startX = 0;
+    private int endX = 0;
     private int startY = 0;
-    private int imageWidth;
-    private int imageHeight;
+    private int endY = 0;
 
     public Tracer (int imageWidth, int imageHeight, Scene scene) {
         this.startX = 0;
+        this.endX = this.startY + imageWidth;
+
         this.startY = 0;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
+        this.endY = this.startY + imageHeight;
+
         this.scene = scene;
     }
 
     public Tracer (int startX, int startY, int imageWidth, int imageHeight, Scene scene) {
         this.startX = startX;
         this.startY = startY;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
         this.scene = scene;
     }
 
@@ -81,7 +81,7 @@ public class Tracer implements RayTracer, Callable<RenderResult> {
      * @return RenderResult
      */
     public RenderResult render () {
-        long start = System.currentTimeMillis();
+        long timeStartMs = System.currentTimeMillis();
 
         double randomMultiplier = 0.5;
         double randX;
@@ -93,20 +93,23 @@ public class Tracer implements RayTracer, Callable<RenderResult> {
         RGBColor color;
         Ray ray;
 
-        for (int y = this.startY; y < this.startY + this.imageHeight; y++) {
-            for (int x = this.startX; x < this.startX + this.imageWidth; x++) {
+        double rand1 = RandomGenerator.getRandomDouble();
+        double rand2 = RandomGenerator.getRandomDouble();
+
+        for (int y = this.startY; y < this.endY; y++) {
+            for (int x = this.startX; x < this.endX; x++) {
                 color = RGBColor.BLACK;
 
-                if (RandomGenerator.getRandomDouble() > 0.5) {
-                    randX = x + RandomGenerator.getRandomDouble() * randomMultiplier;
+                if (rand1 > 0.5) {
+                    randX = x + rand1 * randomMultiplier;
                 } else {
-                    randX = x - RandomGenerator.getRandomDouble() * randomMultiplier;
+                    randX = x - rand1 * randomMultiplier;
                 }
 
-                if (RandomGenerator.getRandomDouble() > 0.5) {
-                    randY = y + RandomGenerator.getRandomDouble() * randomMultiplier;
+                if (rand2 > 0.5) {
+                    randY = y + rand2 * randomMultiplier;
                 } else {
-                    randY = y - RandomGenerator.getRandomDouble() * randomMultiplier;
+                    randY = y - rand2 * randomMultiplier;
                 }
 
                 ray = new Ray(
@@ -128,8 +131,8 @@ public class Tracer implements RayTracer, Callable<RenderResult> {
             }
         }
 
-        long end = System.currentTimeMillis();
-        int renderTime = (int) (end - start);
+        long timeEndMs = System.currentTimeMillis();
+        int renderTime = (int) (timeEndMs - timeStartMs);
 
         return new RenderResult(buffer, renderTime);
     }
