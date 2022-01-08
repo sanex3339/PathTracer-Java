@@ -17,7 +17,7 @@ public final class PTMath {
         Vector sDir;
         Vector tDir;
 
-        if (Math.abs(normal.getX()) < 0.5) {
+        if (Math.abs(normal.x) < 0.5) {
             sDir = Vector.cross(normal, new Vector(1,0,0));
         } else {
             sDir = Vector.cross(normal, new Vector(0,1,0));

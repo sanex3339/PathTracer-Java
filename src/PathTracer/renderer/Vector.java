@@ -1,35 +1,14 @@
 package PathTracer.renderer;
 
 public class Vector {
-    private double x;
-    private double y;
-    private double z;
+    public double x;
+    public double y;
+    public double z;
 
     public Vector(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    /**
-     * @return double
-     */
-    public double getX () {
-        return this.x;
-    }
-
-    /**
-     * @return double
-     */
-    public double getY () {
-        return this.y;
-    }
-
-    /**
-     * @return double
-     */
-    public double getZ () {
-        return this.z;
     }
 
     /**
@@ -50,9 +29,9 @@ public class Vector {
             return false;
         }
 
-        return this.getX() == vector.getX() &&
-            this.getY() == vector.getY() &&
-            this.getZ() == vector.getZ();
+        return this.x == vector.x &&
+            this.y == vector.y &&
+            this.z == vector.z;
     }
 
     /**
@@ -75,9 +54,9 @@ public class Vector {
      */
     public static Vector add (Vector vector1, Vector vector2) {
         return new Vector(
-            vector1.getX() + vector2.getX(),
-            vector1.getY() + vector2.getY(),
-            vector1.getZ() + vector2.getZ()
+            vector1.x + vector2.x,
+            vector1.y + vector2.y,
+            vector1.z + vector2.z
         );
     }
 
@@ -86,14 +65,14 @@ public class Vector {
      * @return Vector
      */
     public static Vector add (Vector ...vectors) {
-        double x = vectors[0].getX();
-        double y = vectors[0].getY();
-        double z = vectors[0].getZ();
+        double x = vectors[0].x;
+        double y = vectors[0].y;
+        double z = vectors[0].z;
 
         for (int i = 1, len = vectors.length; i < len; i++) {
-            x += vectors[i].getX();
-            y += vectors[i].getY();
-            z += vectors[i].getZ();
+            x += vectors[i].x;
+            y += vectors[i].y;
+            z += vectors[i].z;
         }
 
         return new Vector(
@@ -108,9 +87,9 @@ public class Vector {
      */
     public static Vector substract (Vector vector1, Vector vector2) {
         return new Vector(
-            vector1.getX() - vector2.getX(),
-            vector1.getY() - vector2.getY(),
-            vector1.getZ() - vector2.getZ()
+            vector1.x - vector2.x,
+            vector1.y - vector2.y,
+            vector1.z - vector2.z
         );
     }
 
