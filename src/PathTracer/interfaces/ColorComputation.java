@@ -1,7 +1,7 @@
 package PathTracer.interfaces;
 
-import PathTracer.renderer.RGBColor;
+import PathTracer.renderer.PTColor;
 
 public interface ColorComputation {
-    RGBColor calculateColor ();
+    PTColor calculateColor ();
 }

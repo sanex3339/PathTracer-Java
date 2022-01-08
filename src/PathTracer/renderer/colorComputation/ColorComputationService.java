@@ -11,7 +11,7 @@ public class ColorComputationService {
     /**
      * Final pixel color
      */
-    private RGBColor pixelColor = RGBColor.BLACK;
+    private PTColor pixelColor = PTColor.BLACK;
 
     public ColorComputationService(Ray ray, Scene scene) {
         this.ray = ray;
@@ -23,23 +23,25 @@ public class ColorComputationService {
      */
     public void calculatePixelColor() {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
+        double terminationProbability = this.terminationProbability(ray.getIteration());
 
-        if (!intersection.isIntersected() || ray.getIteration() > 5) {
-            this.pixelColor = RGBColor.BLACK;
+        if (!intersection.isIntersected() || Math.random() < terminationProbability) {
+            this.pixelColor = PTColor.BLACK;
 
             return;
         }
 
-        this.pixelColor = intersection.
-            getOwner().
-            getMaterial().
-            getComputedColor(this.ray, intersection, this.scene);
+        this.pixelColor = intersection
+            .getOwner()
+            .getMaterial()
+            .getComputedColor(this.ray, intersection, this.scene)
+            .scale(1 / (1 - terminationProbability));
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor getPixelColor () {
+    public PTColor getPixelColor () {
         return this.pixelColor;
     }
 
@@ -47,9 +49,9 @@ public class ColorComputationService {
      * @param intersection
      * @param scene
      * @param lightSource
-     * @return RGBColor
+     * @return PTColor
      */
-    public static RGBColor getExplicitLightSamplingColor (IntersectPoint intersection, Scene scene, SceneObject lightSource) {
+    public static PTColor getExplicitLightSamplingColor (IntersectPoint intersection, Scene scene, SceneObject lightSource) {
         EmissiveSurface lightMaterial = (EmissiveSurface) lightSource.getMaterial();
         LightSourceSamplingData lightSourceSamplingData = lightMaterial.sampleLight(intersection, lightSource, scene);
 
@@ -72,7 +74,19 @@ public class ColorComputationService {
 
         return new Ray(
             Vector.add(
-                ray.getOrigin(),
+                Vector.add(
+                    ray.getOrigin(),
+                    Vector.scale(
+                        Vector.scale(
+                            intersection.getNormal(),
+                            PTMath.EPSILON
+                        ),
+                        Vector.dot(
+                            newDirection,
+                            intersection.getNormal()
+                        )
+                    )
+                ),
                 Vector.scale(
                     ray.getDirection(),
                     intersection.getDistanceFromOrigin() * (1 + epsilon)
@@ -81,5 +95,74 @@ public class ColorComputationService {
             newDirection,
             ray.getIteration() + 1
         );
+    }
+
+    /**
+     * @param cosTheta1
+     * @param etaExt
+     * @param etaInt
+     * @return
+     */
+    public static double fresnel (double cosTheta1, double etaExt, double etaInt) {
+        double temp;
+
+        if (cosTheta1 < 0) {
+            temp = etaExt;
+            etaExt = etaInt;
+            etaInt = temp;
+        }
+
+        double sinTheta = (etaExt / etaInt) * Math.sqrt(Math.max(PTMath.EPSILON, 1 - cosTheta1 * cosTheta1));
+
+        if (sinTheta > 1) {
+            return 1;
+        }
+
+        double cosTheta2 = Math.sqrt(Math.max(PTMath.EPSILON, 1 - sinTheta * sinTheta));
+
+        return ColorComputationService.fresnelDielectric(Math.abs(cosTheta1), cosTheta2, etaInt, etaExt);
+    }
+
+    /**
+     * @param cosTheta1
+     * @param cosTheta2
+     * @param etaExt
+     * @param etaInt
+     * @return
+     */
+    public static double fresnelDielectric (double cosTheta1, double cosTheta2, double etaExt, double etaInt) {
+        double Rs = (etaExt * cosTheta1 - etaInt * cosTheta2) / (etaExt * cosTheta1 + etaInt * cosTheta2);
+        double Rp = (etaInt * cosTheta1 - etaExt * cosTheta2) / (etaInt * cosTheta1 + etaExt * cosTheta2);
+
+        return (Rs * Rs + Rp * Rp) / 2;
+    }
+
+    /**
+     * Fresnel Schlick approximation
+     *
+     * @param cosTheta
+     * @param n1
+     * @param n2
+     * @return double fresnel coefficient
+     */
+    public static double fresnelSchlick (double cosTheta, double n1, double n2) {
+        if (cosTheta <= PTMath.EPSILON) {
+            cosTheta = - cosTheta;
+        }
+
+        double r0 = Math.pow((n1 - n2) / (n1 + n2), 2);
+
+        return r0 + (1 - r0) * Math.pow((1 - cosTheta), 5);
+    }
+
+    /**
+     * Return ray termination probability based on current ray iteration.
+     * probability = (1 / (1 + sqrt(iteration) / 6)
+     *
+     * @param iteration
+     * @return double
+     */
+    private double terminationProbability (double iteration) {
+        return 1 - (1 / (1 + Math.sqrt(iteration) / 6));
     }
 }

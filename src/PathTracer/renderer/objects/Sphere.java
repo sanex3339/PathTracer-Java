@@ -47,38 +47,24 @@ public class Sphere implements SceneObject {
         double t2;
         double minT;
         double maxT;
-        double intersectionPoint = 0;
         Vector hitPoint;
 
         if (b > 0 || d < 0) {
             return null;
         }
 
-        if (d >= 0) {
-            t1 = -b + Math.sqrt(d);
-            t2 = -b - Math.sqrt(d);
-            minT = Math.min(t1, t2);
-            maxT = Math.max(t1, t2);
+        t1 = -b + Math.sqrt(d);
+        t2 = -b - Math.sqrt(d);
+        minT = Math.min(t1, t2);
+        maxT = Math.max(t1, t2);
 
-            if (minT > PTMath.EPSILON) {
-                intersectionPoint = minT;
-            } else {
-                intersectionPoint = maxT;
-            }
-
-            if (intersectionPoint < PTMath.EPSILON) {
-                return null;
-            }
+        if (minT > PTMath.EPSILON) {
+            distance = minT;
+        } else {
+            distance = maxT;
         }
 
-        hitPoint = Vector.add(
-            Vector.scale(ray.getDirection(), intersectionPoint),
-            ray.getOrigin()
-        );
-        distance = Vector.substract(
-            hitPoint,
-            ray.getOrigin()
-        ).getLength();
+        hitPoint = ray.getHitPoint(distance);
 
         return new IntersectData(
             hitPoint,

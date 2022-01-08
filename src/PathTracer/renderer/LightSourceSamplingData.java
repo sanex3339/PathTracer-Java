@@ -1,18 +1,18 @@
 package PathTracer.renderer;
 
 public class LightSourceSamplingData {
-    RGBColor lightBRDF;
+    PTColor lightBRDF;
     double lightPDF;
 
-    public LightSourceSamplingData(RGBColor lightBRDF, double lightPDF) {
+    public LightSourceSamplingData(PTColor lightBRDF, double lightPDF) {
         this.lightBRDF = lightBRDF;
         this.lightPDF = lightPDF;
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor getLightBRDF () {
+    public PTColor getLightBRDF () {
         return this.lightBRDF;
     }
 

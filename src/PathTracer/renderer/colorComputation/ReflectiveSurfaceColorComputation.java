@@ -18,15 +18,9 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor calculateColor () {
-        double reflectionValue = this.material.getReflectionCoefficient();
-
-        if (reflectionValue == 0) {
-            return RGBColor.BLACK;
-        }
-
+    public PTColor calculateColor () {
         Vector reflectedRay = Vector.reflect(
             ray.getDirection(),
             intersection.getNormal()
@@ -43,7 +37,6 @@ public class ReflectiveSurfaceColorComputation <T extends ReflectiveSurface> imp
         colorComputationService.calculatePixelColor();
 
         return colorComputationService
-            .getPixelColor()
-            .scale(reflectionValue);
+            .getPixelColor();
     }
 }

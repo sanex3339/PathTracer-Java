@@ -1,6 +1,5 @@
 package PathTracer.renderer.materials;
 
-import PathTracer.interfaces.BaseSurface;
 import PathTracer.interfaces.ReflectiveSurface;
 import PathTracer.renderer.*;
 import PathTracer.renderer.colorComputation.*;
@@ -9,9 +8,9 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
     /**
      * Reflection coefficient 0..1
      */
-    private double reflectionCoefficient = 0;
+    private double reflectionCoefficient = 1;
 
-    public MirrorMaterial(RGBColor surfaceColor, double reflectionCoefficient) {
+    public MirrorMaterial(PTColor surfaceColor, double reflectionCoefficient) {
         this.surfaceColor = surfaceColor;
         this.reflectionCoefficient = reflectionCoefficient;
     }
@@ -19,27 +18,28 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
     /**
      * @param ray
      * @param scene
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<BaseSurface>(ray, this, scene);
-        ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<ReflectiveSurface>(ray, intersection, scene, this);
+    public PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, this, scene);
+        ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
         return baseColorComputation
             .calculateColor()
             .add(
                 reflectiveSurfaceColorComputation.calculateColor()
+                    .scale(reflectionCoefficient)
             );
     }
 
     /**
      * @param direction
      * @param normal
-     * @return RGBColor
+     * @return PTColor
      */
     @Override
-    public RGBColor getBRDF (Vector direction, Vector normal) {
+    public PTColor getBRDF (Vector direction, Vector normal) {
         return this.getSurfaceColor();
     }
 

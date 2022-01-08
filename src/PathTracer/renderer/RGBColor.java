@@ -18,19 +18,13 @@ public class RGBColor {
     public static RGBColor BLUE = new RGBColor(0, 0, 255);
     public static RGBColor blue = RGBColor.BLUE;
 
-    public RGBColor(int red, int green, int blue) {
-        this.r = red;
-        this.g = green;
-        this.b = blue;
+    public RGBColor(PTColor ptColor) {
+        this.r = (int) (ptColor.getRed() * 255);
+        this.g = (int) (ptColor.getGreen() * 255);
+        this.b = (int) (ptColor.getBlue() * 255);
     }
 
     public RGBColor(double red, double green, double blue) {
-        this.r = (int) red;
-        this.g = (int) green;
-        this.b = (int) blue;
-    }
-
-    public RGBColor(float red, float green, float blue) {
         this.r = (int) red;
         this.g = (int) green;
         this.b = (int) blue;
@@ -50,6 +44,9 @@ public class RGBColor {
         return this.g;
     }
 
+    /**
+     * @return int
+     */
     public int getBlue () {
         return this.b;
     }
@@ -127,17 +124,6 @@ public class RGBColor {
     }
 
     /**
-     * @return RGBColor
-     */
-    public RGBColor inverse () {
-        return new RGBColor(
-            255 - this.getRed(),
-            255 - this.getGreen(),
-            255 - this.getBlue()
-        );
-    }
-
-    /**
      * @param color
      * @return boolean
      */
@@ -153,7 +139,7 @@ public class RGBColor {
 
     /**
      * @param color
-     * @return RGBColor
+     * @return PTColor
      */
     public static RGBColor clampRGBColor (RGBColor color) {
         if (color.getRed() > 255) {

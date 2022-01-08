@@ -3,6 +3,7 @@ package PathTracer;
 import PathTracer.interfaces.SceneObject;
 import PathTracer.renderer.*;
 import PathTracer.renderer.materials.DiffuseMaterial;
+import PathTracer.renderer.materials.GlassMaterial;
 import PathTracer.renderer.materials.LightMaterial;
 import PathTracer.renderer.materials.MirrorMaterial;
 import PathTracer.renderer.objects.Plane;
@@ -26,7 +27,7 @@ final public class Main {
                 new Vector(0, 580, 0),
                 150,
                 new LightMaterial(
-                    new RGBColor(255, 250, 249),
+                    new PTColor(255, 250, 249),
                     10
                 )
             )
@@ -42,7 +43,7 @@ final public class Main {
                     new Vector(-250, 699, -250)
                 ),
                 new LightMaterial(
-                    new RGBColor(255, 250, 249),
+                    new PTColor(new RGBColor(255, 250, 249)),
                     10
                 )
             )
@@ -53,16 +54,16 @@ final public class Main {
             new Sphere(
                 new Vector(-330, -400, 300),
                 300,
-                new MirrorMaterial(RGBColor.BLACK, 1)
+                new MirrorMaterial(PTColor.BLACK, 1)
             )
         );
 
-        // gray sphere
+        // glass sphere
         objects.add(
             new Sphere(
                 new Vector(330, -400, -50),
                 300,
-                new DiffuseMaterial(new RGBColor(0.8 * 255, 0.8 * 255, 0.8 * 255))
+                new GlassMaterial()
             )
         );
 
@@ -75,7 +76,7 @@ final public class Main {
                     new Vector(700, 700, -700),
                     new Vector(-700, 700, -700)
                 ),
-                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255)))
             )
         );
 
@@ -84,7 +85,7 @@ final public class Main {
             new Plane(
                 new Vector(0, 1, 0),
                 new Vector (0, -700, 0),
-                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255)))
             )
         );
 
@@ -93,7 +94,7 @@ final public class Main {
             new Plane(
                 new Vector(-1, 0, 0),
                 new Vector (700, 0, 0),
-                new DiffuseMaterial(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(0.5 * 255, 0.5 * 255, 0.8 * 255)))
             )
         );
 
@@ -102,7 +103,7 @@ final public class Main {
             new Plane(
                 new Vector(1, 0, 0),
                 new Vector (-700, 0, 0),
-                new DiffuseMaterial(new RGBColor(0.8 * 255, 0.5 * 255, 0.5 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(255, 134, 127)))
             )
         );
 
@@ -111,7 +112,7 @@ final public class Main {
             new Plane(
                 new Vector(0, 0, -1),
                 new Vector (0, 0, 700),
-                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255)))
             )
         );
 
@@ -124,7 +125,7 @@ final public class Main {
                     new Vector(700, -700, -700),
                     new Vector(-700, -700, -700)
                 ),
-                new DiffuseMaterial(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255))
+                new DiffuseMaterial(new PTColor(new RGBColor(0.95 * 255, 0.95 * 255, 0.95 * 255)))
             )
         );
 

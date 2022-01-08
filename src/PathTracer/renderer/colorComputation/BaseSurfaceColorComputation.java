@@ -21,13 +21,13 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
     }
 
     /**
-     * @return RGBColor
+     * @return PTColor
      */
-    public RGBColor calculateColor () {
+    public PTColor calculateColor () {
         IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
         Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
 
-        RGBColor explicitLightSamplingColor = RGBColor.BLACK;
+        PTColor explicitLightSamplingColor = PTColor.BLACK;
 
         for (SceneObject object : this.sceneLights) {
             explicitLightSamplingColor = explicitLightSamplingColor
@@ -44,7 +44,7 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
             .add(
                 nextIterationPixelColor
                     .getPixelColor()
-                    .filter(
+                    .multiple(
                         this.material.getBRDF(newDirection, intersection.getNormal())
                             .divide(
                                 this.material
