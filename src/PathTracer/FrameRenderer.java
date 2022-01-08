@@ -1,5 +1,7 @@
 package PathTracer;
 
+import PathTracer.renderer.RenderResult;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -16,6 +18,8 @@ final public class FrameRenderer extends Canvas {
     private List<Double> buffer = new ArrayList<>();
 
     private List<Color> averageColors;
+    private List<Integer> renderTimes = new ArrayList<>();
+
     private int currentSample = 1;
 
     /**
@@ -57,12 +61,10 @@ final public class FrameRenderer extends Canvas {
     /**
      * Update canvas with calculated sample colors
      *
-     * @param sampleColors
+     * @param renderResult
      */
-    public void updateFrame (List<Color> sampleColors) {
-        System.out.println("Sample: " + this.currentSample);
-
-        this.averageColors = this.getAverageColors(sampleColors);
+    public void updateFrame (RenderResult renderResult) {
+        this.averageColors = this.getAverageColors(renderResult.colors());
         this.currentSample++;
 
         BufferStrategy bufferStrategy = this.getBufferStrategy();
@@ -77,6 +79,13 @@ final public class FrameRenderer extends Canvas {
         this.render(graphics);
 
         bufferStrategy.show();
+
+        double averageRenderTime = this.getAverageRenderTime(renderResult.renderTime());
+
+        System.out.println(
+            "Sample: " + this.currentSample + "; " +
+            "Sample render time (ms): " + renderResult.renderTime() + "; " +
+            "Average render time (ms): " + averageRenderTime);
     }
 
     /**
@@ -134,6 +143,18 @@ final public class FrameRenderer extends Canvas {
         }
 
         return sampledColors;
+    }
+
+    /**
+     * Returns average sample time
+     *
+     * @param sampleRenderTime
+     * @return
+     */
+    private double getAverageRenderTime(int sampleRenderTime) {
+        this.renderTimes.add(sampleRenderTime);
+
+        return this.renderTimes.stream().mapToInt(val -> val).average().orElse(0);
     }
 
     /**

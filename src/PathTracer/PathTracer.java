@@ -1,13 +1,13 @@
 package PathTracer;
 
 import PathTracer.interfaces.ClickListener;
+import PathTracer.renderer.RenderResult;
 import PathTracer.renderer.Scene;
 import PathTracer.renderer.Tracer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -169,9 +169,9 @@ final public class PathTracer implements Runnable {
     }
 
     /**
-     * @return List<Color> Provide collection of calculated Colors object for each pixel
+     * @return RenderResult Provide collection of calculated Colors object for each pixel
      */
-    private Callable<List<Color>> renderDataProvider () {
+    private Callable<RenderResult> renderDataProvider () {
         return new Tracer(this.windowWidth, this.windowHeight, this.scene);
     }
 
@@ -182,19 +182,19 @@ final public class PathTracer implements Runnable {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    private void renderDataHandler (Future<List<Color>> thread) throws ExecutionException, InterruptedException {
+    private void renderDataHandler (Future<RenderResult> thread) throws ExecutionException, InterruptedException {
         this.redrawCanvas(thread.get());
     }
 
     /**
-     * @param colors calculated pixel colors from Tracer
+     * @param renderResult
      */
-    private void redrawCanvas (List<Color> colors) {
+    private void redrawCanvas (RenderResult renderResult) {
         if (this.renderButton.isVisible()) {
             this.renderButton.setVisible(false);
         }
 
-        this.frameRenderer.updateFrame(colors);
+        this.frameRenderer.updateFrame(renderResult);
     }
 
     /**

@@ -1,10 +1,10 @@
 package PathTracer.interfaces;
 
-import java.awt.*;
-import java.util.List;
+import PathTracer.renderer.RenderResult;
+
 import java.util.concurrent.Callable;
 
 @FunctionalInterface
 public interface RenderDataProvider {
-    Callable<List<Color>> callback();
+    Callable<RenderResult> callback();
 }

@@ -1,7 +1,7 @@
 package PathTracer.interfaces;
 
-import java.awt.*;
+import PathTracer.renderer.RenderResult;
 
 public interface RayTracer {
-    java.util.List<Color> render ();
+    RenderResult render ();
 }

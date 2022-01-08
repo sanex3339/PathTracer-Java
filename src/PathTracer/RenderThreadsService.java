@@ -2,9 +2,8 @@ package PathTracer;
 
 import PathTracer.interfaces.RenderDataHandler;
 import PathTracer.interfaces.RenderDataProvider;
+import PathTracer.renderer.RenderResult;
 
-import java.awt.*;
-import java.util.List;
 import java.util.concurrent.*;
 
 final public class RenderThreadsService {
@@ -13,7 +12,7 @@ final public class RenderThreadsService {
     private RenderDataProvider renderDataProvider;
     private RenderDataHandler renderDataHandler;
 
-    private ExecutorCompletionService<List<Color>> completionService;
+    private ExecutorCompletionService<RenderResult> completionService;
 
     RenderThreadsService(RenderDataProvider renderDataProvider, RenderDataHandler renderDataHandler) {
         this.renderDataProvider = renderDataProvider;

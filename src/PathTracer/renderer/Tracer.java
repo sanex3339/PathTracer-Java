@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class Tracer implements RayTracer, Callable<List<Color>> {
+public class Tracer implements RayTracer, Callable<RenderResult> {
     private Scene scene;
     private int startX = 0;
     private int startY = 0;
@@ -33,7 +33,7 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
     }
 
     @Override
-    public List<Color> call () {
+    public RenderResult call () {
         return this.render();
     }
 
@@ -78,9 +78,11 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
     /**
      * Render one sample
      *
-     * @return List<Color>
+     * @return RenderResult
      */
-    public List<Color> render () {
+    public RenderResult render () {
+        long start = System.currentTimeMillis();
+
         double randomMultiplier = 0.5;
         double randX;
         double randY;
@@ -126,6 +128,9 @@ public class Tracer implements RayTracer, Callable<List<Color>> {
             }
         }
 
-        return buffer;
+        long end = System.currentTimeMillis();
+        int renderTime = (int) (end - start);
+
+        return new RenderResult(buffer, renderTime);
     }
 }
