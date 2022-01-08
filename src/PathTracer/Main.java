@@ -27,7 +27,7 @@ final public class Main {
                 new Vector(0, 580, 0),
                 150,
                 new LightMaterial(
-                    new PTColor(255, 250, 249),
+                    new PTColor(new RGBColor(255, 250, 249)),
                     10
                 )
             )
