@@ -22,7 +22,7 @@ public class MirrorMaterial extends AbstractMaterial implements ReflectiveSurfac
      */
     @Override
     public PTColor getComputedColor (Ray ray, IntersectPoint intersection, Scene scene) {
-        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, this, scene);
+        BaseSurfaceColorComputation baseColorComputation = new BaseSurfaceColorComputation<>(ray, intersection, this, scene);
         ReflectiveSurfaceColorComputation reflectiveSurfaceColorComputation = new ReflectiveSurfaceColorComputation<>(ray, intersection, scene, this);
 
         return baseColorComputation

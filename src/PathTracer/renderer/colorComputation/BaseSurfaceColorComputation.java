@@ -9,12 +9,14 @@ import java.util.List;
 
 public class BaseSurfaceColorComputation <T extends BaseSurface> implements ColorComputation {
     private Ray ray;
+    private IntersectPoint intersection;
     private T material;
     private Scene scene;
     private List<SceneObject> sceneLights;
 
-    public BaseSurfaceColorComputation(Ray ray, T material, Scene scene) {
+    public BaseSurfaceColorComputation(Ray ray, IntersectPoint intersection, T material, Scene scene) {
         this.ray = ray;
+        this.intersection = intersection;
         this.material = material;
         this.scene = scene;
         this.sceneLights = this.scene.getLights();
@@ -24,18 +26,17 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
      * @return PTColor
      */
     public PTColor calculateColor () {
-        IntersectPoint intersection = Tracer.trace(this.ray, this.scene);
-        Vector newDirection = PTMath.cosineSampleHemisphere(intersection.getNormal());
+        Vector newDirection = PTMath.cosineSampleHemisphere(this.intersection.getNormal());
 
         PTColor explicitLightSamplingColor = PTColor.BLACK;
 
         for (SceneObject object : this.sceneLights) {
             explicitLightSamplingColor = explicitLightSamplingColor
-                .add(ColorComputationService.getExplicitLightSamplingColor(intersection, this.scene, object));
+                .add(ColorComputationService.getExplicitLightSamplingColor(this.intersection, this.scene, object));
         }
 
         ColorComputationService nextIterationPixelColor = new ColorComputationService(
-            ColorComputationService.getNextIterationRandomRay(ray, intersection, newDirection),
+            ColorComputationService.getNextIterationRandomRay(this.ray, this.intersection, newDirection),
             this.scene
         );
         nextIterationPixelColor.calculatePixelColor();
@@ -45,10 +46,10 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
                 nextIterationPixelColor
                     .getPixelColor()
                     .multiple(
-                        this.material.getBRDF(newDirection, intersection.getNormal())
+                        this.material.getBRDF(newDirection, this.intersection.getNormal())
                             .divide(
                                 this.material
-                                    .getPDF(newDirection, intersection.getNormal())
+                                    .getPDF(newDirection, this.intersection.getNormal())
                             )
                     )
             );
