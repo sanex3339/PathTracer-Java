@@ -26,13 +26,15 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
      * @return PTColor
      */
     public PTColor calculateColor () {
-        Vector newDirection = PTMath.cosineSampleHemisphere(this.intersection.getNormal());
+        Vector intersectionNormal = this.intersection.getNormal();
+        Vector newDirection = PTMath.cosineSampleHemisphere(intersectionNormal);
 
+        PTColor directColor = this.material.getSurfaceColor();
         PTColor explicitLightSamplingColor = PTColor.BLACK;
 
-        for (SceneObject object : this.sceneLights) {
+        for (SceneObject lightSource : this.sceneLights) {
             explicitLightSamplingColor = explicitLightSamplingColor
-                .add(ColorComputationService.getExplicitLightSamplingColor(this.intersection, this.scene, object));
+                .add(ColorComputationService.getExplicitLightSamplingColor(this.intersection, this.scene, lightSource));
         }
 
         ColorComputationService nextIterationPixelColor = new ColorComputationService(
@@ -41,17 +43,8 @@ public class BaseSurfaceColorComputation <T extends BaseSurface> implements Colo
         );
         nextIterationPixelColor.calculatePixelColor();
 
-        return explicitLightSamplingColor
-            .add(
-                nextIterationPixelColor
-                    .getPixelColor()
-                    .multiple(
-                        this.material.getBRDF(newDirection, this.intersection.getNormal())
-                            .divide(
-                                this.material
-                                    .getPDF(newDirection, this.intersection.getNormal())
-                            )
-                    )
-            );
+        return directColor
+            .multiple(nextIterationPixelColor.getPixelColor())
+            .add(explicitLightSamplingColor);
     }
 }
